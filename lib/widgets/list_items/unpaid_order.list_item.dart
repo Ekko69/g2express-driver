@@ -10,8 +10,8 @@ import 'package:localize_and_translate/localize_and_translate.dart';
 
 class UnPaidOrderListItem extends StatelessWidget {
   const UnPaidOrderListItem({
-    this.order,
-    Key key,
+    required this.order,
+    Key? key,
   }) : super(key: key);
 
   final Order order;
@@ -25,7 +25,7 @@ class UnPaidOrderListItem extends StatelessWidget {
               [
                 //vendor image
                 CustomImage(
-                  imageUrl: order.vendor.featureImage,
+                  imageUrl: order.vendor?.featureImage ?? "",
                   width: context.percentWidth * 20,
                   boxFit: BoxFit.cover,
                   height: context.percentHeight * 12,
@@ -40,10 +40,10 @@ class UnPaidOrderListItem extends StatelessWidget {
                     HStack(
                       [
                         (order.isPackageDelivery
-                                ? order.packageType.name
+                                ? "${order.packageType?.name}"
                                 : "%s Product(s)"
                                     .tr()
-                                    .fill([order.orderProducts.length]))
+                                    .fill([order.orderProducts?.length]))
                             .text
                             .medium
                             .make()
@@ -61,7 +61,7 @@ class UnPaidOrderListItem extends StatelessWidget {
                       [
                         //time
                         order.formattedDate.text.sm.make().expand(),
-                        "${order.status.tr().allWordsCapitilize() ?? ''}"
+                        "${order.status.tr().capitalized}"
                             .text
                             .lg
                             .color(

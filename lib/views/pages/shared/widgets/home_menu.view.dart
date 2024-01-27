@@ -7,6 +7,7 @@ import 'package:fuodz/views/pages/order/orders.page.dart';
 import 'package:fuodz/views/pages/profile/finance.page.dart';
 import 'package:fuodz/views/pages/profile/legal.page.dart';
 import 'package:fuodz/views/pages/profile/support.page.dart';
+import 'package:fuodz/views/pages/profile/widget/document_request.view.dart';
 import 'package:fuodz/views/pages/profile/widget/driver_type.switch.dart';
 import 'package:fuodz/views/pages/vehicle/vehicles.page.dart';
 import 'package:fuodz/widgets/cards/profile.card.dart';
@@ -16,27 +17,30 @@ import 'package:stacked/stacked.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class HomeMenuView extends StatelessWidget {
-  const HomeMenuView({Key key}) : super(key: key);
+  const HomeMenuView({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Material(
-      child: SafeArea(
-        bottom: false,
-        child: ViewModelBuilder<ProfileViewModel>.reactive(
-          viewModelBuilder: () => ProfileViewModel(context),
-          onModelReady: (model) => model.initialise(),
-          builder: (context, model, child) {
-            return VStack(
+    return ViewModelBuilder<ProfileViewModel>.reactive(
+      viewModelBuilder: () => ProfileViewModel(context),
+      onViewModelReady: (model) => model.initialise(),
+      builder: (context, model, child) {
+        return Stack(
+          children: [
+            VStack(
               [
                 //profile card
-                ProfileCard(model).py12(),
+                ProfileCard(model),
+                12.heightBox,
 
                 //if driver switch is enabled
                 DriverTypeSwitch(),
+                //document verification
+                DocumentRequestView(),
                 Visibility(
                   visible: AppUISettings.enableDriverTypeSwitch ||
-                      model.currentUser.isTaxiDriver,
+                      (model.currentUser != null &&
+                          model.currentUser!.isTaxiDriver),
                   child: MenuItem(
                     title: "Vehicle Details".tr(),
                     onPressed: () {
@@ -74,6 +78,11 @@ class HomeMenuView extends StatelessWidget {
                     MenuItem(
                       title: "Rate & Review".tr(),
                       onPressed: model.openReviewApp,
+                    ),
+
+                    MenuItem(
+                      title: "Faqs".tr(),
+                      onPressed: model.openFaqs,
                     ),
 
                     //
@@ -123,10 +132,29 @@ class HomeMenuView extends StatelessWidget {
                     .makeCentered()
                     .py20(),
               ],
-            ).p20().scrollVertical();
-          },
-        ),
-      ),
-    ).hFull(context);
+            )
+                .p(18)
+                .scrollVertical()
+                .hFull(context)
+                .box
+                .color(context.colors.background)
+                .topRounded(value: 20)
+                .make()
+                .pOnly(top: 20),
+
+            //close
+            IconButton(
+              icon: Icon(
+                FlutterIcons.close_ant,
+                color: Colors.white,
+              ),
+              onPressed: () {
+                context.pop();
+              },
+            ).box.roundedFull.red500.make().positioned(top: 0, right: 20),
+          ],
+        );
+      },
+    );
   }
 }

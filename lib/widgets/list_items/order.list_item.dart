@@ -9,14 +9,14 @@ import 'package:velocity_x/velocity_x.dart';
 
 class OrderListItem extends StatelessWidget {
   const OrderListItem({
-    this.order,
+    required this.order,
     this.onPayPressed,
-    this.orderPressed,
-    Key key,
+    required this.orderPressed,
+    Key? key,
   }) : super(key: key);
 
   final Order order;
-  final Function onPayPressed;
+  final Function? onPayPressed;
   final Function orderPressed;
   @override
   Widget build(BuildContext context) {
@@ -26,7 +26,7 @@ class OrderListItem extends StatelessWidget {
           [
             //vendor image
             CustomImage(
-              imageUrl: order.vendor.featureImage,
+              imageUrl: order.vendor?.featureImage ?? "",
               width: context.percentWidth * 20,
               boxFit: BoxFit.cover,
               height: context.percentHeight * 12,
@@ -40,14 +40,17 @@ class OrderListItem extends StatelessWidget {
                 //amount and total products
                 HStack(
                   [
-                    ( order.isPackageDelivery ? order.packageType.name :"%s Product(s)"
-                        .tr()
-                        .fill([order.orderProducts.length]))
+                    (order.isPackageDelivery
+                            ? "${order.packageType?.name}"
+                            : "%s Product(s)"
+                                .tr()
+                                .fill([order.orderProducts?.length]))
                         .text
                         .medium
                         .make()
                         .expand(),
-                    "${AppStrings.currencySymbol} ${order.total}".currencyFormat()
+                    "${AppStrings.currencySymbol} ${order.total}"
+                        .currencyFormat()
                         .text
                         .xl
                         .semiBold
@@ -59,8 +62,7 @@ class OrderListItem extends StatelessWidget {
                   [
                     //time
                     order.formattedDate.text.sm.make().expand(),
-                    "${order.status.tr()
-                        .allWordsCapitilize() ?? ''}"
+                    "${order.status.tr().capitalized}"
                         .text
                         .lg
                         .color(
@@ -76,7 +78,7 @@ class OrderListItem extends StatelessWidget {
         ),
       ],
     )
-        .onInkTap(orderPressed)
+        .onInkTap(() => orderPressed())
         .card
         .elevation(0.5)
         .clip(Clip.antiAlias)

@@ -9,7 +9,6 @@ import 'package:localize_and_translate/localize_and_translate.dart';
 import 'base.view_model.dart';
 import 'package:velocity_x/velocity_x.dart';
 
-
 class NewVehicleViewModel extends MyBaseViewModel {
   //the textediting controllers
   TextEditingController carMakeTEC = new TextEditingController();
@@ -19,8 +18,8 @@ class NewVehicleViewModel extends MyBaseViewModel {
   String selectedDriverType = "regular";
   List<CarMake> carMakes = [];
   List<CarModel> carModels = [];
-  CarMake selectedCarMake;
-  CarModel selectedCarModel;
+  CarMake? selectedCarMake;
+  CarModel? selectedCarModel;
   List<File> selectedDocuments = [];
 
   GeneralRequest _generalRequest = GeneralRequest();
@@ -87,13 +86,13 @@ class NewVehicleViewModel extends MyBaseViewModel {
 
   void processSave() async {
     // Validate returns true if the form is valid, otherwise false.
-    if (formBuilderKey.currentState.saveAndValidate()) {
+    if (formBuilderKey.currentState!.saveAndValidate()) {
       //
 
       setBusy(true);
 
       try {
-        Map<String, dynamic> mValues = formBuilderKey.currentState.value;
+        Map<String, dynamic> mValues = formBuilderKey.currentState!.value;
         final carData = {
           "car_make_id": selectedCarMake?.id,
           "car_model_id": selectedCarModel?.id,

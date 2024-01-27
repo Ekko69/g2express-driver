@@ -15,7 +15,7 @@ class OverlayService {
     /// request overlay permission
     /// it will open the overlay settings page and return `true` once the permission granted.
     if (!status) {
-      status = await FlutterOverlayWindow.requestPermission();
+      status = await FlutterOverlayWindow.requestPermission() ?? false;
     }
 
     /// Open overLay content

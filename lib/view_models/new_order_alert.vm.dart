@@ -26,7 +26,7 @@ class NewOrderAlertViewModel extends MyBaseViewModel {
   void processOrderAcceptance() async {
     setBusy(true);
     try {
-      await orderRequest.acceptNewOrder(newOrder.id);
+      await orderRequest.acceptNewOrder(newOrder.id!);
       AppService().assetsAudioPlayer.stop();
 
       //

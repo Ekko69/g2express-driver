@@ -11,6 +11,8 @@ class GeneralAppService {
   static Future<void> onBackgroundMessageHandler(
     RemoteMessage remoteMessage,
   ) async {
+    //if it has not data then it is a normal notification, so ignore it
+    if (remoteMessage.data.isEmpty) return;
     await Firebase.initializeApp();
     await FirebaseService().saveNewNotification(remoteMessage);
     //normal notifications

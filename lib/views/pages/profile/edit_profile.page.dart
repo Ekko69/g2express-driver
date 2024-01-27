@@ -13,13 +13,13 @@ import 'package:stacked/stacked.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class EditProfilePage extends StatelessWidget {
-  const EditProfilePage({Key key}) : super(key: key);
+  const EditProfilePage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder<EditProfileViewModel>.reactive(
       viewModelBuilder: () => EditProfileViewModel(context),
-      onModelReady: (model) => model.initialise(),
+      onViewModelReady: (model) => model.initialise(),
       builder: (context, model, child) {
         return BasePage(
           showLeadingAction: true,
@@ -61,7 +61,7 @@ class EditProfilePage extends StatelessWidget {
                                   .clip(Clip.antiAlias)
                                   .make()
                               : Image.file(
-                                  model.newPhoto,
+                                  model.newPhoto!,
                                   fit: BoxFit.cover,
                                 )
                                   .wh(

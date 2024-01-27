@@ -8,20 +8,20 @@ class CurrencyHStack extends StatefulWidget {
     this.alignment,
     this.crossAlignment,
     this.axisSize,
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   final List<Widget> mChildren;
-  final MainAxisAlignment alignment;
-  final CrossAxisAlignment crossAlignment;
-  final MainAxisSize axisSize;
+  final MainAxisAlignment? alignment;
+  final CrossAxisAlignment? crossAlignment;
+  final MainAxisSize? axisSize;
 
   @override
   State<CurrencyHStack> createState() => _CurrencyHStackState();
 }
 
 class _CurrencyHStackState extends State<CurrencyHStack> {
-  List<Widget> children;
+  List<Widget> children = [];
 
   @override
   void initState() {

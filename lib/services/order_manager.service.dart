@@ -1,9 +1,7 @@
 import 'dart:async';
-import 'dart:convert';
 import 'dart:isolate';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter_isolate/flutter_isolate.dart';
 import 'package:fuodz/constants/app_strings.dart';
 import 'package:fuodz/models/new_order.dart';
 import 'package:fuodz/models/new_taxi_order.dart';
@@ -16,7 +14,6 @@ import 'package:schedulers/schedulers.dart';
 import 'package:singleton/singleton.dart';
 
 import 'app.service.dart';
-import 'order_assignment.service.dart';
 
 class OrderManagerService {
   //
@@ -29,33 +26,29 @@ class OrderManagerService {
 
   //
   FirebaseFirestore firebaseFireStore = FirebaseFirestore.instance;
-  StreamSubscription<DocumentSnapshot> newOrderDocsRefSubscription;
-  StreamSubscription<DocumentSnapshot> driverNewOrderDocsRefSubscription;
-  StreamSubscription<dynamic> firebaseOrderHandlerServiceSubscription;
-  IntervalScheduler driverNewOrderDataScheduler;
+  StreamSubscription<DocumentSnapshot>? newOrderDocsRefSubscription;
+  StreamSubscription<DocumentSnapshot>? driverNewOrderDocsRefSubscription;
+  StreamSubscription<dynamic>? firebaseOrderHandlerServiceSubscription;
+  IntervalScheduler? driverNewOrderDataScheduler;
   final alertDriverNewOrderAlert = "can_notify_driver";
 
   //listen to driver new order firebase node
-  void startListener() async {
+  startListener() async {
     //
     //for new driver matching system
     if (AppStrings.driverMatchingNewSystem) {
-      if (firebaseOrderHandlerServiceSubscription != null) {
-        print("prevent multiple calls");
-        return;
-      }
-
+      print("prevent multiple calls");
+      return;
+      /*
       final driver = AuthServices.currentUser.toJson() ?? {};
       Map<String, dynamic> jsonObject = {
         "user": driver,
       };
-      if (AuthServices.driverVehicle != null) {
-        jsonObject.addAll({
-          "vehicle": AuthServices.driverVehicle?.toJson() ?? {},
-        });
-      }
+      jsonObject.addAll({
+        "vehicle": AuthServices.driverVehicle.toJson() ?? {},
+      });
       //
-      firebaseOrderHandlerServiceSubscription?.cancel();
+      firebaseOrderHandlerServiceSubscription.cancel();
       firebaseOrderHandlerServiceSubscription =
           FirebaseOrderHandlerService.port.asBroadcastStream().listen(
         (data) async {
@@ -100,6 +93,7 @@ class OrderManagerService {
         FirebaseOrderHandlerService.startAutoOrderAssignment,
         [jsonEncode(jsonObject), FirebaseOrderHandlerService.port.sendPort],
       );
+      */
     }
     //old driver matching from firebase notification
     else {
@@ -123,8 +117,7 @@ class OrderManagerService {
           }
           //
           // if (canShowAlert()) {
-          final hasVehicle =
-              newOrderAlertData.containsKey("vehicle_type_id") ?? false;
+          final hasVehicle = newOrderAlertData.containsKey("vehicle_type_id");
           //if is taxi
           if (hasVehicle) {
             final newTaxiOrder = NewTaxiOrder.fromJson(newOrderAlertData);
@@ -145,21 +138,21 @@ class OrderManagerService {
 
   //stop
   bool stopListener() {
-    if (newOrderDocsRefSubscription != null) {
-      newOrderDocsRefSubscription?.cancel();
-    }
+    newOrderDocsRefSubscription?.cancel();
     // driverNewOrderDocsRefSubscription?.cancel();
     //
     firebaseOrderHandlerServiceSubscription?.cancel();
     firebaseOrderHandlerServiceSubscription = null;
-    FirebaseOrderHandlerService?.port?.close();
+    FirebaseOrderHandlerService.port.close();
     FirebaseOrderHandlerService.port = ReceivePort();
     return true;
   }
 
   //This is not monitor if the driver node onf ifrestore has the online/free fields
   //so it can be used in connecting order to drivers
-  void monitorOnlineStatusListener({AppService appService}) async {
+  monitorOnlineStatusListener({
+    AppService? appService,
+  }) async {
     //
     final driverId = (await AuthServices.getCurrentUser()).id.toString();
     final driverDoc =
@@ -169,15 +162,16 @@ class OrderManagerService {
     //if exists
     if (driverDoc.exists) {
       //
-      if (!driverDoc.data().containsKey("online") ||
-          !driverDoc.data().containsKey("free")) {
+      if (driverDoc.data() != null &&
+          (!driverDoc.data()!.containsKey("online") ||
+              !driverDoc.data()!.containsKey("free"))) {
         //forcefully update doc value
         await driverDoc.reference.update(
           {
-            "online": driverDoc.data().containsKey("online")
+            "online": driverDoc.data()!.containsKey("online")
                 ? driverDoc.get("online")
                 : 1,
-            "free": driverDoc.data().containsKey("free")
+            "free": driverDoc.data()!.containsKey("free")
                 ? driverDoc.get("free")
                 : 1,
           },
@@ -194,7 +188,7 @@ class OrderManagerService {
     }
     //set the status to the backend
     if (shouldGoOffline) {
-      await LocalStorageService.prefs.setBool(AppStrings.onlineOnApp, false);
+      await LocalStorageService.prefs!.setBool(AppStrings.onlineOnApp, false);
       if (appService != null) {
         appService.driverIsOnline = false;
       } else {
@@ -205,10 +199,8 @@ class OrderManagerService {
 
   //
   void scheduleClearDriverNewOrderListener() {
-    if (driverNewOrderDataScheduler != null) {
-      driverNewOrderDataScheduler.dispose();
-      driverNewOrderDataScheduler = null;
-    }
+    driverNewOrderDataScheduler?.dispose();
+    driverNewOrderDataScheduler = null;
 
     if (driverNewOrderDataScheduler == null) {
       driverNewOrderDataScheduler = IntervalScheduler(
@@ -216,7 +208,7 @@ class OrderManagerService {
       );
     }
     //
-    driverNewOrderDataScheduler.run(
+    driverNewOrderDataScheduler?.run(
       () => clearDriverNewOrderListener(),
     );
   }

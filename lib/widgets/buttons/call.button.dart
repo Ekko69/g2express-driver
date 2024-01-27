@@ -10,11 +10,11 @@ class CallButton extends StatelessWidget {
     this.vendor, {
     this.size = 24,
     this.phone,
-    Key key,
+    Key? key,
   }) : super(key: key);
 
-  final Vendor vendor;
-  final String phone;
+  final Vendor? vendor;
+  final String? phone;
   final double size;
   @override
   Widget build(BuildContext context) {

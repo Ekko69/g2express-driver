@@ -13,11 +13,15 @@ import 'package:stacked/stacked.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class PhotoVerificationPage extends StatefulWidget {
-  PhotoVerificationPage({this.order,this.onsubmit, Key key}) : super(key: key);
+  PhotoVerificationPage({
+    required this.order,
+    this.onsubmit,
+    Key? key,
+  }) : super(key: key);
 
   //
   final Order order;
-  final Function(File) onsubmit;
+  final Function(File)? onsubmit;
   @override
   _PhotoVerificationPageState createState() => _PhotoVerificationPageState();
 }
@@ -34,7 +38,7 @@ class _PhotoVerificationPageState extends State<PhotoVerificationPage> {
           context,
           widget.order,
         ),
-        onModelReady: (vm) => vm.initialise(),
+        onViewModelReady: (vm) => vm.initialise(),
         builder: (context, vm, child) {
           return VStack(
             [
@@ -45,7 +49,7 @@ class _PhotoVerificationPageState extends State<PhotoVerificationPage> {
                   //image preview
                   vm.newPhoto != null
                       ? Image.file(
-                          vm.newPhoto,
+                          vm.newPhoto!,
                           fit: BoxFit.fill,
                         )
                           .wFull(context)
@@ -80,11 +84,13 @@ class _PhotoVerificationPageState extends State<PhotoVerificationPage> {
               CustomButton(
                 title: "Submit".tr(),
                 loading: vm.isBusy,
-                onLongPress: widget.onsubmit != null
-                    ? () async {
-                        widget.onsubmit(vm.newPhoto);
-                      }
-                    : vm.submitPhotoProof,
+                onLongPress: (vm.newPhoto == null)
+                    ? null
+                    : widget.onsubmit != null
+                        ? () async {
+                            widget.onsubmit!(vm.newPhoto!);
+                          }
+                        : vm.submitPhotoProof,
               ).wFull(context),
               "Long press to submit".tr().text.lg.makeCentered().py8(),
             ],

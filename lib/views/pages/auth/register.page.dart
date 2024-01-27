@@ -22,7 +22,7 @@ import 'package:velocity_x/velocity_x.dart';
 import 'package:localize_and_translate/localize_and_translate.dart';
 
 class RegisterPage extends StatelessWidget {
-  RegisterPage({Key key}) : super(key: key);
+  RegisterPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -34,7 +34,7 @@ class RegisterPage extends StatelessWidget {
     //
     return ViewModelBuilder<RegisterViewModel>.reactive(
       viewModelBuilder: () => RegisterViewModel(context),
-      onModelReady: (vm) => vm.initialise(),
+      onViewModelReady: (vm) => vm.initialise(),
       builder: (context, vm, child) {
         return BasePage(
           isLoading: vm.isBusy,
@@ -200,6 +200,11 @@ class RegisterPage extends StatelessWidget {
                                   textEditingController: vm.carMakeTEC,
                                   title: "Car Make".tr(),
                                   items: vm.carMakes,
+                                  itemBuilder: (context, suggestion) {
+                                    return ListTile(
+                                      title: Text("${suggestion.name}"),
+                                    );
+                                  },
                                   suggestionsCallback: (value) async {
                                     return vm.carMakes
                                         .where(
@@ -218,6 +223,11 @@ class RegisterPage extends StatelessWidget {
                                   textEditingController: vm.carModelTEC,
                                   title: "Car Model".tr(),
                                   items: vm.carModels,
+                                  itemBuilder: (context, suggestion) {
+                                    return ListTile(
+                                      title: Text("${suggestion.name}"),
+                                    );
+                                  },
                                   suggestionsCallback: (value) async {
                                     return vm.carModels
                                         .where(
@@ -268,8 +278,8 @@ class RegisterPage extends StatelessWidget {
                                   labelText: "Color".tr(),
                                 ),
                               ),
-
-                              UiSpacer.divider().py20(),
+                              10.heightBox,
+                              UiSpacer.divider(),
                             ],
                           ),
                         ),
@@ -281,9 +291,9 @@ class RegisterPage extends StatelessWidget {
                               AppPageSettings.driverDocumentInstructions,
                           max: AppPageSettings.maxDriverDocumentCount,
                           onSelected: vm.onDocumentsSelected,
-                        ).py20(),
+                        ).py(12),
 
-                        UiSpacer.divider().py12(),
+                        UiSpacer.divider(),
 
                         FormBuilderCheckbox(
                           name: "agreed",

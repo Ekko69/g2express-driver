@@ -29,15 +29,14 @@ class HomeViewModel extends MyBaseViewModel with UpdateService {
   //
   // bool isOnline = true;
   int currentIndex = 0;
-  User currentUser;
-  Vehicle driverVehicle;
+  User? currentUser;
+  Vehicle? driverVehicle;
   PageController pageViewController = PageController(initialPage: 0);
-  StreamSubscription homePageChangeStream;
-  StreamSubscription locationReadyStream;
+  StreamSubscription? homePageChangeStream;
+  StreamSubscription? locationReadyStream;
   FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
   GeoRange georange = GeoRange();
-  StreamSubscription newOrderStream;
-
+  StreamSubscription? newOrderStream;
   AuthRequest authRequest = AuthRequest();
 
   @override
@@ -49,7 +48,7 @@ class HomeViewModel extends MyBaseViewModel with UpdateService {
     driverVehicle = await AuthServices.getDriverVehicle();
     //
     AppService().driverIsOnline =
-        LocalStorageService.prefs.getBool(AppStrings.onlineOnApp) ?? false;
+        LocalStorageService.prefs!.getBool(AppStrings.onlineOnApp) ?? false;
     notifyListeners();
 
     //
@@ -116,7 +115,7 @@ class HomeViewModel extends MyBaseViewModel with UpdateService {
       if (apiResponse.allGood) {
         //
         AppService().driverIsOnline = !AppService().driverIsOnline;
-        await LocalStorageService.prefs.setBool(
+        await LocalStorageService.prefs!.setBool(
           AppStrings.onlineOnApp,
           AppService().driverIsOnline,
         );
@@ -161,16 +160,15 @@ class HomeViewModel extends MyBaseViewModel with UpdateService {
     startNewOrderBackgroundService();
   }
 
-  NewOrder showingNewOrder;
+  NewOrder? showingNewOrder;
   void showNewOrderAlert(NewOrder newOrder) async {
     //
 
-    if (showingNewOrder == null || showingNewOrder.docRef != newOrder.docRef) {
+    if (showingNewOrder == null || showingNewOrder!.docRef != newOrder.docRef) {
       showingNewOrder = newOrder;
-
       print("called showNewOrderAlert");
       final result = await showModalBottomSheet(
-        context: AppService().navigatorKey.currentContext,
+        context: AppService().navigatorKey.currentContext!,
         isDismissible: false,
         enableDrag: false,
         builder: (context) {
@@ -184,7 +182,7 @@ class HomeViewModel extends MyBaseViewModel with UpdateService {
       } else {
         await OrderAssignmentService.releaseOrderForotherDrivers(
           newOrder.toJson(),
-          newOrder.docRef,
+          newOrder.docRef!,
         );
       }
     }

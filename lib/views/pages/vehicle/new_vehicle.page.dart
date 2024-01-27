@@ -15,7 +15,7 @@ import 'package:stacked/stacked.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class NewVehiclePage extends StatefulWidget {
-  const NewVehiclePage({Key key}) : super(key: key);
+  const NewVehiclePage({Key? key}) : super(key: key);
 
   @override
   State<NewVehiclePage> createState() => _NewVehiclePageState();
@@ -31,7 +31,7 @@ class _NewVehiclePageState extends State<NewVehiclePage> {
 
     return ViewModelBuilder<NewVehicleViewModel>.reactive(
       viewModelBuilder: () => NewVehicleViewModel(context),
-      onModelReady: (vm) => vm.initialise(),
+      onViewModelReady: (vm) => vm.initialise(),
       builder: (context, vm, child) {
         return BasePage(
           showAppBar: true,
@@ -49,6 +49,11 @@ class _NewVehiclePageState extends State<NewVehiclePage> {
                     textEditingController: vm.carMakeTEC,
                     title: "Car Make".tr(),
                     items: vm.carMakes,
+                    itemBuilder: (context, suggestion) {
+                      return ListTile(
+                        title: Text("${suggestion.name}"),
+                      );
+                    },
                     suggestionsCallback: (value) async {
                       return vm.carMakes
                           .where(
@@ -67,6 +72,11 @@ class _NewVehiclePageState extends State<NewVehiclePage> {
                     textEditingController: vm.carModelTEC,
                     title: "Car Model".tr(),
                     items: vm.carModels,
+                    itemBuilder: (context, suggestion) {
+                      return ListTile(
+                        title: Text("${suggestion.name}"),
+                      );
+                    },
                     suggestionsCallback: (value) async {
                       return vm.carModels
                           .where(

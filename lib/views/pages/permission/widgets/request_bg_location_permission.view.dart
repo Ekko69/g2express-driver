@@ -9,7 +9,7 @@ import 'package:localize_and_translate/localize_and_translate.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class RequestBGLocationPermissionView extends StatefulWidget {
-  const RequestBGLocationPermissionView(this.vm, {Key key}) : super(key: key);
+  const RequestBGLocationPermissionView(this.vm, {Key? key}) : super(key: key);
 
   final PermissionViewModel vm;
 

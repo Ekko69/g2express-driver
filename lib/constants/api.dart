@@ -2,7 +2,7 @@
 
 class Api {
   static String get baseUrl {
-    return "https://g2-express.com/api";
+    return "https://g2-express.shop/api";
     // return "http://192.168.8.145:8000/api";
   }
 
@@ -23,6 +23,7 @@ class Api {
   //
   static const sendOtp = "/otp/send";
   static const verifyOtp = "/otp/verify";
+  static const verifyFirebaseOtp = "/otp/firebase/verify";
 
   static const orders = "/orders";
   static const orderStopVerification = "/package/order/stop/verify";
@@ -56,6 +57,8 @@ class Api {
   static const driverVehicleRegister = "/driver/vehicle/register";
   static const vehicles = "/driver/vehicles";
   static const activateVehicle = "/driver/vehicle/{id}/activate";
+  //
+  static const documentSubmission = "/driver/document/request/submission";
 
   // Other pages
   static String get privacyPolicy {

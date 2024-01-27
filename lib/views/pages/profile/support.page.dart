@@ -7,7 +7,7 @@ import 'package:stacked/stacked.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class SupportPage extends StatelessWidget {
-  const SupportPage({Key key}) : super(key: key);
+  const SupportPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -17,7 +17,7 @@ class SupportPage extends StatelessWidget {
       title: "Support".tr(),
       body: ViewModelBuilder<ProfileViewModel>.reactive(
         viewModelBuilder: () => ProfileViewModel(context),
-        onModelReady: (vm) => vm.initialise(),
+        onViewModelReady: (vm) => vm.initialise(),
         builder: (context, model, child) {
           return VStack(
             [

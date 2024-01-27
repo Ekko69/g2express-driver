@@ -7,7 +7,7 @@ import 'package:stacked/stacked.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class LegalPage extends StatelessWidget {
-  const LegalPage({Key key}) : super(key: key);
+  const LegalPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -17,7 +17,7 @@ class LegalPage extends StatelessWidget {
       title: "Legal Documents".tr(),
       body: ViewModelBuilder<ProfileViewModel>.reactive(
         viewModelBuilder: () => ProfileViewModel(context),
-        onModelReady: (vm) => vm.initialise(),
+        onViewModelReady: (vm) => vm.initialise(),
         builder: (context, model, child) {
           return VStack(
             [

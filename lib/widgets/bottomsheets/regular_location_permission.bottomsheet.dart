@@ -8,7 +8,7 @@ import 'package:localize_and_translate/localize_and_translate.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class RegularLocationPermissionDialog extends StatelessWidget {
-  const RegularLocationPermissionDialog({Key key}) : super(key: key);
+  const RegularLocationPermissionDialog({Key? key}) : super(key: key);
 
   //
   @override
@@ -26,7 +26,7 @@ class RegularLocationPermissionDialog extends StatelessWidget {
           CustomButton(
             title: "Next".tr(),
             onPressed: () {
-              AppService().navigatorKey.currentContext.pop(true);
+              AppService().navigatorKey.currentContext?.pop(true);
             },
           ).py12(),
           Visibility(

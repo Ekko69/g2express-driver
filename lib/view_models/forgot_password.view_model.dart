@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fuodz/constants/app_strings.dart';
 import 'package:fuodz/requests/auth.request.dart';
+import 'package:fuodz/utils/utils.dart';
 import 'package:fuodz/widgets/bottomsheets/account_verification_entry.dart';
 import 'package:fuodz/widgets/bottomsheets/new_password_entry.dart';
 import 'package:localize_and_translate/localize_and_translate.dart';
@@ -16,16 +17,21 @@ class ForgotPasswordViewModel extends MyBaseViewModel {
   TextEditingController passwordTEC = new TextEditingController();
   AuthRequest _authRequest = AuthRequest();
   FirebaseAuth auth = FirebaseAuth.instance;
-  Country selectedCountry;
-  String accountPhoneNumber;
+  late Country selectedCountry;
+  String? accountPhoneNumber;
   //
-  String firebaseToken;
-  String firebaseVerificationId;
+  String? firebaseToken;
+  String? firebaseVerificationId;
+  bool? otpLogin;
 
   ForgotPasswordViewModel(BuildContext context) {
     this.viewContext = context;
+    this.selectedCountry = Country.parse("US");
+  }
+
+  void initialise() async {
     this.selectedCountry = Country.parse(
-      WidgetsBinding.instance.window.locale.countryCode ?? "US",
+      await Utils.getCurrentCountryCode(),
     );
   }
 
@@ -48,11 +54,11 @@ class ForgotPasswordViewModel extends MyBaseViewModel {
   processForgotPassword() async {
     accountPhoneNumber = "+${selectedCountry.phoneCode}${phoneTEC.text}";
     // Validate returns true if the form is valid, otherwise false.
-    if (formKey.currentState.validate()) {
+    if (formKey.currentState!.validate()) {
       //
       setBusy(true);
       final apiResponse =
-          await _authRequest.verifyPhoneAccount(accountPhoneNumber);
+          await _authRequest.verifyPhoneAccount(accountPhoneNumber!);
       if (apiResponse.allGood) {
         //
         final phoneNumber = apiResponse.body["phone"];
@@ -89,7 +95,7 @@ class ForgotPasswordViewModel extends MyBaseViewModel {
         );
 
         //fetch user id token
-        firebaseToken = await userCredential.user.getIdToken();
+        firebaseToken = await userCredential.user?.getIdToken();
         firebaseVerificationId = credential.verificationId;
 
         //
@@ -100,11 +106,11 @@ class ForgotPasswordViewModel extends MyBaseViewModel {
         if (e.code == 'invalid-phone-number') {
           viewContext.showToast(msg: "Invalid Phone Number".tr());
         } else {
-          viewContext.showToast(msg: e.message);
+          viewContext.showToast(msg: e.message ?? "Error".tr());
         }
         setBusy(false);
       },
-      codeSent: (String verificationId, int resendToken) {
+      codeSent: (String verificationId, int? resendToken) {
         firebaseVerificationId = verificationId;
         showVerificationEntry();
         setBusy(false);
@@ -163,7 +169,7 @@ class ForgotPasswordViewModel extends MyBaseViewModel {
     try {
       // Create a PhoneAuthCredential with the code
       PhoneAuthCredential phoneAuthCredential = PhoneAuthProvider.credential(
-        verificationId: firebaseVerificationId,
+        verificationId: firebaseVerificationId!,
         smsCode: smsCode,
       );
 
@@ -171,7 +177,7 @@ class ForgotPasswordViewModel extends MyBaseViewModel {
         phoneAuthCredential,
       );
       //
-      firebaseToken = await userCredential.user.getIdToken();
+      firebaseToken = await userCredential.user?.getIdToken();
       showNewPasswordEntry();
     } catch (error) {
       viewContext.showToast(msg: "$error", bgColor: Colors.red);
@@ -187,7 +193,11 @@ class ForgotPasswordViewModel extends MyBaseViewModel {
 
     // Sign the user in (or link) with the credential
     try {
-      await _authRequest.verifyOTP(accountPhoneNumber, smsCode);
+      final apiResponse = await _authRequest.verifyOTP(
+        accountPhoneNumber!,
+        smsCode,
+      );
+      firebaseToken = apiResponse.body["token"];
       showNewPasswordEntry();
     } catch (error) {
       viewContext.showToast(msg: "$error", bgColor: Colors.red);
@@ -221,9 +231,11 @@ class ForgotPasswordViewModel extends MyBaseViewModel {
 
     setBusy(true);
     final apiResponse = await _authRequest.resetPasswordRequest(
-      phone: accountPhoneNumber,
+      phone: accountPhoneNumber!,
       password: passwordTEC.text,
-      firebaseToken: firebaseToken,
+      //
+      firebaseToken: !AppStrings.isCustomOtp ? firebaseToken! : null,
+      customToken: AppStrings.isCustomOtp ? firebaseToken! : null,
     );
     setBusy(false);
 
@@ -233,7 +245,7 @@ class ForgotPasswordViewModel extends MyBaseViewModel {
       title: "Forgot Password".tr(),
       text: apiResponse.message,
       onConfirmBtnTap: () {
-        viewContext.navigator.popUntil((route) => route.isFirst);
+        Navigator.of(viewContext).popUntil((route) => route.isFirst);
       },
     );
   }

@@ -13,11 +13,11 @@ class EarningViewModel extends MyBaseViewModel {
   //
   EarningRequest earningRequest = EarningRequest();
   PaymentAccountRequest paymentAccountRequest = PaymentAccountRequest();
-  Currency currency;
-  Earning earning;
+  Currency? currency;
+  Earning? earning;
   bool showPayout = false;
   List<PaymentAccount> paymentAccounts = [];
-  PaymentAccount selectedPaymentAccount;
+  PaymentAccount? selectedPaymentAccount;
   TextEditingController amountTEC = TextEditingController();
 
   EarningViewModel(BuildContext context) {
@@ -47,14 +47,15 @@ class EarningViewModel extends MyBaseViewModel {
     showPayout = true;
     notifyListeners();
     //
-    if (paymentAccounts != null && paymentAccounts.isNotEmpty) {
+    if (paymentAccounts.isNotEmpty) {
       return;
     }
     //
     setBusyForObject(paymentAccounts, true);
     try {
       paymentAccounts = (await paymentAccountRequest.paymentAccounts(page: 0))
-          .filter((e) => e.isActive).toList();
+          .filter((e) => e.isActive)
+          .toList();
     } catch (error) {
       print("paymentAccounts error ==> $error");
     }
@@ -66,13 +67,13 @@ class EarningViewModel extends MyBaseViewModel {
     if (selectedPaymentAccount == null) {
       toastError("Please select payment account".tr());
       //
-    } else if (formKey.currentState.validate()) {
+    } else if (formKey.currentState!.validate()) {
       setBusyForObject(selectedPaymentAccount, true);
       //
       final apiResponse = await paymentAccountRequest.requestPayout(
         {
           "amount": amountTEC.text,
-          "payment_account_id": selectedPaymentAccount.id,
+          "payment_account_id": selectedPaymentAccount?.id,
         },
       );
       //

@@ -11,21 +11,17 @@ String vehicleToJson(Vehicle data) => json.encode(data.toJson());
 
 class Vehicle {
   Vehicle({
-    this.id,
-    this.carModelId,
-    this.driverId,
-    this.vehicleTypeId,
-    this.regNo,
-    this.color,
-    this.isActive,
-    this.createdAt,
-    this.updatedAt,
-    this.formattedDate,
-    this.formattedUpdatedDate,
-    this.photo,
-    this.carModel,
-    this.vehicleType,
-    this.verified,
+    required this.id,
+    required this.carModelId,
+    required this.driverId,
+    required this.vehicleTypeId,
+    required this.regNo,
+    required this.color,
+    required this.photo,
+    required this.carModel,
+    required this.vehicleType,
+    required this.verified,
+    this.isActive = 0,
   });
 
   int id;
@@ -35,10 +31,7 @@ class Vehicle {
   String regNo;
   String color;
   int isActive;
-  DateTime createdAt;
-  DateTime updatedAt;
-  String formattedDate;
-  String formattedUpdatedDate;
+
   String photo;
   CarModel carModel;
   VehicleType vehicleType;
@@ -52,11 +45,13 @@ class Vehicle {
       vehicleTypeId: json["vehicle_type_id"],
       regNo: json["reg_no"],
       color: json["color"],
-      isActive: json["is_active"],
-      createdAt: DateTime.parse(json["created_at"]),
-      updatedAt: DateTime.parse(json["updated_at"]),
-      formattedDate: json["formatted_date"],
-      formattedUpdatedDate: json["formatted_updated_date"],
+      isActive: json["is_active"] == null
+          ? 0
+          : (json["is_active"] is bool)
+              ? json["is_active"]
+                  ? 1
+                  : 0
+              : json["is_active"] ?? 0,
       photo: json["photo"],
       carModel: CarModel.fromJson(json["car_model"]),
       vehicleType: VehicleType.fromJson(json["vehicle_type"]),
@@ -72,10 +67,6 @@ class Vehicle {
         "reg_no": regNo,
         "color": color,
         "is_active": isActive,
-        "created_at": createdAt.toIso8601String(),
-        "updated_at": updatedAt.toIso8601String(),
-        "formatted_date": formattedDate,
-        "formatted_updated_date": formattedUpdatedDate,
         "photo": photo,
         "car_model": carModel.toJson(),
         "vehicle_type": vehicleType.toJson(),
@@ -85,16 +76,16 @@ class Vehicle {
 
 class CarModel {
   CarModel({
-    this.id,
-    this.name,
-    this.carMakeId,
-    this.carMake,
+    required this.id,
+    required this.name,
+    required this.carMakeId,
+    required this.carMake,
   });
 
   int id;
   String name;
   int carMakeId;
-  CarMake carMake;
+  CarMake? carMake;
 
   factory CarModel.fromJson(Map<String, dynamic> json) => CarModel(
         id: json["id"],
@@ -115,8 +106,8 @@ class CarModel {
 
 class CarMake {
   CarMake({
-    this.id,
-    this.name,
+    required this.id,
+    required this.name,
   });
 
   int id;
@@ -135,16 +126,16 @@ class CarMake {
 
 class VehicleType {
   VehicleType({
-    this.id,
-    this.name,
-    this.slug,
-    this.baseFare,
-    this.distanceFare,
-    this.timeFare,
-    this.minFare,
-    this.isActive,
-    this.formattedDate,
-    this.photo,
+    required this.id,
+    required this.name,
+    required this.slug,
+    required this.baseFare,
+    required this.distanceFare,
+    required this.timeFare,
+    required this.minFare,
+    required this.isActive,
+    required this.formattedDate,
+    required this.photo,
   });
 
   int id;
@@ -162,10 +153,10 @@ class VehicleType {
         id: json["id"],
         name: json["name"],
         slug: json["slug"],
-        baseFare: json["base_fare"].toString().toDouble(),
-        distanceFare: json["distance_fare"].toString().toDouble(),
-        timeFare: json["time_fare"].toString().toDouble(),
-        minFare: json["min_fare"].toString().toDouble(),
+        baseFare: json["base_fare"].toString().toDouble()!,
+        distanceFare: json["distance_fare"].toString().toDouble()!,
+        timeFare: json["time_fare"].toString().toDouble()!,
+        minFare: json["min_fare"].toString().toDouble()!,
         isActive: json["is_active"],
         formattedDate: json["formatted_date"],
         photo: json["photo"],

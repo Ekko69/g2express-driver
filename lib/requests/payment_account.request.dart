@@ -29,7 +29,7 @@ class PaymentAccountRequest extends HttpService {
           .toList();
     }
 
-    throw apiResponse.message;
+    throw "${apiResponse.message}";
   }
 
   //

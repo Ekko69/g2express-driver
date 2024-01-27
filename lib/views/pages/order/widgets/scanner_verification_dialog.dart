@@ -7,8 +7,11 @@ import 'package:qr_code_scanner/qr_code_scanner.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class ScanOrderVerificationDialog extends StatefulWidget {
-  ScanOrderVerificationDialog({this.order, this.onValidated, Key key})
-      : super(key: key);
+  ScanOrderVerificationDialog({
+    required this.order,
+    required this.onValidated,
+    Key? key,
+  }) : super(key: key);
 
   //
   final Order order;
@@ -22,16 +25,16 @@ class _ScanOrderVerificationDialogState
     extends State<ScanOrderVerificationDialog> {
   //
   final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
-  Barcode result;
-  QRViewController controller;
+  Barcode? result;
+  QRViewController? controller;
 
   @override
   void reassemble() {
     super.reassemble();
     if (Platform.isAndroid) {
-      controller.pauseCamera();
+      controller?.pauseCamera();
     } else if (Platform.isIOS) {
-      controller.resumeCamera();
+      controller?.resumeCamera();
     }
   }
 
@@ -55,8 +58,8 @@ class _ScanOrderVerificationDialogState
 
     controller.scannedDataStream.listen((scanData) {
       result = scanData;
-      print("Result ==> ${result.code}");
-      if (widget.order.verificationCode == result.code) {
+      print("Result ==> ${result?.code}");
+      if (widget.order.verificationCode == result?.code) {
         controller.stopCamera();
         controller.dispose();
         context.pop();

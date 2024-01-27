@@ -5,8 +5,11 @@ import 'package:localize_and_translate/localize_and_translate.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class PaymentAccountListItem extends StatelessWidget {
-  const PaymentAccountListItem(this.paymentAccount, {Key key, this.onPressed})
-      : super(key: key);
+  const PaymentAccountListItem(
+    this.paymentAccount, {
+    Key? key,
+    required this.onPressed,
+  }) : super(key: key);
 
   final PaymentAccount paymentAccount;
   final Function onPressed;
@@ -39,8 +42,7 @@ class PaymentAccountListItem extends StatelessWidget {
         //
 
         Visibility(
-          visible: paymentAccount.instructions != null &&
-              paymentAccount.instructions.isNotEmpty,
+          visible: paymentAccount.instructions.isNotEmpty,
           child: VStack(
             [
               "Instructions".tr().text.medium.make(),
@@ -58,6 +60,6 @@ class PaymentAccountListItem extends StatelessWidget {
         .margin(EdgeInsets.symmetric(horizontal: Vx.dp4))
         .make()
         .opacity(value: paymentAccount.isActive ? 1.0 : 0.6)
-        .onInkTap(onPressed);
+        .onInkTap(() => onPressed());
   }
 }

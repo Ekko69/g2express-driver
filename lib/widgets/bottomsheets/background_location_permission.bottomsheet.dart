@@ -8,7 +8,7 @@ import 'package:localize_and_translate/localize_and_translate.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class BackgroundLocationPermissionDialog extends StatelessWidget {
-  const BackgroundLocationPermissionDialog({Key key}) : super(key: key);
+  const BackgroundLocationPermissionDialog({Key? key}) : super(key: key);
 
   //
   @override
@@ -26,7 +26,7 @@ class BackgroundLocationPermissionDialog extends StatelessWidget {
           CustomButton(
             title: "Next".tr(),
             onPressed: () {
-              AppService().navigatorKey.currentContext.pop(true);
+              AppService().navigatorKey.currentContext?.pop(true);
             },
           ).py12(),
           Visibility(

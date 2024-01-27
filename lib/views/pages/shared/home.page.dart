@@ -5,7 +5,6 @@ import 'package:awesome_drawer_bar/awesome_drawer_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:fuodz/constants/app_upgrade_settings.dart';
-import 'package:fuodz/utils/utils.dart';
 import 'package:fuodz/views/pages/order/assigned_orders.page.dart';
 import 'package:fuodz/view_models/home.vm.dart';
 import 'package:fuodz/views/pages/shared/widgets/app_menu.dart';
@@ -20,7 +19,7 @@ import 'widgets/home_menu.view.dart';
 
 class HomePage extends StatefulWidget {
   HomePage({
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   @override
@@ -34,21 +33,18 @@ class _HomePageState extends State<HomePage> {
   //
   @override
   Widget build(BuildContext context) {
-    final menuWidth = MediaQuery.of(context).size.width * 0.80;
-
-    return WillPopScope(
-      onWillPop: () async {
-        //
-        if (awesomeDrawerBarController != null &&
-            awesomeDrawerBarController.isOpen()) {
-          awesomeDrawerBarController.close();
-          return false;
-        }
+    return PopScope(
+      canPop: canCloseApp,
+      onPopInvoked: (popCalled) async {
         //
         if (!canCloseApp) {
-          canCloseApp = true;
+          setState(() {
+            canCloseApp = true;
+          });
           Timer(Duration(seconds: 1), () {
-            canCloseApp = false;
+            setState(() {
+              canCloseApp = false;
+            });
           });
           //
           Fluttertoast.showToast(
@@ -60,58 +56,55 @@ class _HomePageState extends State<HomePage> {
             textColor: Colors.white,
             fontSize: 14.0,
           );
-          return false;
         }
-        return true;
       },
       child: ViewModelBuilder<HomeViewModel>.reactive(
         viewModelBuilder: () => HomeViewModel(context),
-        onModelReady: (vm) {
+        onViewModelReady: (vm) {
           vm.initialise();
         },
         builder: (context, vm, child) {
-          return AwesomeDrawerBar(
-            type: StyleState.stack,
-            controller: awesomeDrawerBarController,
-            showShadow: true,
-            borderRadius: 24.0,
-            // angle: -12.0,
-            backgroundColor: Colors.grey[300],
-            slideWidth: menuWidth,
-            slideHeight: context.percentHeight * 100,
-            openCurve: Curves.fastOutSlowIn,
-            closeCurve: Curves.bounceIn,
-            isRTL: Utils.isArabic,
-            menuScreen: HomeMenuView().w(menuWidth),
-            mainScreen: Scaffold(
-              body: UpgradeAlert(
-                upgrader: Upgrader(
-                  showIgnore: !AppUpgradeSettings.forceUpgrade(),
-                  shouldPopScope: () => !AppUpgradeSettings.forceUpgrade(),
-                  dialogStyle: Platform.isIOS
-                      ? UpgradeDialogStyle.cupertino
-                      : UpgradeDialogStyle.material,
-                ),
-                child: Stack(
-                  children: [
-                    //home view
-                    vm.currentUser == null
-                        ? BusyIndicator().centered()
-                        : !vm.currentUser.isTaxiDriver
-                            ? AssignedOrdersPage()
-                            : TaxiOrderPage(),
+          return Scaffold(
+            body: UpgradeAlert(
+              upgrader: Upgrader(
+                showIgnore: !AppUpgradeSettings.forceUpgrade(),
+                shouldPopScope: () => !AppUpgradeSettings.forceUpgrade(),
+                dialogStyle: Platform.isIOS
+                    ? UpgradeDialogStyle.cupertino
+                    : UpgradeDialogStyle.material,
+              ),
+              child: Stack(
+                children: [
+                  //home view
+                  vm.currentUser == null
+                      ? BusyIndicator().centered()
+                      : !vm.currentUser!.isTaxiDriver
+                          ? AssignedOrdersPage()
+                          : TaxiOrderPage(),
 
-                    //
-                    AppHamburgerMenu(ontap: () {
-                      awesomeDrawerBarController.toggle();
-                    }),
-                  ],
-                ),
+                  //
+                  AppHamburgerMenu(
+                    ontap: () {
+                      openMenuBottomSheet(context);
+                    },
+                  ),
+                ],
               ),
             ),
           );
         },
       ),
+    );
+  }
+
+  void openMenuBottomSheet(BuildContext context) async {
+    await showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (context) {
+        return HomeMenuView().h(context.percentHeight * 90);
+      },
     );
   }
 }

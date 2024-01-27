@@ -9,7 +9,10 @@ import 'package:localize_and_translate/localize_and_translate.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class LocationPermissionDialog extends StatelessWidget {
-  const LocationPermissionDialog({Key key, this.onResult}) : super(key: key);
+  const LocationPermissionDialog({
+    Key? key,
+    required this.onResult,
+  }) : super(key: key);
 
   //
   final Function(bool) onResult;
@@ -32,7 +35,7 @@ class LocationPermissionDialog extends StatelessWidget {
             title: "Next".tr(),
             onPressed: () {
               onResult(true);
-              AppService().navigatorKey.currentContext.pop();
+              AppService().navigatorKey.currentContext?.pop();
             },
           ).py12(),
           Visibility(

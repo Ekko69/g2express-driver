@@ -21,11 +21,11 @@ class RegisterViewModel extends MyBaseViewModel with QrcodeScannerTrait {
   String selectedDriverType = "regular";
   List<CarMake> carMakes = [];
   List<CarModel> carModels = [];
-  CarMake selectedCarMake;
-  CarModel selectedCarModel;
+  CarMake? selectedCarMake;
+  CarModel? selectedCarModel;
   List<File> selectedDocuments = [];
   bool hidePassword = true;
-  Country selectedCountry;
+  late Country selectedCountry;
 
   //
   AuthRequest _authRequest = AuthRequest();
@@ -41,6 +41,7 @@ class RegisterViewModel extends MyBaseViewModel with QrcodeScannerTrait {
     } catch (error) {
       this.selectedCountry = Country.parse("us");
     }
+    notifyListeners();
   }
 
   @override
@@ -68,8 +69,8 @@ class RegisterViewModel extends MyBaseViewModel with QrcodeScannerTrait {
     notifyListeners();
   }
 
-  void onSelectedDriverType(String value) {
-    selectedDriverType = value;
+  void onSelectedDriverType(String? value) {
+    selectedDriverType = value ?? "regular";
     notifyListeners();
   }
 
@@ -120,13 +121,13 @@ class RegisterViewModel extends MyBaseViewModel with QrcodeScannerTrait {
 
   void processRegister() async {
     // Validate returns true if the form is valid, otherwise false.
-    if (formBuilderKey.currentState.saveAndValidate()) {
+    if (formBuilderKey.currentState!.saveAndValidate()) {
       //
 
       setBusy(true);
 
       try {
-        Map<String, dynamic> mValues = formBuilderKey.currentState.value;
+        Map<String, dynamic> mValues = formBuilderKey.currentState!.value;
         final carData = {
           "car_make_id": selectedCarMake?.id,
           "car_model_id": selectedCarModel?.id,
@@ -136,7 +137,7 @@ class RegisterViewModel extends MyBaseViewModel with QrcodeScannerTrait {
         Map<String, dynamic> params = Map.from(values);
         String phone = params['phone'].toString().telFormat();
         params["phone"] = "+${selectedCountry.phoneCode}${phone}";
-        
+
         final apiResponse = await _authRequest.registerRequest(
           vals: params,
           docs: selectedDocuments,

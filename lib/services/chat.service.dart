@@ -14,7 +14,7 @@ class ChatService {
     final apiResponse = await ChatRequest().sendNotification(
       title: "New Message from".tr() + " ${chatEntity.mainUser.name}",
       body: message,
-      topic: otherPeer.id,
+      topic: otherPeer!.id,
       path: chatEntity.path,
       user: chatEntity.mainUser,
       otherUser: otherPeer,

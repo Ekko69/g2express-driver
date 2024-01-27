@@ -12,14 +12,14 @@ import 'package:velocity_x/velocity_x.dart';
 
 class TaxiOrderListItem extends StatelessWidget {
   const TaxiOrderListItem({
-    this.order,
+    required this.order,
     this.onPayPressed,
-    this.orderPressed,
-    Key key,
+    required this.orderPressed,
+    Key? key,
   }) : super(key: key);
 
   final Order order;
-  final Function onPayPressed;
+  final Function? onPayPressed;
   final Function orderPressed;
   @override
   Widget build(BuildContext context) {
@@ -50,7 +50,7 @@ class TaxiOrderListItem extends StatelessWidget {
             VStack(
               [
                 "Fee".tr().text.sm.light.gray500.make(),
-                "${order.taxiOrder.currency != null ? order.taxiOrder.currency.symbol : AppStrings.currencySymbol}${order.total}"
+                "${order.taxiOrder?.currency != null ? order.taxiOrder?.currency?.symbol : AppStrings.currencySymbol}${order.total}"
                     .text
                     .semiBold
                     .base
@@ -90,7 +90,7 @@ class TaxiOrderListItem extends StatelessWidget {
               [
                 Image.asset(AppImages.pickupLocation).wh(12, 12),
                 UiSpacer.horizontalSpace(space: 10),
-                "${order.taxiOrder.pickupAddress}"
+                "${order.taxiOrder?.pickupAddress}"
                     .text
                     .medium
                     .ellipsis
@@ -98,7 +98,7 @@ class TaxiOrderListItem extends StatelessWidget {
                     .expand(),
                 UiSpacer.hSpace(5),
                 //time
-                "${order.taxiOrder.startTime}".text.light.gray500.sm.make(),
+                "${order.taxiOrder?.startTime}".text.light.gray500.sm.make(),
               ],
             ),
             DottedLine(
@@ -111,7 +111,7 @@ class TaxiOrderListItem extends StatelessWidget {
               [
                 Image.asset(AppImages.dropoffLocation).wh(12, 12),
                 UiSpacer.horizontalSpace(space: 10),
-                "${order.taxiOrder.dropoffAddress}"
+                "${order.taxiOrder?.dropoffAddress}"
                     .text
                     .medium
                     .overflow(TextOverflow.ellipsis)
@@ -119,14 +119,14 @@ class TaxiOrderListItem extends StatelessWidget {
                     .expand(),
                 UiSpacer.hSpace(5),
                 //time
-                "${order.taxiOrder.endTime}".text.light.gray500.sm.make(),
+                "${order.taxiOrder?.endTime}".text.light.gray500.sm.make(),
               ],
             ),
           ],
         ).px16().py8()
       ],
     )
-        .onInkTap(orderPressed)
+        .onInkTap(() => orderPressed())
         .box
         .color(context.theme.colorScheme.background)
         .shadowXs

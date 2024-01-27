@@ -17,7 +17,7 @@ class EarningRequest extends HttpService {
         Earning.fromJson(apiResponse.body["earning"]),
       ];
     } else {
-      throw apiResponse.message;
+      throw "${apiResponse.message}";
     }
   }
 }

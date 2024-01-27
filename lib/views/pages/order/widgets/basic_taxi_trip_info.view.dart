@@ -12,7 +12,7 @@ import 'package:timelines/timelines.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class BasicTaxiTripInfoView extends StatelessWidget {
-  BasicTaxiTripInfoView(this.order, {Key key}) : super(key: key);
+  BasicTaxiTripInfoView(this.order, {Key? key}) : super(key: key);
 
   final Order order;
 
@@ -26,7 +26,7 @@ class BasicTaxiTripInfoView extends StatelessWidget {
             [
               VStack(
                 [
-                  "${DateFormat("dd MMM y 'at' H:m a").format(order.createdAt) ?? order.formattedDate}"
+                  "${DateFormat("dd MMM y 'at' H:m a").format(order.createdAt)}"
                       .text
                       .medium
                       .lg
@@ -44,7 +44,7 @@ class BasicTaxiTripInfoView extends StatelessWidget {
                   "#${order.code}".text.light.make(),
                   CurrencyHStack(
                     [
-                      "${order.taxiOrder.currency != null ? order.taxiOrder.currency.symbol : AppStrings.currencySymbol}"
+                      "${order.taxiOrder?.currency != null ? order.taxiOrder?.currency?.symbol : AppStrings.currencySymbol}"
                           .text
                           .semiBold
                           .xl
@@ -100,15 +100,15 @@ class BasicTaxiTripInfoView extends StatelessWidget {
                       index == 0
                           ? "Pickup Location".tr()
                           : "Drop Off Location".tr(),
-                      style: context.textTheme.bodySmall.copyWith(
+                      style: context.textTheme.bodySmall!.copyWith(
                         fontWeight: FontWeight.w400,
                       ),
                     ),
                     Text(
                       index == 0
-                          ? order.taxiOrder.pickupAddress
-                          : order.taxiOrder.dropoffAddress,
-                      style: context.textTheme.bodyLarge.copyWith(
+                          ? order.taxiOrder!.pickupAddress
+                          : order.taxiOrder!.dropoffAddress,
+                      style: context.textTheme.bodyLarge!.copyWith(
                         fontWeight: FontWeight.w500,
                       ),
                     ),

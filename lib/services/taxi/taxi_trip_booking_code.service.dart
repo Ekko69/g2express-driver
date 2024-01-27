@@ -18,12 +18,14 @@ class TaxiTripBookingCodeService {
                   .contains(nextOrderStatus) &&
               AppTaxiSettings.requiredBookingCodeAfterTrip)) {
         //
-        final orderVerifyCode = taxiViewModel.onGoingOrderTrip.verificationCode;
+        final orderVerifyCode =
+            taxiViewModel.onGoingOrderTrip?.verificationCode;
         final result = await showModalBottomSheet(
           context: taxiViewModel.viewContext,
           backgroundColor: Colors.transparent,
           builder: (ctx) {
-            return TaxiBookingCodeVerificationBottomSheet(orderVerifyCode);
+            return TaxiBookingCodeVerificationBottomSheet(
+                orderVerifyCode ?? "");
           },
         );
         //

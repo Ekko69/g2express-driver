@@ -5,7 +5,7 @@ import 'package:fuodz/services/http.service.dart';
 
 class TaxiRequest extends HttpService {
   //
-  Future<Order> getOnGoingTrip() async {
+  Future<Order?> getOnGoingTrip() async {
     final apiResult = await get(
       "${Api.currentTaxiBooking}",
     );

@@ -4,7 +4,10 @@ import 'package:fuodz/utils/utils.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class AppHamburgerMenu extends StatelessWidget {
-  const AppHamburgerMenu({Key key, this.ontap}) : super(key: key);
+  const AppHamburgerMenu({
+    Key? key,
+    required this.ontap,
+  }) : super(key: key);
 
   final Function ontap;
 
@@ -25,7 +28,7 @@ class AppHamburgerMenu extends StatelessWidget {
           .outerShadow
           // .shadowXl
           .make()
-          .onTap(ontap)
+          .onTap(() => ontap())
           .safeArea(),
     );
   }

@@ -10,7 +10,7 @@ import 'package:stacked/stacked.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class EditPaymentAccountPage extends StatelessWidget {
-  const EditPaymentAccountPage(this.paymentAccount, {Key key})
+  const EditPaymentAccountPage(this.paymentAccount, {Key? key})
       : super(key: key);
 
   final PaymentAccount paymentAccount;
@@ -25,7 +25,7 @@ class EditPaymentAccountPage extends StatelessWidget {
       body: ViewModelBuilder<EditPaymentAccountViewModel>.reactive(
         viewModelBuilder: () =>
             EditPaymentAccountViewModel(context, paymentAccount),
-        onModelReady: (vm) => vm.initialise(),
+        onViewModelReady: (vm) => vm.initialise(),
         builder: (context, vm, child) {
           return VStack(
             [
@@ -57,7 +57,7 @@ class EditPaymentAccountPage extends StatelessWidget {
                         Checkbox(
                           value: vm.isActive,
                           onChanged: (value) {
-                            vm.isActive = value;
+                            vm.isActive = value ?? false;
                             vm.notifyListeners();
                           },
                         ),

@@ -33,7 +33,7 @@ class LocationServiceWatcher {
         if (timeDiff > 300000 && AppService().driverIsOnline) {
           //show alert dialog if driver is yet to be shown a dialog
           final result = await showModalBottomSheet(
-            context: AppService().navigatorKey.currentContext,
+            context: AppService().navigatorKey.currentContext!,
             isScrollControlled: true,
             backgroundColor: Colors.transparent,
             builder: (context) {

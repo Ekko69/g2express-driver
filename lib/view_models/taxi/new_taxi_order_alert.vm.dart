@@ -72,7 +72,7 @@ class NewTaxiOrderAlertViewModel extends MyBaseViewModel {
           //
           await taxiRequest.rejectAssignment(
             newOrder.id,
-            AuthServices?.currentUser?.id,
+            AuthServices.currentUser!.id,
           );
         } catch (error) {
           print("error ignoring trip assignment ==> $error");

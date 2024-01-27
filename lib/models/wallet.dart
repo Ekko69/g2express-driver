@@ -9,21 +9,23 @@ Wallet walletFromJson(String str) => Wallet.fromJson(json.decode(str));
 String walletToJson(Wallet data) => json.encode(data.toJson());
 
 class Wallet {
-    Wallet({
-        this.balance,
-        this.updatedAt,
-    });
+  Wallet({
+    required this.balance,
+    this.updatedAt,
+  });
 
-    double balance;
-    DateTime updatedAt;
+  double balance;
+  DateTime? updatedAt;
 
-    factory Wallet.fromJson(Map<String, dynamic> json) => Wallet(
-        balance: json["balance"] == null ? null : double.parse(json["balance"].toString()),
-        updatedAt: json["updated_at"] == null ? null : DateTime.parse(json["updated_at"]),
-    );
+  factory Wallet.fromJson(Map<String, dynamic> json) => Wallet(
+        balance: double.tryParse(json["balance"].toString()) ?? 0.00,
+        updatedAt: json["updated_at"] == null
+            ? null
+            : DateTime.parse(json["updated_at"]),
+      );
 
-    Map<String, dynamic> toJson() => {
-        "balance": balance == null ? null : balance,
-        "updated_at": updatedAt == null ? null : updatedAt.toIso8601String(),
-    };
+  Map<String, dynamic> toJson() => {
+        "balance": balance,
+        "updated_at": updatedAt == null ? null : updatedAt?.toIso8601String(),
+      };
 }

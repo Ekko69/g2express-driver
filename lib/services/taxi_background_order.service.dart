@@ -30,8 +30,8 @@ class TaxiBackgroundOrderService extends ExtendedOrderService {
   }
 
   BehaviorSubject<dynamic> showNewOrderStream = BehaviorSubject();
-  NewTaxiOrder newOrder;
-  TaxiViewModel taxiViewModel;
+  NewTaxiOrder? newOrder;
+  TaxiViewModel? taxiViewModel;
 
   processOrderNotification(NewTaxiOrder newOrder) async {
     //not in background
@@ -52,35 +52,38 @@ class TaxiBackgroundOrderService extends ExtendedOrderService {
   //handle showing new order alert bottom sheet to driver in app
   showNewOrderInAppAlert(NewTaxiOrder newOrder) async {
     try {
-      taxiViewModel.newOrder = newOrder;
-      taxiViewModel.newTaxiBookingService.stopListeningToNewOrder();
+      taxiViewModel?.newOrder = newOrder;
+      taxiViewModel?.newTaxiBookingService.stopListeningToNewOrder();
       //send zoom to new order point via stream
-      taxiViewModel.onGoingTaxiBookingService.zoomToPickupLocation(
+      taxiViewModel?.onGoingTaxiBookingService.zoomToPickupLocation(
         LatLng(
-          taxiViewModel.newOrder.pickup.lat,
-          taxiViewModel.newOrder.pickup.long,
+          taxiViewModel!.newOrder!.pickup!.lat!,
+          taxiViewModel!.newOrder!.pickup!.long!,
         ),
       );
       //
       final result = await showModalBottomSheet(
         isDismissible: false,
         enableDrag: false,
-        context: AppService().navigatorKey.currentContext,
+        context: AppService().navigatorKey.currentContext!,
         backgroundColor: Colors.transparent,
         builder: (context) {
-          return IncomingNewOrderAlert(taxiViewModel, taxiViewModel.newOrder);
+          return IncomingNewOrderAlert(
+            taxiViewModel!,
+            taxiViewModel!.newOrder!,
+          );
         },
       );
 
       if (result != null) {
-        taxiViewModel.onGoingOrderTrip = result;
-        taxiViewModel.onGoingTaxiBookingService.loadTripUIByOrderStatus();
-        taxiViewModel.notifyListeners();
+        taxiViewModel?.onGoingOrderTrip = result;
+        taxiViewModel?.onGoingTaxiBookingService.loadTripUIByOrderStatus();
+        taxiViewModel?.notifyListeners();
       } else {
-        taxiViewModel.taxiGoogleMapManagerService.clearMapData();
-        taxiViewModel.taxiGoogleMapManagerService.zoomToCurrentLocation();
-        taxiViewModel.taxiGoogleMapManagerService.updateGoogleMapPadding(20);
-        taxiViewModel.newTaxiBookingService.countDownCompleted();
+        taxiViewModel?.taxiGoogleMapManagerService.clearMapData();
+        taxiViewModel?.taxiGoogleMapManagerService.zoomToCurrentLocation();
+        taxiViewModel?.taxiGoogleMapManagerService.updateGoogleMapPadding(20);
+        taxiViewModel?.newTaxiBookingService.countDownCompleted();
       }
     } catch (e) {
       print(e);
@@ -99,12 +102,12 @@ class TaxiBackgroundOrderService extends ExtendedOrderService {
         id: notifcationId,
         ticker: "${AppStrings.appName}",
         channelKey:
-            NotificationService.newOrderNotificationChannel().channelKey,
+            NotificationService.newOrderNotificationChannel().channelKey!,
         title: "New Order Alert".tr(),
-        backgroundColor: AppColor.primaryColorDark ?? null,
+        backgroundColor: AppColor.primaryColorDark,
         body: ("Pickup Location".tr() +
             ": " +
-            "${newOrder.pickup.address} (${newOrder.pickupDistance.toInt().ceil()}km)"),
+            "${newOrder.pickup?.address} (${newOrder.pickupDistance.toInt().ceil()}km)"),
         notificationLayout: NotificationLayout.BigText,
         //
         payload: {

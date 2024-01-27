@@ -11,13 +11,13 @@ import 'package:stacked/stacked.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class VehiclesPage extends StatelessWidget {
-  const VehiclesPage({Key key}) : super(key: key);
+  const VehiclesPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder<VehiclesViewModel>.reactive(
       viewModelBuilder: () => VehiclesViewModel(context),
-      onModelReady: (vm) => vm.initialise(),
+      onViewModelReady: (vm) => vm.initialise(),
       builder: (context, vm, child) {
         return BasePage(
           showAppBar: true,

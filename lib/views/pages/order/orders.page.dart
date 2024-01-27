@@ -12,7 +12,7 @@ import 'package:localize_and_translate/localize_and_translate.dart';
 import 'package:stacked/stacked.dart';
 
 class OrdersPage extends StatefulWidget {
-  const OrdersPage({Key key}) : super(key: key);
+  const OrdersPage({Key? key}) : super(key: key);
 
   @override
   _OrdersPageState createState() => _OrdersPageState();
@@ -21,7 +21,7 @@ class OrdersPage extends StatefulWidget {
 class _OrdersPageState extends State<OrdersPage>
     with AutomaticKeepAliveClientMixin<OrdersPage>, WidgetsBindingObserver {
   //
-  OrdersViewModel vm;
+  late OrdersViewModel vm;
   @override
   void initState() {
     super.initState();
@@ -36,7 +36,7 @@ class _OrdersPageState extends State<OrdersPage>
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
-    if (state == AppLifecycleState.resumed && vm != null) {
+    if (state == AppLifecycleState.resumed) {
       vm.fetchMyOrders();
     }
   }
@@ -52,7 +52,7 @@ class _OrdersPageState extends State<OrdersPage>
       backgroundColor: Colors.grey.shade200,
       body: ViewModelBuilder<OrdersViewModel>.reactive(
         viewModelBuilder: () => vm,
-        onModelReady: (vm) => vm.initialise(),
+        onViewModelReady: (vm) => vm.initialise(),
         builder: (context, vm, child) {
           return CustomListView(
             canRefresh: true,

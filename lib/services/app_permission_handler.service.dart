@@ -17,7 +17,7 @@ class AppPermissionHandlerService {
       //background app service permission
       final result = await showDialog(
         barrierDismissible: false,
-        context: AppService().navigatorKey.currentContext,
+        context: AppService().navigatorKey.currentContext!,
         builder: (context) {
           return BackgroundPermissionDialog();
         },
@@ -43,7 +43,7 @@ class AppPermissionHandlerService {
     if (!status.isGranted) {
       final requestResult = await showDialog(
         barrierDismissible: false,
-        context: AppService().navigatorKey.currentContext,
+        context: AppService().navigatorKey.currentContext!,
         builder: (context) {
           return RegularLocationPermissionDialog();
         },
@@ -59,7 +59,7 @@ class AppPermissionHandlerService {
         //
         final requestResult = await showDialog(
           barrierDismissible: false,
-          context: AppService().navigatorKey.currentContext,
+          context: AppService().navigatorKey.currentContext!,
           builder: (context) {
             return BackgroundLocationPermissionDialog();
           },
@@ -92,7 +92,7 @@ class AppPermissionHandlerService {
       if (!status.isGranted) {
         final requestResult = await showDialog(
           barrierDismissible: false,
-          context: AppService().navigatorKey.currentContext,
+          context: AppService().navigatorKey.currentContext!,
           builder: (context) {
             return BackgroundLocationPermissionDialog();
           },
@@ -118,7 +118,7 @@ class AppPermissionHandlerService {
         return true;
       }
     }
-      return true;
+    return true;
   }
 
   //

@@ -6,7 +6,10 @@ import 'package:localize_and_translate/localize_and_translate.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class LocationPermissionView extends StatelessWidget {
-  const LocationPermissionView({Key key, this.onResult}) : super(key: key);
+  const LocationPermissionView({
+    Key? key,
+    required this.onResult,
+  }) : super(key: key);
 
   //
   final Function(bool) onResult;

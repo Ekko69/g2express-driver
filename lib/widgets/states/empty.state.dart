@@ -7,7 +7,7 @@ import 'package:velocity_x/velocity_x.dart';
 
 class EmptyState extends StatelessWidget {
   const EmptyState({
-    Key key,
+    Key? key,
     this.imageUrl,
     this.title = "",
     this.actionText = "Action",
@@ -20,8 +20,8 @@ class EmptyState extends StatelessWidget {
   final String title;
   final String actionText;
   final String description;
-  final String imageUrl;
-  final Function actionPressed;
+  final String? imageUrl;
+  final Function? actionPressed;
   final bool showAction;
   final bool auth;
 
@@ -30,8 +30,8 @@ class EmptyState extends StatelessWidget {
     return VStack(
       [
         //
-        (imageUrl != null && imageUrl.isNotBlank)
-            ? Image.asset(imageUrl)
+        (imageUrl != null && imageUrl!.isNotBlank)
+            ? Image.asset(imageUrl!)
                 .wh(
                   Vx.dp64 * 2,
                   Vx.dp64 * 2,
@@ -42,7 +42,7 @@ class EmptyState extends StatelessWidget {
             : UiSpacer.emptySpace(),
 
         //
-        (title != null && title.isNotEmpty)
+        (title.isNotEmpty)
             ? title.text.xl.semiBold.center.makeCentered()
             : SizedBox.shrink(),
 
@@ -54,7 +54,8 @@ class EmptyState extends StatelessWidget {
                   Vx.dp64,
                 )
                 .box
-                .makeCentered().py12()
+                .makeCentered()
+                .py12()
                 .wFull(context)
             : SizedBox.shrink(),
         //
@@ -65,7 +66,8 @@ class EmptyState extends StatelessWidget {
                 .center
                 .lg
                 .light
-                .makeCentered().py12()
+                .makeCentered()
+                .py12()
             : description.isNotEmpty
                 ? description.text.lg.light.center.makeCentered()
                 : SizedBox.shrink(),

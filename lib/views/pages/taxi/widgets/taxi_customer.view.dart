@@ -5,7 +5,7 @@ import 'package:fuodz/widgets/custom_image.view.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class TaxiCustomerView extends StatelessWidget {
-  const TaxiCustomerView(this.user, {Key key}) : super(key: key);
+  const TaxiCustomerView(this.user, {Key? key}) : super(key: key);
 
   final User user;
 
@@ -14,19 +14,19 @@ class TaxiCustomerView extends StatelessWidget {
     return HStack(
       [
         CustomImage(
-          imageUrl: user?.photo,
+          imageUrl: user.photo,
           width: 40,
           height: 40,
         ).box.roundedFull.clip(Clip.antiAlias).make(),
         VStack(
           [
             //
-            "${user?.name}".text.xl.medium.make(),
+            "${user.name}".text.xl.medium.make(),
             VxRating(
               maxRating: 5,
               selectionColor: AppColor.ratingColor,
-              value: user?.rating,
-              onRatingUpdate: null,
+              value: user.rating,
+              onRatingUpdate: (value) {},
               isSelectable: false,
             ),
           ],

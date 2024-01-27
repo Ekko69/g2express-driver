@@ -8,7 +8,7 @@ import 'package:firebase_core/firebase_core.dart';
 
 class FirebaseOrderHandlerService {
   static ReceivePort port = ReceivePort();
-  static StreamSubscription newOrderListener;
+  static StreamSubscription? newOrderListener;
 
   @pragma('vm:entry-point')
   static void startAutoOrderAssignment(List<dynamic> dataSet) async {

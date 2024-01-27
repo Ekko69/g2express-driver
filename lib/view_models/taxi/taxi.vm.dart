@@ -1,6 +1,7 @@
 import 'package:firestore_chat/firestore_chat.dart';
 import 'package:flutter/material.dart';
 import 'package:fuodz/constants/app_routes.dart';
+import 'package:fuodz/constants/app_ui_settings.dart';
 import 'package:fuodz/models/new_taxi_order.dart';
 import 'package:fuodz/models/order.dart';
 import 'package:fuodz/models/user.dart';
@@ -28,16 +29,16 @@ class TaxiViewModel extends MyBaseViewModel {
   OrderRequest orderRequest = OrderRequest();
   TaxiRequest taxiRequest = TaxiRequest();
   //services
-  TaxiLocationService taxiLocationService;
-  NewTaxiBookingService newTaxiBookingService;
-  OnGoingTaxiBookingService onGoingTaxiBookingService;
-  TaxiGoogleMapManagerService taxiGoogleMapManagerService;
+  late TaxiLocationService taxiLocationService;
+  late NewTaxiBookingService newTaxiBookingService;
+  late OnGoingTaxiBookingService onGoingTaxiBookingService;
+  late TaxiGoogleMapManagerService taxiGoogleMapManagerService;
   AppService appService = AppService();
-  BehaviorSubject<Widget> uiStream = BehaviorSubject<Widget>();
+  BehaviorSubject<Widget?> uiStream = BehaviorSubject<Widget?>();
   //
-  Order onGoingOrderTrip;
-  Order finishedOrderTrip;
-  NewTaxiOrder newOrder;
+  Order? onGoingOrderTrip;
+  Order? finishedOrderTrip;
+  NewTaxiOrder? newOrder;
 
   @override
   void initialise() async {
@@ -105,27 +106,28 @@ class TaxiViewModel extends MyBaseViewModel {
   chatCustomer() {
     //
     Map<String, PeerUser> peers = {
-      '${onGoingOrderTrip.driver.id}': PeerUser(
-        id: '${onGoingOrderTrip.driver.id}',
-        name: onGoingOrderTrip.driver.name,
-        image: onGoingOrderTrip.driver.photo,
+      '${onGoingOrderTrip!.driver!.id}': PeerUser(
+        id: '${onGoingOrderTrip!.driver!.id}',
+        name: onGoingOrderTrip!.driver!.name,
+        image: onGoingOrderTrip!.driver!.photo,
       ),
-      '${onGoingOrderTrip.user.id}': PeerUser(
-          id: "${onGoingOrderTrip.user.id}",
-          name: onGoingOrderTrip.user.name,
-          image: onGoingOrderTrip.user.photo),
+      '${onGoingOrderTrip!.user.id}': PeerUser(
+          id: "${onGoingOrderTrip!.user.id}",
+          name: onGoingOrderTrip!.user.name,
+          image: onGoingOrderTrip!.user.photo),
     };
     //
     final chatEntity = ChatEntity(
       onMessageSent: ChatService.sendChatMessage,
-      mainUser: peers['${onGoingOrderTrip.driver.id}'],
+      mainUser: peers['${onGoingOrderTrip?.driver?.id}']!,
       peers: peers,
       //don't translate this
-      path: 'orders/' + onGoingOrderTrip.code + "/customerDriver/chats",
+      path: 'orders/' + onGoingOrderTrip!.code + "/customerDriver/chats",
       title: "Chat with customer".tr(),
+      supportMedia: AppUISettings.canDriverChatSupportMedia,
     );
     //
-    viewContext.navigator.pushNamed(
+    Navigator.of(viewContext).pushNamed(
       AppRoutes.chatRoute,
       arguments: chatEntity,
     );
@@ -134,7 +136,8 @@ class TaxiViewModel extends MyBaseViewModel {
   //rate trip
   void showUserRating(Order finishedTrip) async {
     //
-    finishedTrip = finishedOrderTrip != null ? finishedOrderTrip : finishedTrip;
+    finishedTrip =
+        finishedOrderTrip != null ? finishedOrderTrip! : finishedTrip;
     //
     await viewContext.push(
       (context) => UserRatingBottomSheet(

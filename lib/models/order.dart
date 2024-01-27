@@ -5,7 +5,9 @@
 import 'dart:convert';
 import 'package:fuodz/constants/app_strings.dart';
 import 'package:fuodz/models/delivery_address.dart';
+import 'package:fuodz/models/order_attachment.dart';
 import 'package:fuodz/models/order_fee.dart';
+import 'package:fuodz/models/order_service.dart';
 import 'package:fuodz/models/order_stop.dart';
 import 'package:fuodz/models/package_type.dart';
 import 'package:fuodz/models/taxi_order.dart';
@@ -21,15 +23,15 @@ String orderToJson(Order data) => json.encode(data.toJson());
 
 class Order {
   Order({
-    this.id,
-    this.canRate,
-    this.rateDriver,
-    this.code,
-    this.verificationCode,
-    this.note,
-    this.type,
-    this.status,
-    this.paymentStatus,
+    required this.id,
+    required this.canRate,
+    required this.rateDriver,
+    required this.code,
+    required this.verificationCode,
+    required this.note,
+    required this.type,
+    required this.status,
+    required this.paymentStatus,
     this.subTotal,
     this.discount,
     this.deliveryFee,
@@ -38,37 +40,40 @@ class Order {
     this.taxRate,
     this.tip,
     this.total,
-    this.deliveryAddressId,
-    this.paymentMethodId,
-    this.vendorId,
-    this.userId,
-    this.driverId,
-    this.createdAt,
-    this.updatedAt,
-    this.formattedDate,
-    this.paymentLink,
-    this.orderProducts,
-    this.orderStops,
-    this.user,
-    this.driver,
-    this.deliveryAddress,
-    this.paymentMethod,
-    this.vendor,
-    this.taxiOrder,
+    required this.deliveryAddressId,
+    required this.paymentMethodId,
+    required this.vendorId,
+    required this.userId,
+    required this.driverId,
+    required this.createdAt,
+    required this.updatedAt,
+    required this.formattedDate,
+    required this.paymentLink,
+    required this.orderProducts,
+    required this.orderStops,
+    required this.user,
+    required this.driver,
+    required this.deliveryAddress,
+    required this.paymentMethod,
+    required this.vendor,
+    required this.orderService,
+    required this.taxiOrder,
     //
-    this.packageType,
-    this.pickupLocation,
-    this.dropoffLocation,
-    this.pickupDate,
-    this.pickupTime,
+    required this.packageType,
+    required this.pickupLocation,
+    required this.dropoffLocation,
+    required this.pickupDate,
+    required this.pickupTime,
     this.recipientName,
     this.recipientPhone,
-    this.width,
-    this.height,
-    this.length,
-    this.weight,
-    this.payer,
-    this.fees,
+    required this.width,
+    required this.height,
+    required this.length,
+    required this.weight,
+    required this.payer,
+    required this.photo,
+    required this.attachments,
+    required this.fees,
   });
 
   int id;
@@ -80,47 +85,60 @@ class Order {
   String type;
   String status;
   String paymentStatus;
-  double subTotal;
-  double discount;
-  double deliveryFee;
-  double comission;
-  double tax;
-  double taxRate;
-  double tip;
-  double total;
-  int deliveryAddressId;
-  int paymentMethodId;
-  int vendorId;
+  double? subTotal;
+  double? discount;
+  double? deliveryFee;
+  double? comission;
+  double? tax;
+  double? taxRate;
+  double? tip;
+  double? total;
+  int? deliveryAddressId;
+  int? paymentMethodId;
+  int? vendorId;
   int userId;
-  int driverId;
-  String pickupDate;
-  String pickupTime;
+  int? driverId;
+  String? pickupDate;
+  String? pickupTime;
   DateTime createdAt;
   DateTime updatedAt;
   String formattedDate;
   String paymentLink;
-  List<OrderProduct> orderProducts;
-  List<OrderStop> orderStops;
+  List<OrderProduct>? orderProducts;
+  List<OrderStop>? orderStops;
   User user;
-  User driver;
-  DeliveryAddress deliveryAddress;
-  PaymentMethod paymentMethod;
-  Vendor vendor;
-  TaxiOrder taxiOrder;
+  User? driver;
+  DeliveryAddress? deliveryAddress;
+  PaymentMethod? paymentMethod;
+  Vendor? vendor;
+  OrderService? orderService;
+  TaxiOrder? taxiOrder;
   //Package related
-  PackageType packageType;
-  DeliveryAddress pickupLocation;
-  DeliveryAddress dropoffLocation;
-  String weight;
-  String length;
-  String height;
-  String width;
-  String payer;
-  String recipientName;
-  String recipientPhone;
-  List<OrderFee> fees;
+  PackageType? packageType;
+  DeliveryAddress? pickupLocation;
+  DeliveryAddress? dropoffLocation;
+  String? weight;
+  String? length;
+  String? height;
+  String? width;
+  String? payer;
+  String? recipientName;
+  String? recipientPhone;
+  String? photo;
+  List<OrderAttachment>? attachments;
+  List<OrderFee>? fees;
 
   factory Order.fromJson(dynamic json) {
+    //parse fees
+    dynamic fees = json["fees"];
+    if (fees.runtimeType == String) {
+      try {
+        fees = jsonDecode(jsonDecode(fees));
+      } catch (e) {
+        fees = jsonDecode(fees);
+      }
+    }
+
     return Order(
       id: json["id"] == null ? null : json["id"],
       canRate: json["can_rate"] == null ? null : json["can_rate"],
@@ -164,18 +182,12 @@ class Order {
       vendorId: json["vendor_id"] == null
           ? null
           : int.parse(json["vendor_id"].toString()),
-      userId: json["user_id"] == null
-          ? null
-          : int.parse(json["user_id"].toString()),
+      userId: int.parse(json["user_id"].toString()),
       driverId: json["driver_id"] == null
           ? null
           : int.parse(json["driver_id"].toString()),
-      createdAt: json["created_at"] == null
-          ? null
-          : DateTime.parse(json["created_at"]),
-      updatedAt: json["updated_at"] == null
-          ? null
-          : DateTime.parse(json["updated_at"]),
+      createdAt: DateTime.parse(json["created_at"]),
+      updatedAt: DateTime.parse(json["updated_at"]),
       formattedDate:
           json["formatted_date"] == null ? null : json["formatted_date"],
       paymentLink: json["payment_link"] == null ? "" : json["payment_link"],
@@ -188,7 +200,7 @@ class Order {
           ? []
           : List<OrderStop>.from(
               json["stops"].map((x) => OrderStop.fromJson(x))),
-      user: json["user"] == null ? null : User.fromJson(json["user"]),
+      user: User.fromJson(json["user"]),
       driver: json["driver"] == null ? null : User.fromJson(json["driver"]),
       deliveryAddress: json["delivery_address"] == null
           ? null
@@ -197,6 +209,11 @@ class Order {
           ? null
           : PaymentMethod.fromJson(json["payment_method"]),
       vendor: json["vendor"] == null ? null : Vendor.fromJson(json["vendor"]),
+      orderService: json["order_service"] == null
+          ? null
+          : OrderService.fromJson(
+              json["order_service"],
+            ),
       taxiOrder: json["taxi_order"] == null
           ? null
           : TaxiOrder.fromJson(
@@ -220,19 +237,27 @@ class Order {
           : "",
       pickupTime: "${json["pickup_date"]} ${json["pickup_time"]}",
       // Jiffy("${json["pickup_date"]} ${json["pickup_time"]}","yyyy-MM-dd hh:mm:ss").format("hh:mm a"),
-      weight: json["weight"].toString() ?? "",
-      length: json["length"].toString() ?? "",
-      height: json["height"].toString() ?? "",
-      width: json["width"].toString() ?? "",
-      payer: json["payer"].toString() ?? "",
-      //
+      weight: json["weight"].toString(),
+      length: json["length"].toString(),
+      height: json["height"].toString(),
+      width: json["width"].toString(),
+      payer: json["payer"].toString(),
       fees: json["fees"] == null
           ? []
           : List<OrderFee>.from(
-              (jsonDecode(json["fees"])).map(
+              (fees as List).map(
                 (x) => OrderFee.fromJson(x),
               ),
             ),
+      //attachments
+      attachments: json["attachments"] == null
+          ? []
+          : List<OrderAttachment>.from(
+              json["attachments"].map(
+                (x) => OrderAttachment.fromJson(x),
+              ),
+            ),
+      photo: json["photo"],
     );
   }
 
@@ -261,45 +286,45 @@ class Order {
         "updated_at": updatedAt.toIso8601String(),
         "formatted_date": formattedDate,
         "payment_link": paymentLink,
-        "products": List<dynamic>.from(orderProducts.map((x) => x.toJson())),
-        "stops": List<dynamic>.from(orderStops.map((x) => x.toJson())),
-        "user": user?.toJson(),
+        "products": List<dynamic>.from(
+          (orderProducts ?? []).map((x) => x.toJson()),
+        ),
+        "stops": List<dynamic>.from((orderStops ?? []).map((x) => x.toJson())),
+        "user": user.toJson(),
         "driver": driver?.toJson(),
         "delivery_address": deliveryAddress?.toJson(),
         "payment_method": paymentMethod?.toJson(),
         "vendor": vendor?.toJson(),
+        "order_service": orderService?.toJson(),
         "taxi_order": taxiOrder?.toJson(),
-        "fees": List<dynamic>.from(fees.map((x) => x.toJson())),
+        "fees": List<dynamic>.from((fees ?? []).map((x) => x.toJson())),
+        "attachments": List<dynamic>.from(
+          (attachments ?? []).map((x) => x.toJson()),
+        ),
       };
 
   //getters
 
   //
   get isPaymentPending => paymentStatus == "pending";
-  get isPackageDelivery =>
-      vendor != null &&
-      vendor.vendorType != null &&
-      vendor.vendorType.slug == "parcel" &&
-      packageType != null;
+  get isPackageDelivery => vendor?.vendorType?.slug == "parcel";
 
   //status => 'pending','preparing','enroute','failed','cancelled','delivered'
   get canChatVendor {
     if (!AppStrings.enableChat) {
       return false;
     }
-    return vendor != null &&
-        ["pending", "preparing", "enroute"].contains(status);
+    return ["pending", "preparing", "enroute"].contains(status);
   }
 
   get canChatCustomer {
     if (!AppStrings.enableChat) {
       return false;
     }
-    return user != null &&
-        !["failed", "delivered", "cancelled"].contains(status);
+    return !["failed", "delivered", "cancelled"].contains(status);
   }
 
-  get canChatDriver => driver != null && ["enroute"].contains(status);
+  get canChatDriver => ["enroute"].contains(status);
   String get taxiStatus {
     return status.contains("deliver") ? "completed" : status;
   }
@@ -307,7 +332,7 @@ class Order {
   //
   bool get isUnpaid {
     return ['pending', 'request', 'review'].contains(paymentStatus) &&
-        !["wallet", "cash"].contains([paymentMethod.slug]);
+        !["wallet", "cash"].contains([paymentMethod?.slug]);
   }
 
   get duration {

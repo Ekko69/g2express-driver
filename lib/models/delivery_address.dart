@@ -19,29 +19,23 @@ class DeliveryAddress {
     this.longitude,
     this.isDefault,
     this.userId,
-    this.createdAt,
-    this.updatedAt,
-    this.formattedDate,
     this.photo,
     this.distance,
   });
 
-  int id;
-  String name;
-  String description;
-  String address;
-  String city;
-  String state;
-  String country;
-  double latitude;
-  double longitude;
-  int isDefault;
-  int userId;
-  DateTime createdAt;
-  DateTime updatedAt;
-  String formattedDate;
-  String photo;
-  double distance;
+  int? id;
+  String? name;
+  String? description;
+  String? address;
+  String? city;
+  String? state;
+  String? country;
+  double? latitude;
+  double? longitude;
+  int? isDefault;
+  int? userId;
+  String? photo;
+  double? distance;
 
   factory DeliveryAddress.fromJson(Map<String, dynamic> json) =>
       DeliveryAddress(
@@ -59,9 +53,6 @@ class DeliveryAddress {
             : double.parse(json["distance"].toString()),
         isDefault: int.parse(json["is_default"].toString()),
         userId: int.parse(json["user_id"].toString()),
-        createdAt: DateTime.parse(json["created_at"]),
-        updatedAt: DateTime.parse(json["updated_at"]),
-        formattedDate: json["formatted_date"],
         photo: json["photo"],
       );
 
@@ -78,9 +69,6 @@ class DeliveryAddress {
         "distance": distance,
         "is_default": isDefault,
         "user_id": userId,
-        "created_at": createdAt.toIso8601String(),
-        "updated_at": updatedAt.toIso8601String(),
-        "formatted_date": formattedDate,
         "photo": photo,
       };
 

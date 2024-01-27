@@ -12,7 +12,7 @@ import 'package:stacked/stacked.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class TaxiOrderPage extends StatefulWidget {
-  const TaxiOrderPage({Key key}) : super(key: key);
+  const TaxiOrderPage({Key? key}) : super(key: key);
 
   @override
   _TaxiOrderPageState createState() => _TaxiOrderPageState();
@@ -24,18 +24,18 @@ class _TaxiOrderPageState extends State<TaxiOrderPage>
   bool get wantKeepAlive => true;
 
   //
-  TaxiViewModel taxiViewModel;
+  TaxiViewModel? taxiViewModel;
 
   //
   @override
   void initState() {
     super.initState();
-    taxiViewModel = TaxiViewModel(context);
+    taxiViewModel ??= TaxiViewModel(context);
   }
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
-    taxiViewModel?.taxiGoogleMapManagerService?.setGoogleMapStyle();
+    taxiViewModel?.taxiGoogleMapManagerService.setGoogleMapStyle();
   }
 
   @override
@@ -43,8 +43,8 @@ class _TaxiOrderPageState extends State<TaxiOrderPage>
     super.build(context);
     return BasePage(
       body: ViewModelBuilder<TaxiViewModel>.reactive(
-        viewModelBuilder: () => taxiViewModel,
-        onModelReady: (vm) => vm.initialise(),
+        viewModelBuilder: () => taxiViewModel!,
+        onViewModelReady: (vm) => vm.initialise(),
         builder: (context, vm, child) {
           return Stack(
             children: [
@@ -61,22 +61,21 @@ class _TaxiOrderPageState extends State<TaxiOrderPage>
                   onCameraMoveStarted:
                       vm.taxiGoogleMapManagerService.onMapCameraMoveStarted,
                   padding: vm.taxiGoogleMapManagerService.googleMapPadding,
-                  markers: vm.taxiGoogleMapManagerService?.gMapMarkers ?? {},
-                  polylines:
-                      vm.taxiGoogleMapManagerService?.gMapPolylines ?? {},
+                  markers: vm.taxiGoogleMapManagerService.gMapMarkers,
+                  polylines: vm.taxiGoogleMapManagerService.gMapPolylines,
                 ),
               ),
 
               //sos button
               SOSButton(),
               //
-              StreamBuilder<Widget>(
+              StreamBuilder<Widget?>(
                 stream: vm.uiStream,
                 builder: (ctx, snapshot) {
-                  if (!snapshot.hasData) {
+                  if (!snapshot.hasData || snapshot.data == null) {
                     return IdleTaxiView(vm);
                   }
-                  return snapshot.data;
+                  return snapshot.data!;
                 },
               ),
               //permission request

@@ -9,12 +9,10 @@ import 'package:velocity_x/velocity_x.dart';
 class ScanLoginView extends StatelessWidget {
   const ScanLoginView(
     this.model, {
-    this.bottomPadding = Vx.dp48,
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   final LoginViewModel model;
-  final double bottomPadding;
 
   @override
   Widget build(BuildContext context) {
@@ -28,11 +26,7 @@ class ScanLoginView extends StatelessWidget {
             FlutterIcons.qrcode_ant,
           ),
         ],
-      )
-          .centered()
-          .px24()
-          .pOnly(bottom: bottomPadding)
-          .onInkTap(model.initateQrcodeLogin),
+      ).centered().px24().onInkTap(model.initateQrcodeLogin),
     );
   }
 }

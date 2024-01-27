@@ -15,22 +15,23 @@ class OrderSummary extends StatelessWidget {
     this.deliveryFee,
     this.tax,
     this.vendorTax,
-    this.total,
+    required this.total,
     this.driverTip = 0.00,
     this.mCurrencySymbol,
-    this.fees,
-    Key key,
+    this.fees = const [],
+    Key? key,
   }) : super(key: key);
 
-  final double subTotal;
-  final double discount;
-  final double deliveryFee;
-  final double tax;
-  final String vendorTax;
+  final double? subTotal;
+  final double? discount;
+  final double? deliveryFee;
+  final double? tax;
+  final String? vendorTax;
   final double total;
-  final double driverTip;
-  final String mCurrencySymbol;
+  final double? driverTip;
+  final String? mCurrencySymbol;
   final List<OrderFee> fees;
+
   @override
   Widget build(BuildContext context) {
     final currencySymbol =
@@ -64,21 +65,21 @@ class OrderSummary extends StatelessWidget {
           ).py2(),
         ),
         Visibility(
-          visible: fees != null && fees.isNotEmpty,
+          visible: fees.isNotEmpty,
           child: VStack(
             [
-              ...((fees == null ? [] : fees).map((fee) {
+              ...((fees).map((fee) {
                 return AmountTile(
                   "${fee.name}".tr(),
-                  "+ " + " $currencySymbol ${fee.amount ?? 0}".currencyFormat(),
+                  "+ " + " $currencySymbol ${fee.amount}".currencyFormat(),
                 ).py2();
               }).toList()),
-              DottedLine(dashColor: context.textTheme.bodyLarge.color).py8(),
+              DottedLine(dashColor: context.textTheme.bodyLarge!.color!).py8(),
             ],
           ),
         ),
 
-        DottedLine(dashColor: context.textTheme.bodyLarge.color).py8(),
+        DottedLine(dashColor: context.textTheme.bodyLarge!.color!).py8(),
         Visibility(
           visible: driverTip != null,
           child: VStack(
@@ -87,7 +88,7 @@ class OrderSummary extends StatelessWidget {
                 "Driver Tip".tr(),
                 "+ " + "$currencySymbol ${driverTip ?? 0.00}".currencyFormat(),
               ).py2(),
-              DottedLine(dashColor: context.textTheme.bodyLarge.color).py8(),
+              DottedLine(dashColor: context.textTheme.bodyLarge!.color!).py8(),
             ],
           ),
         ),

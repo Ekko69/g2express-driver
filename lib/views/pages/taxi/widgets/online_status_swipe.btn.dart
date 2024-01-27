@@ -7,7 +7,7 @@ import 'package:swipe_button_widget/swipe_button_widget.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class OnlineStatusSwipeButton extends StatefulWidget {
-  const OnlineStatusSwipeButton(this.vm, {Key key}) : super(key: key);
+  const OnlineStatusSwipeButton(this.vm, {Key? key}) : super(key: key);
   final TaxiViewModel vm;
 
   @override
@@ -79,9 +79,7 @@ class _OnlineStatusSwipeButtonState extends State<OnlineStatusSwipeButton> {
           bool result = false;
           AlertService.showLoading();
           try {
-            final newDriverState =
-                !widget.vm.appService.driverIsOnline ?? false;
-
+            final newDriverState = !widget.vm.appService.driverIsOnline;
             //show loading
             await widget.vm.newTaxiBookingService
                 .toggleVisibility(newDriverState);

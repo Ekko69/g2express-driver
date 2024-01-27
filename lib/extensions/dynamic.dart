@@ -12,7 +12,7 @@ extension DynamicParsing on dynamic {
       final decimalSeparator = uiConfig["currency"]["decimal_format"] ?? ".";
       final decimals = uiConfig["currency"]["decimals"];
       final currencylOCATION = uiConfig["currency"]["location"] ?? 'left';
-      final decimalsValue = "".padLeft(decimals.toString().toInt(), "0");
+      final decimalsValue = "".padLeft(decimals.toString().toInt() ?? 0, "0");
 
       //
       //
@@ -29,11 +29,10 @@ extension DynamicParsing on dynamic {
         decimalSeparator: decimalSeparator,
       );
 
-      CurrencyFormatter cf = CurrencyFormatter();
-      return cf.format(
+      return CurrencyFormatter.format(
         values[1],
         currencySettings,
-        decimal: decimalsValue.length ?? 2,
+        decimal: decimalsValue.length,
         enforceDecimals: true,
       );
     } else {
@@ -48,7 +47,7 @@ extension DynamicParsing on dynamic {
       final thousandSeparator = uiConfig["currency"]["format"] ?? ",";
       final decimalSeparator = uiConfig["currency"]["decimal_format"] ?? ".";
       final decimals = uiConfig["currency"]["decimals"];
-      final decimalsValue = "".padLeft(decimals.toString().toInt(), "0");
+      final decimalsValue = "".padLeft(decimals.toString().toInt() ?? 0, "0");
       final values = this.toString().split(" ").join("");
 
       //
@@ -58,11 +57,10 @@ extension DynamicParsing on dynamic {
         thousandSeparator: thousandSeparator,
         decimalSeparator: decimalSeparator,
       );
-      CurrencyFormatter cf = CurrencyFormatter();
-      return cf.format(
+      return CurrencyFormatter.format(
         values,
         currencySettings,
-        decimal: decimalsValue.length ?? 2,
+        decimal: decimalsValue.length,
         enforceDecimals: true,
       );
     } else {

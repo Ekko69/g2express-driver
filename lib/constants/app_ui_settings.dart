@@ -23,6 +23,21 @@ class AppUISettings extends AppStrings {
     return AppStrings.env('ui')['chat']["canDriverChat"] == "1";
   }
 
+  static bool get canDriverChatSupportMedia {
+    if (AppStrings.env('ui') == null || AppStrings.env('ui')["chat"] == null) {
+      return true;
+    }
+    try {
+      dynamic isSupportMedia =
+          AppStrings.env('ui')['chat']["canDriverChatSupportMedia"] ?? false;
+      return (isSupportMedia is bool
+          ? isSupportMedia
+          : int.parse("$isSupportMedia") == 1);
+    } catch (e) {
+      return false;
+    }
+  }
+
   static bool get enableDriverTypeSwitch {
     if (AppStrings.env('enableDriverTypeSwitch') == null) {
       return false;
@@ -35,5 +50,22 @@ class AppUISettings extends AppStrings {
     } else {
       return int.parse("$canSwitch") == 1;
     }
+  }
+
+  //call
+  static bool get canCallVendor {
+    if (AppStrings.env('ui') == null || AppStrings.env('ui')["call"] == null) {
+      return true;
+    }
+    return [1, "1"]
+        .contains(AppStrings.env('ui')['call']["canDriverVendorCall"]);
+  }
+
+  static bool get canCallCustomer {
+    if (AppStrings.env('ui') == null || AppStrings.env('ui')["call"] == null) {
+      return true;
+    }
+    return [1, "1"]
+        .contains(AppStrings.env('ui')['call']["canCustomerDriverCall"]);
   }
 }

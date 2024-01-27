@@ -22,7 +22,7 @@ import 'order/orders.page.dart';
 
 class HomePage extends StatefulWidget {
   HomePage({
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   @override
@@ -42,7 +42,7 @@ class _HomePageState extends State<HomePage> {
       message: "Press back again to close".tr(),
       child: ViewModelBuilder<HomeViewModel>.reactive(
         viewModelBuilder: () => HomeViewModel(context),
-        onModelReady: (vm) => vm.initialise(),
+        onViewModelReady: (vm) => vm.initialise(),
         builder: (context, vm, child) {
           return Scaffold(
             body: UpgradeAlert(
@@ -64,7 +64,8 @@ class _HomePageState extends State<HomePage> {
                       if (snapshot.connectionState == ConnectionState.waiting) {
                         return Center(child: BusyIndicator());
                       }
-                      return (!snapshot.data.isTaxiDriver)
+                      return (snapshot.data != null &&
+                              !snapshot.data!.isTaxiDriver)
                           ? AssignedOrdersPage()
                           : TaxiOrderPage();
                     },
@@ -102,7 +103,7 @@ class _HomePageState extends State<HomePage> {
                 child: GNav(
                   gap: 8,
                   activeColor: Colors.white,
-                  color: Theme.of(context).textTheme.bodyLarge.color,
+                  color: Theme.of(context).textTheme.bodyLarge!.color,
                   iconSize: 20,
                   padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                   duration: Duration(milliseconds: 250),
@@ -128,7 +129,7 @@ class _HomePageState extends State<HomePage> {
             )
                 .p16
                 .shadow
-                .color(Theme.of(context).bottomSheetTheme.backgroundColor)
+                .color(Theme.of(context).bottomSheetTheme.backgroundColor!)
                 .make(),
           );
         },

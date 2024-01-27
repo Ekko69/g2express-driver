@@ -10,12 +10,12 @@ String feeToJson(OrderFee data) => json.encode(data.toJson());
 
 class OrderFee {
   OrderFee({
-    this.id,
-    this.name,
-    this.amount,
+    required this.id,
+    required this.name,
+    required this.amount,
   });
 
-  int id;
+  int? id;
   String name;
   double amount;
 

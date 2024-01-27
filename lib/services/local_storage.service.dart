@@ -1,7 +1,7 @@
 import 'package:shared_preferences/shared_preferences.dart';
 
 class LocalStorageService {
-  static SharedPreferences prefs;
+  static SharedPreferences? prefs;
 
   static Future<SharedPreferences> getPrefs() async {
     try {
@@ -12,6 +12,6 @@ class LocalStorageService {
       print("Error Getting SharedPreference => $error");
     }
     // prefs.clear();
-    return prefs;
+    return prefs!;
   }
 }

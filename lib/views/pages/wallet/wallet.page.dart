@@ -13,7 +13,7 @@ import 'package:velocity_x/velocity_x.dart';
 import 'package:intl/intl.dart';
 
 class WalletPage extends StatefulWidget {
-  const WalletPage({Key key}) : super(key: key);
+  const WalletPage({Key? key}) : super(key: key);
 
   @override
   _WalletPageState createState() => _WalletPageState();
@@ -21,7 +21,7 @@ class WalletPage extends StatefulWidget {
 
 class _WalletPageState extends State<WalletPage> with WidgetsBindingObserver {
   //
-  WalletViewModel vm;
+  WalletViewModel? vm;
   @override
   void initState() {
     super.initState();
@@ -36,19 +36,15 @@ class _WalletPageState extends State<WalletPage> with WidgetsBindingObserver {
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
-    if (state == AppLifecycleState.resumed && vm != null) {
-      vm.getWalletBalance();
+    if (state == AppLifecycleState.resumed) {
+      vm?.getWalletBalance();
     }
   }
-
-
 
   @override
   Widget build(BuildContext context) {
     //
-    if (vm == null) {
-      vm = WalletViewModel(context);
-    }
+    vm ??= WalletViewModel(context);
 
     //
     return BasePage(
@@ -56,8 +52,8 @@ class _WalletPageState extends State<WalletPage> with WidgetsBindingObserver {
       showLeadingAction: true,
       showAppBar: true,
       body: ViewModelBuilder<WalletViewModel>.reactive(
-        viewModelBuilder: () => vm,
-        onModelReady: (vm) => vm.initialise(),
+        viewModelBuilder: () => vm!,
+        onViewModelReady: (vm) => vm.initialise(),
         builder: (context, vm, child) {
           return VStack(
             [
@@ -68,7 +64,7 @@ class _WalletPageState extends State<WalletPage> with WidgetsBindingObserver {
                   "Total Balance".tr().text.xl.make(),
                   vm.isBusy
                       ? BusyIndicator().py12()
-                      : "${AppStrings.currencySymbol} ${vm.wallet.balance}"
+                      : "${AppStrings.currencySymbol} ${vm.wallet?.balance}"
                           .text
                           .xl3
                           .semiBold
@@ -76,7 +72,7 @@ class _WalletPageState extends State<WalletPage> with WidgetsBindingObserver {
                   HStack(
                     [
                       "Updated last at:".tr().text.sm.make(),
-                      " ${vm.wallet != null ? DateFormat.yMMMMEEEEd(translator.activeLocale.languageCode).format(vm.wallet.updatedAt) : ''}"
+                      " ${vm.wallet != null ? DateFormat.yMMMMEEEEd(translator.activeLocale.languageCode).format(vm.wallet!.updatedAt!) : ''}"
                           .text
                           .lg
                           .make()
@@ -108,10 +104,12 @@ class _WalletPageState extends State<WalletPage> with WidgetsBindingObserver {
                 canRefresh: true,
                 isLoading: vm.busy(vm.walletTransactions),
                 onRefresh: vm.getWalletTransactions,
-                onLoading: () => vm.getWalletTransactions(initialLoading: false),
+                onLoading: () =>
+                    vm.getWalletTransactions(initialLoading: false),
                 dataSet: vm.walletTransactions,
                 itemBuilder: (context, index) {
-                  return WalletTransactionListItem( vm.walletTransactions[index]);
+                  return WalletTransactionListItem(
+                      vm.walletTransactions[index]);
                 },
               ).expand(),
             ],

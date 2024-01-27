@@ -15,18 +15,18 @@ class ParcelOrderStopListView extends StatefulWidget {
   const ParcelOrderStopListView(
     this.title,
     this.stop, {
-    Key key,
+    Key? key,
     this.canCall = false,
     this.verify = false,
     this.routeToLocation,
-    this.vm,
+    required this.vm,
   }) : super(key: key);
 
   final OrderStop stop;
   final String title;
   final bool canCall;
   final bool verify;
-  final Function(DeliveryAddress) routeToLocation;
+  final Function(DeliveryAddress)? routeToLocation;
   final OrderDetailsViewModel vm;
 
   @override
@@ -44,9 +44,9 @@ class _ParcelOrderStopListViewState extends State<ParcelOrderStopListView> {
         VStack(
           [
             "${widget.title}".text.gray500.medium.sm.make(),
-            "${widget.stop?.deliveryAddress?.name}".text.xl.medium.make(),
-            "${widget.stop?.deliveryAddress?.address}".text.make(),
-            "${widget.stop?.deliveryAddress?.description}".text.sm.make(),
+            "${widget.stop.deliveryAddress?.name}".text.xl.medium.make(),
+            "${widget.stop.deliveryAddress?.address}".text.make(),
+            "${widget.stop.deliveryAddress?.description}".text.sm.make(),
           ],
         ).pOnly(bottom: Vx.dp4),
 
@@ -103,12 +103,14 @@ class _ParcelOrderStopListViewState extends State<ParcelOrderStopListView> {
                           iconColor: Colors.white,
                           color: AppColor.primaryColor,
                           shapeRadius: Vx.dp20,
-                          onPressed: () => widget
-                              .routeToLocation(widget.stop?.deliveryAddress),
+                          onPressed: (widget.routeToLocation != null)
+                              ? () => widget.routeToLocation!(
+                                  widget.stop.deliveryAddress!)
+                              : null,
                         ).h(Vx.dp40).p12().expand()
                       : UiSpacer.emptySpace(),
                   //call
-                  (widget.stop.phone.isNotBlank && widget.canCall)
+                  (widget.stop.phone != null && widget.canCall)
                       ? CustomButton(
                           icon: FlutterIcons.phone_call_fea,
                           iconColor: Colors.white,
@@ -142,8 +144,7 @@ class _ParcelOrderStopListViewState extends State<ParcelOrderStopListView> {
                       loading: widget.vm.busy(widget.stop),
                       onLongPress: widget.stop.verified
                           ? null
-                          : () => widget
-                              .vm.verifyStop(widget.stop),
+                          : () => widget.vm.verifyStop(widget.stop),
                     ).h(Vx.dp40).wFull(context),
                     //hint
                     CustomVisibilty(

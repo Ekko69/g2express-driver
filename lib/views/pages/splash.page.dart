@@ -7,14 +7,14 @@ import 'package:stacked/stacked.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class SplashPage extends StatelessWidget {
-  const SplashPage({Key key}) : super(key: key);
+  const SplashPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return BasePage(
       body: ViewModelBuilder<SplashViewModel>.reactive(
         viewModelBuilder: () => SplashViewModel(context),
-        onModelReady: (vm)=> vm.initialise(),
+        onViewModelReady: (vm) => vm.initialise(),
         builder: (context, model, child) {
           return VStack(
             [
@@ -24,7 +24,8 @@ class SplashPage extends StatelessWidget {
                   .box
                   .clip(Clip.antiAlias)
                   .roundedSM
-                  .makeCentered().py12(),
+                  .makeCentered()
+                  .py12(),
               "Loading Please wait...".tr().text.makeCentered(),
             ],
           ).centered();

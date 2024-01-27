@@ -11,37 +11,47 @@ class RouteButton extends StatelessWidget {
     this.vendor, {
     this.lat,
     this.lng,
-    Key key,
+    Key? key,
   }) : super(key: key);
 
-  final Vendor vendor;
-  final double lat;
-  final double lng;
+  final Vendor? vendor;
+  final double? lat;
+  final double? lng;
   @override
   Widget build(BuildContext context) {
+    double locLat =
+        double.tryParse("${this.vendor?.latitude}") ?? this.lat ?? 0.0;
+    double locLng =
+        double.tryParse("${this.vendor?.longitude}") ?? this.lng ?? 0.0;
+
+    //
+    if (vendor == null && (lat == null || lng == null)) {
+      return SizedBox.shrink();
+    }
+
     return Icon(
       FlutterIcons.navigation_fea,
       size: 24,
       color: Colors.white,
     ).p8().box.color(AppColor.primaryColor).roundedSM.make().onInkTap(() async {
       //
-      if (await MapLauncher.isMapAvailable(MapType.google)) {
+      if (await MapLauncher.isMapAvailable(MapType.google) ?? false) {
         await MapLauncher.showDirections(
           mapType: MapType.google,
           destination: Coords(
-            vendor != null ? double.parse(vendor.latitude) : lat,
-            vendor != null ? double.parse(vendor.longitude) : lng,
+            locLat,
+            locLng,
           ),
-          destinationTitle: vendor != null ? vendor.name : "",
+          destinationTitle: vendor != null ? vendor?.name : "",
         );
-      } else if (await MapLauncher.isMapAvailable(MapType.apple)) {
+      } else if (await MapLauncher.isMapAvailable(MapType.apple) ?? false) {
         await MapLauncher.showDirections(
           mapType: MapType.apple,
           destination: Coords(
-            vendor != null ? double.parse(vendor.latitude) : lat,
-            vendor != null ? double.parse(vendor.longitude) : lng,
+            locLat,
+            locLng,
           ),
-          destinationTitle: vendor != null ? vendor.name : "",
+          destinationTitle: vendor != null ? vendor?.name : "",
         );
       } else {
         String googleUrl = 'comgooglemaps://?center=$lat,$lng';

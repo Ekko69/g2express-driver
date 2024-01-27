@@ -7,15 +7,15 @@ import 'package:velocity_x/velocity_x.dart';
 
 class VehicleListItem extends StatefulWidget {
   VehicleListItem({
-    this.vehicle,
-    Key key,
+    required this.vehicle,
+    Key? key,
     this.onpress,
-    this.onLongpress,
+    required this.onLongpress,
   }) : super(key: key);
 
 //
   final Vehicle vehicle;
-  final Function() onpress;
+  final Function()? onpress;
   final Function() onLongpress;
   @override
   State<VehicleListItem> createState() => _VehicleListItemState();
@@ -38,7 +38,7 @@ class _VehicleListItemState extends State<VehicleListItem> {
 
                 "${widget.vehicle.vehicleType.name}".text.semiBold.lg.make(),
 
-                "${widget.vehicle.carModel.carMake.name} - ${widget.vehicle.carModel.name}"
+                "${widget.vehicle.carModel.carMake?.name} - ${widget.vehicle.carModel.name}"
                     .text
                     .medium
                     .make(),
@@ -60,7 +60,6 @@ class _VehicleListItemState extends State<VehicleListItem> {
           ],
         )
             .p12()
-            
             .box
             .outerShadow
             .roundedSM

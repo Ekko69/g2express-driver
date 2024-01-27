@@ -17,7 +17,7 @@ class GeneralRequest extends HttpService {
         return VehicleType.fromJson(jsonObject);
       }).toList();
     } else {
-      throw apiResponse.message;
+      throw "${apiResponse.message}";
     }
   }
 
@@ -33,11 +33,13 @@ class GeneralRequest extends HttpService {
         return CarMake.fromJson(jsonObject);
       }).toList();
     } else {
-      throw apiResponse.message;
+      throw "${apiResponse.message}";
     }
   }
 
-  Future<List<CarModel>> getCarModels({int carMakeId}) async {
+  Future<List<CarModel>> getCarModels({
+    int? carMakeId,
+  }) async {
     final apiResult = await get(
       Api.carModels,
       queryParameters: {
@@ -52,7 +54,7 @@ class GeneralRequest extends HttpService {
         return CarModel.fromJson(jsonObject);
       }).toList();
     } else {
-      throw apiResponse.message;
+      throw "${apiResponse.message}";
     }
   }
 }

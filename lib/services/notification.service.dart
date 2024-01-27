@@ -50,7 +50,7 @@ class NotificationService {
       //confirm is more than the required channels is found
       final notificationChannelNames = notificationChannels
           .map(
-            (e) => e.toString().split(" -- ")[1] ?? "",
+            (e) => e.toString().split(" -- ")[1],
           )
           .toList();
 
@@ -59,7 +59,7 @@ class NotificationService {
           .where(
             (e) =>
                 e.toLowerCase() ==
-                appNotificationChannel().channelName.toLowerCase(),
+                appNotificationChannel().channelName?.toLowerCase(),
           )
           .toList();
 
@@ -118,7 +118,7 @@ class NotificationService {
   static Future<List<NotificationModel>> getNotifications() async {
     //
     final pref = await LocalStorageService.getPrefs();
-    final notificationsStringList = pref?.getString(
+    final notificationsStringList = pref.getString(
           AppStrings.notificationsKey,
         ) ??
         null;
@@ -147,14 +147,14 @@ class NotificationService {
 
   static Future<void> addNotification(NotificationModel notification) async {
     //
-    final notifications = await getNotifications() ?? [];
+    final notifications = await getNotifications();
     notifications.insert(0, notification);
 
     //
     if (LocalStorageService.prefs == null) {
       await LocalStorageService.getPrefs();
     }
-    await LocalStorageService.prefs.setString(
+    await LocalStorageService.prefs!.setString(
       AppStrings.notificationsKey,
       jsonEncode(notifications),
     );
@@ -163,46 +163,50 @@ class NotificationService {
   static void updateNotification(NotificationModel notificationModel) async {
     //
     final notifications = await getNotifications();
-    notifications.removeAt(notificationModel.index);
-    notifications.insert(notificationModel.index, notificationModel);
-    await LocalStorageService.prefs.setString(
+    notifications.removeAt(notificationModel.index!);
+    notifications.insert(notificationModel.index!, notificationModel);
+    await LocalStorageService.prefs!.setString(
       AppStrings.notificationsKey,
       jsonEncode(notifications),
     );
   }
 
   static listenToActions() {
-    AwesomeNotifications().actionStream.listen((receivedNotification) async {
-      //if notification is from order
-      // print("Hello");
-      if (receivedNotification.payload != null &&
-          receivedNotification.payload.containsKey("newOrder")) {
-        final newOrderRawData = jsonDecode(
-          receivedNotification.payload["newOrder"],
-        );
-        //handle actions of order
-        // print("We are here");
-        //
-        // await Future.delayed(Duration(seconds: 10));
-        if (AuthServices.driverVehicle != null) {
-          final newOrder = NewTaxiOrder.fromJson(newOrderRawData);
-          TaxiBackgroundOrderService().showNewOrderStream.add(newOrder);
-        } else {
-          final newOrder = NewOrder.fromJson(newOrderRawData, clean: true);
-          BackgroundOrderService().showNewOrderInAppAlert(newOrder);
-        }
+    AwesomeNotifications().setListeners(
+      onActionReceivedMethod: onActionReceivedMethod,
+    );
+  }
 
-        //close current
+  @pragma('vm:entry-point')
+  static Future<void> onActionReceivedMethod(
+      ReceivedAction receivedAction) async {
+    //if notification is from order
+    // print("Hello");
+    if (receivedAction.payload != null &&
+        receivedAction.payload!.containsKey("newOrder")) {
+      final newOrderRawData = jsonDecode(
+        receivedAction.payload?["newOrder"] ?? "{}",
+      );
+
+      //
+      // await Future.delayed(Duration(seconds: 10));
+      if (AuthServices.driverVehicle != null) {
+        final newOrder = NewTaxiOrder.fromJson(newOrderRawData);
+        TaxiBackgroundOrderService().showNewOrderStream.add(newOrder);
       } else {
-        FirebaseService().saveNewNotification(
-          null,
-          title: receivedNotification.title,
-          body: receivedNotification.body,
-        );
-        FirebaseService().notificationPayloadData =
-            receivedNotification.payload;
-        FirebaseService().selectNotification("");
+        final newOrder = NewOrder.fromJson(newOrderRawData, clean: true);
+        BackgroundOrderService().showNewOrderInAppAlert(newOrder);
       }
-    });
+
+      //close current
+    } else {
+      FirebaseService().saveNewNotification(
+        null,
+        title: receivedAction.title,
+        body: receivedAction.body,
+      );
+      FirebaseService().notificationPayloadData = receivedAction.payload;
+      FirebaseService().selectNotification("");
+    }
   }
 }

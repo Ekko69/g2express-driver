@@ -6,7 +6,7 @@ import 'package:localize_and_translate/localize_and_translate.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class TaxiBookingCodeVerificationBottomSheet extends StatefulWidget {
-  TaxiBookingCodeVerificationBottomSheet(this.verificationCode, {Key key})
+  TaxiBookingCodeVerificationBottomSheet(this.verificationCode, {Key? key})
       : super(key: key);
 
   final String verificationCode;
@@ -50,7 +50,7 @@ class _TaxiBookingCodeVerificationBottomSheetState
               CustomButton(
                 title: "Verify".tr(),
                 onPressed: () {
-                  if (formBuilderKey.currentState.saveAndValidate()) {
+                  if (formBuilderKey.currentState!.saveAndValidate()) {
                     context.pop(true);
                   }
                 },

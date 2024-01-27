@@ -15,7 +15,10 @@ import 'widgets/order_customer_info.view.dart';
 import 'widgets/taxi_trip_map.preview.dart';
 
 class TaxiOrderDetailPage extends StatefulWidget {
-  const TaxiOrderDetailPage({this.order, Key key}) : super(key: key);
+  const TaxiOrderDetailPage({
+    required this.order,
+    Key? key,
+  }) : super(key: key);
 
   //
   final Order order;
@@ -31,7 +34,7 @@ class _TaxiOrderDetailPageState extends State<TaxiOrderDetailPage> {
     return Scaffold(
       body: ViewModelBuilder<OrderDetailsViewModel>.reactive(
         viewModelBuilder: () => OrderDetailsViewModel(context, widget.order),
-        onModelReady: (vm) => vm.initialise(),
+        onViewModelReady: (vm) => vm.initialise(),
         builder: (context, vm, child) {
           return BasePage(
             title: "Trip Details".tr(),
@@ -64,10 +67,10 @@ class _TaxiOrderDetailPageState extends State<TaxiOrderDetailPage> {
                   subTotal: vm.order.subTotal,
                   discount: vm.order.discount ?? 0,
                   driverTip: vm.order.tip,
-                  total: vm.order.total,
+                  total: vm.order.total!,
                   mCurrencySymbol:
-                      "${vm.order.taxiOrder.currency != null ? vm.order.taxiOrder.currency.symbol : AppStrings.currencySymbol}",
-                  fees: vm.order.fees,
+                      "${vm.order.taxiOrder?.currency != null ? vm.order.taxiOrder?.currency?.symbol : AppStrings.currencySymbol}",
+                  fees: vm.order.fees ?? [],
                 )
                     .px20()
                     .py12()

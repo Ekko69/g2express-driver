@@ -9,7 +9,7 @@ import 'package:stacked/stacked.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class FinancePage extends StatelessWidget {
-  const FinancePage({Key key}) : super(key: key);
+  const FinancePage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -19,7 +19,7 @@ class FinancePage extends StatelessWidget {
       title: "Finance".tr(),
       body: ViewModelBuilder<ProfileViewModel>.reactive(
         viewModelBuilder: () => ProfileViewModel(context),
-        onModelReady: (vm) => vm.initialise(),
+        onViewModelReady: (vm) => vm.initialise(),
         builder: (context, model, child) {
           return VStack(
             [

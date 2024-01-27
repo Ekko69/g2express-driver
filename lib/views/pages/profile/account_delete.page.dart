@@ -11,7 +11,7 @@ import 'package:stacked/stacked.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class AccountDeletePage extends StatelessWidget {
-  const AccountDeletePage({Key key}) : super(key: key);
+  const AccountDeletePage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

@@ -4,6 +4,7 @@
 
 import 'dart:convert';
 
+import 'package:dartx/dartx.dart';
 import 'package:fuodz/models/category.dart';
 import 'package:fuodz/models/delivery_address.dart';
 import 'package:fuodz/models/delivery_slot.dart';
@@ -14,69 +15,61 @@ import 'package:random_string/random_string.dart';
 
 class Vendor {
   Vendor({
-    this.id,
-    this.vendorType,
-    this.name,
-    this.description,
-    this.baseDeliveryFee,
-    this.deliveryFee,
-    this.deliveryRange,
-    this.tax,
-    this.phone,
-    this.email,
-    this.address,
-    this.latitude,
-    this.longitude,
-    this.comission,
-    this.pickup,
-    this.delivery,
-    this.rating,
-    this.chargePerKm,
-    this.isOpen,
-    this.isActive,
-    this.createdAt,
-    this.updatedAt,
-    this.formattedDate,
-    this.logo,
-    this.featureImage,
-    this.menus,
-    this.categories,
-    this.packageTypesPricing,
-    this.cities,
-    this.states,
-    this.countries,
-    this.deliverySlots,
-    this.canRate,
-    this.allowScheduleOrder,
-    this.hasSubcategories,
+    required this.id,
+    required this.vendorType,
+    required this.name,
+    required this.description,
+    required this.baseDeliveryFee,
+    required this.deliveryFee,
+    required this.deliveryRange,
+    required this.tax,
+    required this.phone,
+    required this.email,
+    required this.address,
+    required this.latitude,
+    required this.longitude,
+    required this.comission,
+    required this.pickup,
+    required this.delivery,
+    required this.rating,
+    required this.chargePerKm,
+    required this.isOpen,
+    required this.logo,
+    required this.featureImage,
+    required this.menus,
+    required this.categories,
+    required this.packageTypesPricing,
+    required this.cities,
+    required this.states,
+    required this.countries,
+    required this.deliverySlots,
+    required this.canRate,
+    required this.allowScheduleOrder,
+    required this.hasSubcategories,
   }) {
     this.heroTag = randomAlphaNumeric(15) + "$id";
   }
 
   int id;
-  VendorType vendorType;
-  String heroTag;
+  VendorType? vendorType;
+  String? heroTag;
   String name;
   String description;
   double baseDeliveryFee;
   double deliveryFee;
-  double deliveryRange;
+  double? deliveryRange;
   String tax;
   String phone;
   String email;
   String address;
   String latitude;
   String longitude;
-  double comission;
+  double? comission;
   int pickup;
   int delivery;
-  int rating;
+  int? rating;
   int chargePerKm;
   bool isOpen;
-  int isActive;
-  DateTime createdAt;
-  DateTime updatedAt;
-  String formattedDate;
   String logo;
   String featureImage;
   List<Menu> menus;
@@ -125,21 +118,9 @@ class Vendor {
           json["delivery"] == null ? 0 : int.parse(json["delivery"].toString()),
       rating:
           json["rating"] == null ? null : int.parse(json["rating"].toString()),
-      chargePerKm: json["charge_per_km"] == null
-          ? null
-          : int.parse(json["charge_per_km"].toString()),
+      chargePerKm: int.tryParse(json["charge_per_km"].toString()) ?? 0,
       isOpen: json["is_open"] == null ? true : json["is_open"],
-      isActive: json["is_active"] == null
-          ? null
-          : int.parse(json["is_active"].toString()),
-      createdAt: json["created_at"] == null
-          ? null
-          : DateTime.parse(json["created_at"]),
-      updatedAt: json["updated_at"] == null
-          ? null
-          : DateTime.parse(json["updated_at"]),
-      formattedDate:
-          json["formatted_date"] == null ? null : json["formatted_date"],
+
       logo: json["logo"] == null ? null : json["logo"],
       featureImage:
           json["feature_image"] == null ? null : json["feature_image"],
@@ -182,40 +163,33 @@ class Vendor {
   }
 
   Map<String, dynamic> toJson() => {
-        "id": id == null ? null : id,
-        "name": name == null ? null : name,
-        "description": description == null ? null : description,
+        "id": id,
+        "name": name,
+        "description": description,
         "base_delivery_fee": baseDeliveryFee,
-        "delivery_fee": deliveryFee == null ? null : deliveryFee,
+        "delivery_fee": deliveryFee,
         "delivery_range": deliveryRange == null ? null : deliveryRange,
-        "tax": tax == null ? null : tax,
-        "phone": phone == null ? null : phone,
-        "email": email == null ? null : email,
-        "address": address == null ? null : address,
-        "latitude": latitude == null ? null : latitude,
-        "longitude": longitude == null ? null : longitude,
+        "tax": tax,
+        "phone": phone,
+        "email": email,
+        "address": address,
+        "latitude": latitude,
+        "longitude": longitude,
         "comission": comission == null ? null : comission,
         "pickup": pickup,
         "delivery": delivery,
         "rating": rating == null ? null : rating,
-        "charge_per_km": chargePerKm == null ? null : chargePerKm,
-        "is_open": isOpen == null ? null : isOpen,
-        "is_active": isActive == null ? null : isActive,
-        "created_at": createdAt == null ? null : createdAt.toIso8601String(),
-        "updated_at": updatedAt == null ? null : updatedAt.toIso8601String(),
-        "formatted_date": formattedDate == null ? null : formattedDate,
-        "logo": logo == null ? null : logo,
-        "feature_image": featureImage == null ? null : featureImage,
-        "can_rate": canRate == null ? null : canRate,
+        "charge_per_km": chargePerKm,
+        "is_open": isOpen,
+        "logo": logo,
+        "feature_image": featureImage,
+        "can_rate": canRate,
         "allow_schedule_order": allowScheduleOrder,
         "menus": List<dynamic>.from(menus.map((x) => x.toJson())),
         "categories": List<dynamic>.from(categories.map((x) => x.toJson())),
-        "package_types_pricing": packageTypesPricing == null
-            ? null
-            : List<dynamic>.from(packageTypesPricing.map((x) => x.toJson())),
-        "slots": deliverySlots == null
-            ? null
-            : List<dynamic>.from(deliverySlots.map((x) => x.toJson())),
+        "package_types_pricing":
+            List<dynamic>.from(packageTypesPricing.map((x) => x.toJson())),
+        "slots": List<dynamic>.from(deliverySlots.map((x) => x.toJson())),
       };
 
   //
@@ -225,52 +199,44 @@ class Vendor {
   //
   bool canServiceLocation(DeliveryAddress deliveryaddress) {
     //cities,states & countries
-    if (this.countries != null) {
-      final foundCountry = this.countries.firstWhere(
-            (element) =>
-                element.toLowerCase() ==
-                "${deliveryaddress.country}".toLowerCase(),
-            orElse: () => null,
-          );
+    final foundCountry = this.countries.firstOrNullWhere(
+          (element) =>
+              element.toLowerCase() ==
+              "${deliveryaddress.country}".toLowerCase(),
+        );
 
-      //
-      if (foundCountry != null) {
-        print("Country found");
-        return true;
-      }
+    //
+    print("Country found");
+    if (foundCountry != null) {
+      return true;
     }
 
     //states
-    if (this.states != null) {
-      final foundState = this.states.firstWhere(
-            (element) =>
-                element.toLowerCase() ==
-                "${deliveryaddress.state}".toLowerCase(),
-            orElse: () => null,
-          );
+    final foundState = this.states.firstOrNullWhere(
+          (element) =>
+              element.toLowerCase() == "${deliveryaddress.state}".toLowerCase(),
+        );
 
-      //
-      if (foundState != null) {
-        print("state found");
-        return true;
-      }
+    //
+    print("state found");
+    if (foundState != null) {
+      return true;
     }
 
     //cities
-    if (this.cities != null) {
-      final foundCity = this.cities.firstWhere(
-        (element) {
-          return element.toLowerCase() == deliveryaddress.city.toLowerCase();
-        },
-        orElse: () => null,
-      );
+    final foundCity = this.cities.firstOrNullWhere(
+      (element) {
+        return element.toLowerCase() == deliveryaddress.city?.toLowerCase();
+      },
+    );
 
-      //
-      if (foundCity != null) {
-        print("city found");
-        return true;
-      }
+    //
+    print("city found");
+    if (foundCity != null) {
+      return true;
     }
+
+    //
     return false;
   }
 }

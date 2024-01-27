@@ -8,9 +8,12 @@ import 'package:localize_and_translate/localize_and_translate.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class OrderVerificationDialog extends StatefulWidget {
-  OrderVerificationDialog(
-      {this.order, this.onValidated, this.openQRCodeScanner, Key key})
-      : super(key: key);
+  OrderVerificationDialog({
+    required this.order,
+    required this.onValidated,
+    required this.openQRCodeScanner,
+    Key? key,
+  }) : super(key: key);
 
   //
   final Order order;
@@ -54,7 +57,7 @@ class _OrderVerificationDialogState extends State<OrderVerificationDialog> {
               CustomButton(
                 title: "Verify".tr(),
                 onPressed: () {
-                  if (formKey.currentState.validate()) {
+                  if (formKey.currentState!.validate()) {
                     //
                     widget.onValidated();
                   }

@@ -68,7 +68,8 @@ class OrdersViewModel extends MyBaseViewModel {
       );
       return;
     }
-    final result = await viewContext.navigator.pushNamed(
+
+    final result = await Navigator.of(viewContext).pushNamed(
       AppRoutes.orderDetailsRoute,
       arguments: order,
     );
@@ -80,7 +81,7 @@ class OrdersViewModel extends MyBaseViewModel {
   }
 
   void openLogin() async {
-    await viewContext.navigator.pushNamed(AppRoutes.loginRoute);
+    await Navigator.of(viewContext).pushNamed(AppRoutes.loginRoute);
     notifyListeners();
     fetchMyOrders();
   }

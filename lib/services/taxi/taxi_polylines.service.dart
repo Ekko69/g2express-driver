@@ -14,13 +14,13 @@ class TaxiPolylinesService {
   TaxiPolylinesService(this.taxiViewModel);
   //
   FirebaseFirestore firebaseFireStore = FirebaseFirestore.instance;
-  StreamSubscription tripUpdateStream;
-  StreamSubscription locationStreamSubscription;
+  StreamSubscription? tripUpdateStream;
+  StreamSubscription? locationStreamSubscription;
 
   //
-  DeliveryAddress pickupLocation;
-  DeliveryAddress dropoffLocation;
-  LatLng driverPosition;
+  DeliveryAddress? pickupLocation;
+  DeliveryAddress? dropoffLocation;
+  LatLng? driverPosition;
   final pickupMarkerId = MarkerId('sourcePin');
   final dropoffMarkerId = MarkerId('destPin');
 
@@ -29,18 +29,18 @@ class TaxiPolylinesService {
     //setting up latlng
     pickupLocation = DeliveryAddress(
       latitude:
-          taxiViewModel.onGoingOrderTrip.taxiOrder.pickupLatitude.toDouble(),
+          taxiViewModel.onGoingOrderTrip!.taxiOrder!.pickupLatitude.toDouble(),
       longitude:
-          taxiViewModel.onGoingOrderTrip.taxiOrder.pickupLongitude.toDouble(),
-      address: taxiViewModel.onGoingOrderTrip.taxiOrder.pickupAddress,
+          taxiViewModel.onGoingOrderTrip!.taxiOrder!.pickupLongitude.toDouble(),
+      address: taxiViewModel.onGoingOrderTrip!.taxiOrder!.pickupAddress,
     );
     //
     dropoffLocation = DeliveryAddress(
       latitude:
-          taxiViewModel.onGoingOrderTrip.taxiOrder.dropoffLatitude.toDouble(),
-      longitude:
-          taxiViewModel.onGoingOrderTrip.taxiOrder.dropoffLongitude.toDouble(),
-      address: taxiViewModel.onGoingOrderTrip.taxiOrder.dropoffAddress,
+          taxiViewModel.onGoingOrderTrip!.taxiOrder!.dropoffLatitude.toDouble(),
+      longitude: taxiViewModel.onGoingOrderTrip!.taxiOrder!.dropoffLongitude
+          .toDouble(),
+      address: taxiViewModel.onGoingOrderTrip!.taxiOrder!.dropoffAddress,
     );
 
     // source pin
@@ -49,10 +49,10 @@ class TaxiPolylinesService {
       Marker(
         markerId: pickupMarkerId,
         position: LatLng(
-          pickupLocation.latitude,
-          pickupLocation.longitude,
+          pickupLocation?.latitude ?? 0.00,
+          pickupLocation?.longitude ?? 0.00,
         ),
-        icon: taxiViewModel.taxiGoogleMapManagerService.sourceIcon,
+        icon: taxiViewModel.taxiGoogleMapManagerService.sourceIcon!,
         anchor: Offset(0.5, 0.5),
       ),
     );
@@ -62,20 +62,20 @@ class TaxiPolylinesService {
       Marker(
         markerId: dropoffMarkerId,
         position: LatLng(
-          dropoffLocation.latitude,
-          dropoffLocation.longitude,
+          dropoffLocation!.latitude!,
+          dropoffLocation!.longitude!,
         ),
-        icon: taxiViewModel.taxiGoogleMapManagerService.destinationIcon,
+        icon: taxiViewModel.taxiGoogleMapManagerService.destinationIcon!,
         anchor: Offset(0.5, 0.5),
       ),
     );
     //load the ploylines
     PolylineResult polylineResult = await taxiViewModel
         .taxiGoogleMapManagerService.polylinePoints
-        ?.getRouteBetweenCoordinates(
+        .getRouteBetweenCoordinates(
       AppStrings.googleMapApiKey,
-      PointLatLng(pickupLocation.latitude, pickupLocation.longitude),
-      PointLatLng(dropoffLocation.latitude, dropoffLocation.longitude),
+      PointLatLng(pickupLocation!.latitude!, pickupLocation!.longitude!),
+      PointLatLng(dropoffLocation!.latitude!, dropoffLocation!.longitude!),
     );
     //get the points from the result
     List<PointLatLng> result = polylineResult.points;
@@ -108,18 +108,18 @@ class TaxiPolylinesService {
     //setting up latlng
     pickupLocation = DeliveryAddress(
       latitude:
-          taxiViewModel.taxiLocationService.driverMarker.position.latitude,
+          taxiViewModel.taxiLocationService.driverMarker!.position.latitude,
       longitude:
-          taxiViewModel.taxiLocationService.driverMarker.position.longitude,
-      address: taxiViewModel.onGoingOrderTrip.taxiOrder.pickupAddress,
+          taxiViewModel.taxiLocationService.driverMarker!.position.longitude,
+      address: taxiViewModel.onGoingOrderTrip!.taxiOrder!.pickupAddress,
     );
     //
     dropoffLocation = DeliveryAddress(
       latitude:
-          taxiViewModel.onGoingOrderTrip.taxiOrder.pickupLatitude.toDouble(),
+          taxiViewModel.onGoingOrderTrip!.taxiOrder!.pickupLatitude.toDouble(),
       longitude:
-          taxiViewModel.onGoingOrderTrip.taxiOrder.pickupLongitude.toDouble(),
-      address: taxiViewModel.onGoingOrderTrip.taxiOrder.pickupAddress,
+          taxiViewModel.onGoingOrderTrip!.taxiOrder!.pickupLongitude.toDouble(),
+      address: taxiViewModel.onGoingOrderTrip!.taxiOrder!.pickupAddress,
     );
 
     // source pin
@@ -128,10 +128,10 @@ class TaxiPolylinesService {
       Marker(
         markerId: pickupMarkerId,
         position: LatLng(
-          pickupLocation.latitude,
-          pickupLocation.longitude,
+          pickupLocation!.latitude!,
+          pickupLocation!.longitude!,
         ),
-        icon: taxiViewModel.taxiGoogleMapManagerService.sourceIcon,
+        icon: taxiViewModel.taxiGoogleMapManagerService.sourceIcon!,
         anchor: Offset(0.5, 0.5),
       ),
     );
@@ -141,20 +141,20 @@ class TaxiPolylinesService {
       Marker(
         markerId: dropoffMarkerId,
         position: LatLng(
-          dropoffLocation.latitude,
-          dropoffLocation.longitude,
+          dropoffLocation!.latitude!,
+          dropoffLocation!.longitude!,
         ),
-        icon: taxiViewModel.taxiGoogleMapManagerService.destinationIcon,
+        icon: taxiViewModel.taxiGoogleMapManagerService.destinationIcon!,
         anchor: Offset(0.5, 0.5),
       ),
     );
     //load the ploylines
     PolylineResult polylineResult = await taxiViewModel
         .taxiGoogleMapManagerService.polylinePoints
-        ?.getRouteBetweenCoordinates(
+        .getRouteBetweenCoordinates(
       AppStrings.googleMapApiKey,
-      PointLatLng(pickupLocation.latitude, pickupLocation.longitude),
-      PointLatLng(dropoffLocation.latitude, dropoffLocation.longitude),
+      PointLatLng(pickupLocation!.latitude!, pickupLocation!.longitude!),
+      PointLatLng(dropoffLocation!.latitude!, dropoffLocation!.longitude!),
     );
     //get the points from the result
     List<PointLatLng> result = polylineResult.points;
@@ -187,7 +187,7 @@ class TaxiPolylinesService {
   Future<void> updateCameraLocation(
     LatLng source,
     LatLng destination,
-    GoogleMapController mapController,
+    GoogleMapController? mapController,
   ) async {
     if (mapController == null) return;
 

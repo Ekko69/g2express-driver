@@ -16,7 +16,7 @@ import 'package:swipe_button_widget/swipe_button_widget.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class DriverTypeSwitch extends StatefulWidget {
-  const DriverTypeSwitch({Key key}) : super(key: key);
+  const DriverTypeSwitch({Key? key}) : super(key: key);
 
   @override
   State<DriverTypeSwitch> createState() => _DriverTypeSwitchState();
@@ -82,20 +82,21 @@ class _DriverTypeSwitchState extends State<DriverTypeSwitch> {
                   leftChildren: [
                     Align(
                       alignment: Alignment(0.9, 0),
-                      child: (!snapshot.data.isTaxiDriver
-                              ? "Switch To Taxi Driver"
-                              : "Switch To Regular Driver")
-                          .tr()
-                          .text
-                          .lg
-                          .color(Utils.textColorByTheme())
-                          .white
-                          .make(),
+                      child:
+                          (snapshot.data != null && !snapshot.data!.isTaxiDriver
+                                  ? "Switch To Taxi Driver"
+                                  : "Switch To Regular Driver")
+                              .tr()
+                              .text
+                              .lg
+                              .color(Utils.textColorByTheme())
+                              .white
+                              .make(),
                     )
                   ],
                   onHorizontalDragUpdate: (e) {},
                   onHorizontalDragRight: (e) => _processDriverTypeSwitch(
-                        snapshot.data,
+                        snapshot.data!,
                         context,
                       ),
                   onHorizontalDragleft: (e) async {
@@ -128,7 +129,7 @@ class _DriverTypeSwitchState extends State<DriverTypeSwitch> {
         if (newUserModel.isTaxiDriver && vehicleJson != null) {
           await AuthServices.saveVehicle(vehicleJson);
         } else {
-          await LocalStorageService.prefs.remove(AppStrings.driverVehicleKey);
+          await LocalStorageService.prefs!.remove(AppStrings.driverVehicleKey);
         }
 
         await AuthServices.getCurrentUser(force: true);
@@ -136,7 +137,7 @@ class _DriverTypeSwitchState extends State<DriverTypeSwitch> {
         //reload app from splash screen
         context.nextAndRemoveUntilPage(SplashPage());
       } else {
-        throw apiResponse.message;
+        throw "${apiResponse.message}";
       }
       //
       result = true;

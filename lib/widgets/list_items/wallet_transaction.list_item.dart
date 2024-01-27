@@ -10,7 +10,7 @@ import 'package:velocity_x/velocity_x.dart';
 import 'package:intl/intl.dart';
 
 class WalletTransactionListItem extends StatelessWidget {
-  const WalletTransactionListItem(this.walletTransaction, {Key key})
+  const WalletTransactionListItem(this.walletTransaction, {Key? key})
       : super(key: key);
 
   final WalletTransaction walletTransaction;
@@ -22,7 +22,7 @@ class WalletTransactionListItem extends StatelessWidget {
         UiSpacer.verticalSpace(space: 5),
         HStack(
           [
-            "${walletTransaction.status.allWordsCapitilize() ?? ''}"
+            "${walletTransaction.status.capitalized}"
                 .tr()
                 .text
                 .medium
@@ -44,10 +44,7 @@ class WalletTransactionListItem extends StatelessWidget {
         //
         HStack(
           [
-            "${walletTransaction.reason != null ? walletTransaction.reason : ''}"
-                .text
-                .make()
-                .expand(),
+            "${walletTransaction.reason}".text.make().expand(),
             "${DateFormat.MMMd(translator.activeLocale.languageCode).format(walletTransaction.createdAt)}"
                 .text
                 .light

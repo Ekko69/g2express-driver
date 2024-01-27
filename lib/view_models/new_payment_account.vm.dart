@@ -21,7 +21,7 @@ class NewPaymentAccountViewModel extends MyBaseViewModel {
 
   //
   processSave() async {
-    if (formKey.currentState.validate()) {
+    if (formKey.currentState!.validate()) {
       //
       setBusy(true);
       //

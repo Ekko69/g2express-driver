@@ -11,14 +11,16 @@ import 'package:localize_and_translate/localize_and_translate.dart';
 import 'package:stacked/stacked.dart';
 import 'package:velocity_x/velocity_x.dart';
 
-
 class SignatureVerificationPage extends StatefulWidget {
-  SignatureVerificationPage({this.order, this.onsubmit, Key key})
-      : super(key: key);
+  SignatureVerificationPage({
+    required this.order,
+    this.onsubmit,
+    Key? key,
+  }) : super(key: key);
 
   //
   final Order order;
-  final Function(File) onsubmit;
+  final Function(File)? onsubmit;
   @override
   _SignatureVerificationPageState createState() =>
       _SignatureVerificationPageState();
@@ -36,7 +38,7 @@ class _SignatureVerificationPageState extends State<SignatureVerificationPage> {
           context,
           widget.order,
         ),
-        onModelReady: (vm) => vm.initialise(),
+        onViewModelReady: (vm) => vm.initialise(),
         builder: (context, vm, child) {
           return VStack(
             [
@@ -48,14 +50,7 @@ class _SignatureVerificationPageState extends State<SignatureVerificationPage> {
                 width: 2.0,
                 maxWidth: 10.0,
                 type: SignatureDrawType.line,
-              )
-                  .wFull(context)
-                  .hTwoThird(context)
-                  .box
-                  .roundedSM
-                  .border()
-                  .make()
-                  .py12(),
+              ).wFull(context).box.roundedSM.border().make().py12().expand(),
 
               //
               CustomButton(
@@ -63,7 +58,7 @@ class _SignatureVerificationPageState extends State<SignatureVerificationPage> {
                 loading: vm.isBusy,
                 onLongPress: widget.onsubmit != null
                     ? () async {
-                        widget.onsubmit(await vm.getSignatureImage());
+                        widget.onsubmit!(await vm.getSignatureImage());
                       }
                     : vm.submitSignature,
               ).wFull(context),

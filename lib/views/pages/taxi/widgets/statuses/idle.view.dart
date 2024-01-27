@@ -9,7 +9,7 @@ import 'package:measure_size/measure_size.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class IdleTaxiView extends StatelessWidget {
-  const IdleTaxiView(this.taxiViewModel, {Key key}) : super(key: key);
+  const IdleTaxiView(this.taxiViewModel, {Key? key}) : super(key: key);
 
   final TaxiViewModel taxiViewModel;
   @override
@@ -54,10 +54,10 @@ class IdleTaxiView extends StatelessWidget {
                   [
                     CustomImage(
                             imageUrl:
-                                AuthServices?.driverVehicle?.vehicleType?.photo)
+                                AuthServices.driverVehicle!.vehicleType.photo)
                         .wh(32, 32),
                     UiSpacer.hSpace(5),
-                    "${AuthServices?.driverVehicle?.vehicleType?.name}"
+                    "${AuthServices.driverVehicle!.vehicleType.name}"
                         .text
                         .xl
                         .semiBold
@@ -69,7 +69,7 @@ class IdleTaxiView extends StatelessWidget {
                 "Vehicle Details".tr().text.thin.make(),
                 HStack(
                   [
-                    "${AuthServices?.driverVehicle?.carModel?.carMake?.name} (${AuthServices?.driverVehicle?.carModel?.name}) - ${AuthServices?.driverVehicle?.regNo} - ${AuthServices?.driverVehicle?.color?.toUpperCase()}"
+                    "${AuthServices.driverVehicle?.carModel.carMake?.name} (${AuthServices.driverVehicle?.carModel.name}) - ${AuthServices.driverVehicle?.regNo} - ${AuthServices.driverVehicle?.color.toUpperCase()}"
                         .text
                         .xl
                         .semiBold

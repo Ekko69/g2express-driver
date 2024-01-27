@@ -7,7 +7,7 @@ import 'package:localize_and_translate/localize_and_translate.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class TaxiContactView extends StatelessWidget {
-  const TaxiContactView(this.vm, {Key key}) : super(key: key);
+  const TaxiContactView(this.vm, {Key? key}) : super(key: key);
 
   final TaxiViewModel vm;
 
@@ -17,7 +17,7 @@ class TaxiContactView extends StatelessWidget {
       [
         //
         CustomTextFormField(
-          hintText: "Message".tr() + " ${vm.onGoingOrderTrip?.user?.name}",
+          hintText: "Message".tr() + " ${vm.onGoingOrderTrip?.user.name}",
           isReadOnly: true,
           onTap: vm.chatCustomer,
         ).expand(),
@@ -26,7 +26,7 @@ class TaxiContactView extends StatelessWidget {
         //call
         CallButton(
           null,
-          phone: vm.onGoingOrderTrip?.user?.phone,
+          phone: vm.onGoingOrderTrip!.user.phone,
           size: 32,
         ),
       ],

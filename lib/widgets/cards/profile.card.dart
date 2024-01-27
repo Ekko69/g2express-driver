@@ -7,7 +7,7 @@ import 'package:fuodz/widgets/busy_indicator.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class ProfileCard extends StatelessWidget {
-  const ProfileCard(this.model, {Key key}) : super(key: key);
+  const ProfileCard(this.model, {Key? key}) : super(key: key);
 
   final ProfileViewModel model;
   @override
@@ -15,13 +15,13 @@ class ProfileCard extends StatelessWidget {
     return VStack(
       [
         //profile card
-        (model.isBusy || model.currentUser == null)
+        (model.isBusy)
             ? BusyIndicator().centered().p20()
             : HStack(
                 [
                   //
                   CachedNetworkImage(
-                    imageUrl: model.currentUser.photo,
+                    imageUrl: model.currentUser?.photo ?? "",
                     progressIndicatorBuilder: (context, imageUrl, progress) {
                       return BusyIndicator();
                     },
@@ -40,10 +40,8 @@ class ProfileCard extends StatelessWidget {
                   //
                   VStack(
                     [
-                      //name
-                      model.currentUser.name.text.xl.semiBold.make(),
-                      //email
-                      model.currentUser.email.text.light.make(),
+                      "${model.currentUser?.name}".text.xl.semiBold.make(),
+                      "${model.currentUser?.email}".text.light.make(),
                     ],
                   ).px20().expand(),
 

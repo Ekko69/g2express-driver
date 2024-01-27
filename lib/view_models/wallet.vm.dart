@@ -1,18 +1,15 @@
-import 'package:cool_alert/cool_alert.dart';
 import 'package:flutter/material.dart';
-import 'package:fuodz/models/order.dart';
 import 'package:fuodz/models/wallet.dart';
 import 'package:fuodz/models/wallet_transaction.dart';
 import 'package:fuodz/requests/wallet.request.dart';
 import 'package:fuodz/view_models/base.view_model.dart';
 import 'package:fuodz/widgets/bottomsheets/wallet_amount_entry.bottomsheet.dart';
-import 'package:localize_and_translate/localize_and_translate.dart';
 import 'package:pull_to_refresh_flutter3/pull_to_refresh_flutter3.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class WalletViewModel extends MyBaseViewModel {
   //
-  WalletViewModel(BuildContext context, {this.order}) {
+  WalletViewModel(BuildContext context) {
     this.viewContext = context;
   }
 
@@ -20,8 +17,7 @@ class WalletViewModel extends MyBaseViewModel {
   WalletRequest walletRequest = WalletRequest();
   RefreshController refreshController = RefreshController();
   TextEditingController transferAmountTEC = TextEditingController();
-  Wallet wallet;
-  Order order;
+  Wallet? wallet;
   List<WalletTransaction> walletTransactions = [];
   int queryPage = 1;
 
@@ -94,7 +90,6 @@ class WalletViewModel extends MyBaseViewModel {
     setBusy(true);
 
     try {
-      
       final link = await walletRequest.walletTopup(amount);
       openWebpageLink(link);
       clearErrors();
@@ -102,42 +97,5 @@ class WalletViewModel extends MyBaseViewModel {
       setError(error);
     }
     setBusy(false);
-  }
-
-  // wallet balance transfer
-  initiateWalletTransfer() async {
-    if (formKey.currentState.validate()) {
-      setBusyForObject(transferAmountTEC, true);
-      try {
-        final apiResponse = await walletRequest.transferBalanceRequest(
-          amount: transferAmountTEC.text,
-          userId: order.userId,
-        );
-
-        //show dialog in repsent to the response
-        CoolAlert.show(
-          context: viewContext,
-          type:
-              apiResponse.allGood ? CoolAlertType.success : CoolAlertType.error,
-          title: "Topup Customer Wallet".tr(),
-          text: apiResponse.message,
-          onConfirmBtnTap: apiResponse.allGood
-              ? () {
-                  viewContext.pop();
-                  viewContext.pop();
-                }
-              : null,
-        );
-      } catch (error) {
-        print("Transfer balance error ===> $error");
-        CoolAlert.show(
-          context: viewContext,
-          type: CoolAlertType.error,
-          title: "Topup Customer Wallet".tr(),
-          text: "$error",
-        );
-      }
-      setBusyForObject(transferAmountTEC, false);
-    }
   }
 }

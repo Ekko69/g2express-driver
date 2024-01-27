@@ -13,7 +13,7 @@ import 'package:sliding_up_panel/sliding_up_panel.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class EnrouteTaxiView extends StatelessWidget {
-  const EnrouteTaxiView(this.taxiViewModel, {Key key}) : super(key: key);
+  const EnrouteTaxiView(this.taxiViewModel, {Key? key}) : super(key: key);
 
   final TaxiViewModel taxiViewModel;
   @override
@@ -44,13 +44,13 @@ class EnrouteTaxiView extends StatelessWidget {
               UiSpacer.slideIndicator(),
               TaxiETAView(
                 taxiViewModel,
-                taxiViewModel.onGoingOrderTrip.taxiOrder.dropoffLatLng,
+                taxiViewModel.onGoingOrderTrip!.taxiOrder!.dropoffLatLng,
               ).py12(),
               HStack(
                 [
-                  TaxiCustomerView(taxiViewModel.onGoingOrderTrip.user)
+                  TaxiCustomerView(taxiViewModel.onGoingOrderTrip!.user)
                       .expand(),
-                  TaxiAmountView(taxiViewModel.onGoingOrderTrip),
+                  TaxiAmountView(taxiViewModel.onGoingOrderTrip!),
                 ],
               ),
               UiSpacer.vSpace(10),

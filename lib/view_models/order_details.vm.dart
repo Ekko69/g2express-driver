@@ -3,6 +3,7 @@ import 'package:firestore_chat/firestore_chat.dart';
 import 'package:flutter/material.dart';
 import 'package:fuodz/constants/app_routes.dart';
 import 'package:fuodz/constants/app_strings.dart';
+import 'package:fuodz/constants/app_ui_settings.dart';
 import 'package:fuodz/models/api_response.dart';
 import 'package:fuodz/models/delivery_address.dart';
 import 'package:fuodz/models/order.dart';
@@ -42,7 +43,7 @@ class OrderDetailsViewModel extends MyBaseViewModel {
   }
 
   void callVendor() {
-    launchUrlString("tel:${order.vendor.phone}");
+    launchUrlString("tel:${order.vendor?.phone}");
   }
 
   void callCustomer() {
@@ -56,28 +57,29 @@ class OrderDetailsViewModel extends MyBaseViewModel {
   chatVendor() {
     //
     Map<String, PeerUser> peers = {
-      '${order.driver.id}': PeerUser(
-        id: '${order.driver.id}',
-        name: order.driver.name,
-        image: order.driver.photo,
+      '${order.driver!.id}': PeerUser(
+        id: '${order.driver!.id}',
+        name: order.driver!.name,
+        image: order.driver!.photo,
       ),
-      'vendor_${order.vendor.id}': PeerUser(
-        id: "vendor_${order.vendor.id}",
-        name: order.vendor.name,
-        image: order.vendor.logo,
+      'vendor_${order.vendor!.id}': PeerUser(
+        id: "vendor_${order.vendor!.id}",
+        name: order.vendor!.name,
+        image: order.vendor!.logo,
       ),
     };
     //
     final chatEntity = ChatEntity(
       onMessageSent: ChatService.sendChatMessage,
-      mainUser: peers['${order.driver.id}'],
+      mainUser: peers['${order.driver?.id}']!,
       peers: peers,
       //don't translate this
       path: 'orders/' + order.code + "/driverVendor/chats",
       title: "Chat with vendor".tr(),
+      supportMedia: AppUISettings.canDriverChatSupportMedia,
     );
     //
-    viewContext.navigator.pushNamed(
+    Navigator.of(viewContext).pushNamed(
       AppRoutes.chatRoute,
       arguments: chatEntity,
     );
@@ -86,10 +88,10 @@ class OrderDetailsViewModel extends MyBaseViewModel {
   chatCustomer() {
     //
     Map<String, PeerUser> peers = {
-      '${order.driver.id}': PeerUser(
-        id: '${order.driver.id}',
-        name: order.driver.name,
-        image: order.driver.photo,
+      '${order.driver!.id}': PeerUser(
+        id: '${order.driver!.id}',
+        name: order.driver!.name,
+        image: order.driver!.photo,
       ),
       '${order.user.id}': PeerUser(
           id: "${order.user.id}",
@@ -99,14 +101,15 @@ class OrderDetailsViewModel extends MyBaseViewModel {
     //
     final chatEntity = ChatEntity(
       onMessageSent: ChatService.sendChatMessage,
-      mainUser: peers['${order.driver.id}'],
+      mainUser: peers['${order.driver?.id}']!,
       peers: peers,
       //don't translate this
       path: 'orders/' + order.code + "/customerDriver/chats",
       title: "Chat with customer".tr(),
+      supportMedia: AppUISettings.canDriverChatSupportMedia,
     );
     //
-    viewContext.navigator.pushNamed(
+    Navigator.of(viewContext).pushNamed(
       AppRoutes.chatRoute,
       arguments: chatEntity,
     );
@@ -131,17 +134,17 @@ class OrderDetailsViewModel extends MyBaseViewModel {
       //code verification code
       if (!AppStrings.signatureVerify && !AppStrings.verifyOrderByPhoto) {
         showModalBottomSheet(
-          context: AppService().navigatorKey.currentContext,
+          context: AppService().navigatorKey.currentContext!,
           isScrollControlled: true,
           builder: (context) {
             return OrderVerificationDialog(
               order: order,
               onValidated: () {
-                AppService().navigatorKey.currentContext.pop();
+                AppService().navigatorKey.currentContext?.pop();
                 processOrderCompletion();
               },
               openQRCodeScanner: () {
-                AppService().navigatorKey.currentContext.pop();
+                AppService().navigatorKey.currentContext?.pop();
                 showQRCodeScanner();
               },
             );
@@ -182,7 +185,7 @@ class OrderDetailsViewModel extends MyBaseViewModel {
   //
   showQRCodeScanner() async {
     showDialog(
-      context: AppService().navigatorKey.currentContext,
+      context: AppService().navigatorKey.currentContext!,
       builder: (context) {
         return Dialog(
           child: ScanOrderVerificationDialog(
@@ -210,7 +213,7 @@ class OrderDetailsViewModel extends MyBaseViewModel {
       //show successful toast
       toastSuccessful("Order completed successfully".tr());
       //show a cash collection dialog if is cash order
-      if (order.paymentMethod.slug == "cash") {
+      if (order.paymentMethod?.slug == "cash") {
         showDialog(
           barrierDismissible: false,
           context: viewContext,
@@ -251,19 +254,21 @@ class OrderDetailsViewModel extends MyBaseViewModel {
 
   onBackPressed() {
     //
-    AppService().navigatorKey.currentContext.pop(changed ? order : null);
+    AppService().navigatorKey.currentContext?.pop(changed ? order : null);
   }
 
   //
   routeToLocation(DeliveryAddress deliveryAddress) async {
     try {
-      final coords =
-          Coords(deliveryAddress.latitude, deliveryAddress.longitude);
+      final coords = Coords(
+        deliveryAddress.latitude!,
+        deliveryAddress.longitude!,
+      );
       final title = deliveryAddress.name;
       final availableMaps = await MapLauncher.installedMaps;
 
       showModalBottomSheet(
-        context: AppService().navigatorKey.currentContext,
+        context: AppService().navigatorKey.currentContext!,
         builder: (BuildContext context) {
           return SafeArea(
             child: SingleChildScrollView(
@@ -274,7 +279,7 @@ class OrderDetailsViewModel extends MyBaseViewModel {
                       ListTile(
                         onTap: () => map.showMarker(
                           coords: coords,
-                          title: title,
+                          title: title ?? "",
                         ),
                         title: Text(map.mapName),
                         leading: SvgPicture.asset(

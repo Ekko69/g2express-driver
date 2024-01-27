@@ -21,7 +21,7 @@ class MyChromeSafariBrowser extends ChromeSafariBrowser {
   }
 
   @override
-  void onCompletedInitialLoad() {
+  void onCompletedInitialLoad(bool? value) {
     print("ChromeSafari browser initial load completed");
   }
 
@@ -33,13 +33,13 @@ class MyChromeSafariBrowser extends ChromeSafariBrowser {
 
 class MyBaseViewModel extends BaseViewModel {
   //
-  BuildContext viewContext;
+  late BuildContext viewContext;
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
   final formBuilderKey = GlobalKey<FormBuilderState>();
   final currencySymbol = AppStrings.currencySymbol;
   DeliveryAddress deliveryaddress = DeliveryAddress();
-  String firebaseVerificationId;
-  ChatEntity chatEntity;
+  String? firebaseVerificationId;
+  ChatEntity? chatEntity;
 
   //
 
@@ -58,12 +58,14 @@ class MyBaseViewModel extends BaseViewModel {
 
     //
     //try sending location to fcm
-    if (LocationService().currentLocation != null) {
-      print("Resending fcm location");
-      LocationService().syncLocationWithFirebase(
-        LocationService().currentLocationData,
-      );
+    print("Resending fcm location");
+    if (LocationService().currentLocationData == null) {
+      return;
     }
+    //
+    LocationService().syncLocationWithFirebase(
+      LocationService().currentLocationData!,
+    );
   }
 
   //

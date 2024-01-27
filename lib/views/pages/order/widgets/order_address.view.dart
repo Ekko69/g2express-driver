@@ -9,7 +9,7 @@ import 'package:localize_and_translate/localize_and_translate.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class OrderAddressView extends StatelessWidget {
-  const OrderAddressView(this.vm, {Key key}) : super(key: key);
+  const OrderAddressView(this.vm, {Key? key}) : super(key: key);
   final OrderDetailsViewModel vm;
   @override
   Widget build(BuildContext context) {
@@ -22,22 +22,22 @@ class OrderAddressView extends StatelessWidget {
                   //pickup location routing
                   ParcelOrderStopListView(
                     "Pickup Location".tr(),
-                    vm.order.orderStops.first,
+                    vm.order.orderStops!.first,
                     canCall: vm.order.canChatCustomer,
                     routeToLocation: vm.routeToLocation,
-                    verify: vm.order.packageType.driverVerifyStops,
+                    verify: vm.order.packageType!.driverVerifyStops,
                     vm: vm,
                   ),
 
                   //stops
-                  ...(vm.order.orderStops.sublist(1).mapIndexed(
+                  ...((vm.order.orderStops ?? []).sublist(1).mapIndexed(
                     (stop, index) {
                       return ParcelOrderStopListView(
                         "Stop".tr() + " ${index + 1}",
                         stop,
                         canCall: vm.order.canChatCustomer,
                         routeToLocation: vm.routeToLocation,
-                        verify: vm.order.packageType.driverVerifyStops,
+                        verify: vm.order.packageType!.driverVerifyStops,
                         vm: vm,
                       );
                     },
@@ -52,27 +52,34 @@ class OrderAddressView extends StatelessWidget {
                     [
                       "Deliver To".tr().text.gray500.medium.sm.make(),
                       vm.order.deliveryAddress != null
-                          ? vm.order.deliveryAddress.name.text.xl.medium.make()
+                          ? "${vm.order.deliveryAddress!.name}"
+                              .text
+                              .xl
+                              .medium
+                              .make()
                           : UiSpacer.emptySpace(),
                       vm.order.deliveryAddress != null
-                          ? vm.order.deliveryAddress.address.text.make()
+                          ? "${vm.order.deliveryAddress!.address}".text.make()
                           : UiSpacer.emptySpace(),
                       vm.order.deliveryAddress != null
-                          ? vm.order.deliveryAddress.description.text.sm
+                          ? "${vm.order.deliveryAddress!.description}"
+                              .text
+                              .sm
                               .make()
                               .pOnly(bottom: Vx.dp20)
                           : UiSpacer.emptySpace(),
                     ],
                   ).expand(),
                   //route
-                  vm.order.canChatCustomer && vm.order.deliveryAddress != null
+                  vm.order.canChatCustomer
                       ? CustomButton(
                           icon: FlutterIcons.navigation_fea,
                           iconColor: Colors.white,
                           color: AppColor.primaryColor,
                           shapeRadius: Vx.dp20,
-                          onPressed: () =>
-                              vm.routeToLocation(vm.order.deliveryAddress),
+                          onPressed: () => vm.routeToLocation(
+                            vm.order.deliveryAddress!,
+                          ),
                         ).wh(Vx.dp64, Vx.dp40).p12()
                       : UiSpacer.emptySpace(),
                 ],

@@ -13,8 +13,7 @@ import 'package:fuodz/services/order_assignment.service.dart';
 import 'package:fuodz/widgets/bottomsheets/new_order_alert.bottomsheet.dart';
 import 'package:localize_and_translate/localize_and_translate.dart';
 import 'package:singleton/singleton.dart';
-import 'package:velocity_x/src/extensions/num_ext.dart';
-
+import 'package:velocity_x/velocity_x.dart';
 import 'extened_order_service.dart';
 
 class BackgroundOrderService extends ExtendedOrderService {
@@ -28,7 +27,7 @@ class BackgroundOrderService extends ExtendedOrderService {
     this.fbListener();
   }
   // StreamController<NewOrder> showNewOrderStream = StreamController.broadcast();
-  NewOrder newOrder;
+  NewOrder? newOrder;
 
   //
   processOrderNotification(NewOrder newOrder) async {
@@ -48,7 +47,7 @@ class BackgroundOrderService extends ExtendedOrderService {
   //handle showing new order alert bottom sheet to driver in app
   showNewOrderInAppAlert(NewOrder newOrder) async {
     final result = await showModalBottomSheet(
-      context: AppService().navigatorKey.currentContext,
+      context: AppService().navigatorKey.currentContext!,
       isDismissible: false,
       enableDrag: false,
       builder: (context) {
@@ -62,7 +61,7 @@ class BackgroundOrderService extends ExtendedOrderService {
     } else {
       await OrderAssignmentService.releaseOrderForotherDrivers(
         newOrder.toJson(),
-        newOrder.docRef,
+        newOrder.docRef!,
       );
     }
   }
@@ -80,12 +79,12 @@ class BackgroundOrderService extends ExtendedOrderService {
         id: notifcationId,
         ticker: "${AppStrings.appName}",
         channelKey:
-            NotificationService.newOrderNotificationChannel().channelKey,
+            NotificationService.newOrderNotificationChannel().channelKey!,
         title: "New Order Alert".tr(),
-        backgroundColor: AppColor.primaryColorDark ?? null,
+        backgroundColor: AppColor.primaryColorDark,
         body: ("Pickup Location".tr() +
             ": " +
-            "${newOrder.pickup.address} (${newOrder.pickup.distance.numCurrency}km)"),
+            "${newOrder.pickup?.address} (${newOrder.pickup?.distance?.numCurrency}km)"),
         //
         payload: {
           "id": newOrder.id.toString(),

@@ -7,15 +7,15 @@ import 'package:fuodz/models/new_taxi_order.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class FloatingAppBubble extends StatefulWidget {
-  const FloatingAppBubble({Key key}) : super(key: key);
+  const FloatingAppBubble({Key? key}) : super(key: key);
 
   @override
   State<FloatingAppBubble> createState() => _FloatingAppBubbleState();
 }
 
 class _FloatingAppBubbleState extends State<FloatingAppBubble> {
-  NewOrder newOrder;
-  NewTaxiOrder newTaxiOrder;
+  NewOrder? newOrder;
+  NewTaxiOrder? newTaxiOrder;
   Widget currentWidget = SizedBox.shrink();
 
   @override

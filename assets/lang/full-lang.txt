@@ -344,3 +344,55 @@ This field cannot be empty
 This field must be numeric
 Invalid email address
 Faqs
+Accept
+Reject
+Order payment yet to be completed, hence you can't open order
+Switch To Taxi Driver
+Switch To Regular Driver
+Vehicle Details
+Manage Account
+Support
+Legal Documents
+New Vehicle
+New Vehicle
+Long press to switch vehicle
+Vehicle Update
+Vehicle updated, you will need to reload app for this to take effect
+Reload
+Fee
+Time
+mins
+Orders
+GO
+OFF
+Finance
+Vehicles
+Legal
+Legal Documents
+Support
+Faqs
+GO
+OFF
+Switch To Taxi Driver
+Awaiting New Order
+You will be notified when there is a new order
+Permission for overlay is not granted
+Go to settings
+Driver App
+Allow %s to display over other apps
+Allow %s to display over other apps in order to receive orders when you are using other apps or app is in background.
+Permission is permanently denied
+Permission denied
+In order to provide you with the best possible service, we need to access your location data. This will allow us to efficiently connect you with nearby riders, help you navigate to their pickup locations, and provide accurate arrival time estimates.
+To grant us permission to access your location, please tap \"Allow\" when prompted. If you prefer not to share your location, you can tap \"Deny\" and continue to use the app without this feature. However, this may impact your ability to receive trip requests and complete trips efficiently.
+In order to provide you with a seamless experience, we need to access your location data even when the app is not in use. This will allow us to offer personalized recommendations, send notifications about nearby events or promotions, and help you navigate your way to your destination.
+Rest assured that we take your privacy seriously and will only use your location data in accordance with our privacy policy. We will never sell or share your data with third parties.
+We need to draw over other apps on your device. This will allow us to offer features such as floating widgets, pop-up notifications, and other interactive elements.
+Unauthorized user access
+Document Request
+Document Request
+Pending Verification
+Your document is pending verification, once verified you will receive an email from us. Thank you
+Please select a document
+Reject Order
+Trip Fare

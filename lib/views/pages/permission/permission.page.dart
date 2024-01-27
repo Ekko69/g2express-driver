@@ -6,13 +6,13 @@ import 'package:velocity_x/velocity_x.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 class PermissionPage extends StatelessWidget {
-  const PermissionPage({Key key}) : super(key: key);
+  const PermissionPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder<PermissionViewModel>.reactive(
       viewModelBuilder: () => PermissionViewModel(context),
-      onModelReady: (vm) => vm.initialise(),
+      onViewModelReady: (vm) => vm.initialise(),
       builder: (context, vm, child) {
         return BasePage(
           extendBodyBehindAppBar: true,

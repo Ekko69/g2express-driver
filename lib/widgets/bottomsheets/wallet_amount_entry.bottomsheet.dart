@@ -6,7 +6,10 @@ import 'package:localize_and_translate/localize_and_translate.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class WalletAmountEntryBottomSheet extends StatefulWidget {
-  WalletAmountEntryBottomSheet({this.onSubmit, Key key}) : super(key: key);
+  WalletAmountEntryBottomSheet({
+    required this.onSubmit,
+    Key? key,
+  }) : super(key: key);
 
   final Function(String) onSubmit;
   @override
@@ -45,7 +48,7 @@ class _WalletAmountEntryBottomSheetState
               title: "TOP-UP".tr(),
               onPressed: () {
                 //
-                if (formKey.currentState.validate()) {
+                if (formKey.currentState!.validate()) {
                   widget.onSubmit(amountTEC.text);
                 }
               },

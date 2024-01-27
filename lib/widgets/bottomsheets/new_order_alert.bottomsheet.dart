@@ -7,6 +7,7 @@ import 'package:fuodz/models/new_order.dart';
 import 'package:fuodz/utils/ui_spacer.dart';
 import 'package:fuodz/view_models/new_order_alert.vm.dart';
 import 'package:fuodz/widgets/busy_indicator.dart';
+import 'package:fuodz/widgets/buttons/custom_text_button.dart';
 import 'package:localize_and_translate/localize_and_translate.dart';
 import 'package:stacked/stacked.dart';
 import 'package:swipebuttonflutter/swipebuttonflutter.dart';
@@ -15,7 +16,7 @@ import 'package:velocity_x/velocity_x.dart';
 class NewOrderAlertBottomSheet extends StatefulWidget {
   NewOrderAlertBottomSheet(
     this.newOrder, {
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   final NewOrder newOrder;
@@ -27,30 +28,30 @@ class NewOrderAlertBottomSheet extends StatefulWidget {
 class _NewOrderAlertBottomSheetState extends State<NewOrderAlertBottomSheet> {
   //
   bool started = false;
-  NewOrderAlertViewModel vm;
+  NewOrderAlertViewModel? vm;
 
   //
   @override
   void initState() {
     super.initState();
-    vm = NewOrderAlertViewModel(widget.newOrder, context);
+    vm ??= NewOrderAlertViewModel(widget.newOrder, context);
     WidgetsBinding.instance.addPostFrameCallback((_) {
       started = true;
-      vm.initialise();
+      vm?.initialise();
     });
   }
 
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder<NewOrderAlertViewModel>.reactive(
-      viewModelBuilder: () => vm,
+      viewModelBuilder: () => vm!,
       builder: (context, vm, child) {
         return VStack(
           [
             HStack(
               [
                 //title
-                "New Order Alert".tr().text.semiBold.xl2.make().py12().expand(),
+                "New Order Alert".tr().text.bold.xl.make().py12().expand(),
 
                 //countdown
                 CircularCountDownTimer(
@@ -59,7 +60,7 @@ class _NewOrderAlertBottomSheetState extends State<NewOrderAlertBottomSheet> {
                   initialDuration: vm.newOrder.initialAlertDuration,
                   width: 30,
                   height: 30,
-                  ringColor: Colors.grey[300],
+                  ringColor: Colors.grey.shade300,
                   ringGradient: null,
                   fillColor: AppColor.accentColor,
                   fillGradient: null,
@@ -84,19 +85,21 @@ class _NewOrderAlertBottomSheetState extends State<NewOrderAlertBottomSheet> {
                 ),
               ],
             ),
-            "Pickup Location".tr().text.make(),
-            "${widget.newOrder.pickup.address} (${widget.newOrder.pickup.distance}km)"
+            "Pickup Location".tr().text.medium.make(),
+            "${widget.newOrder.pickup?.address} (${widget.newOrder.pickup?.distance}km)"
                 .text
                 .semiBold
-                .xl
+                .lg
+                .maxLines(2)
                 .make(),
             UiSpacer.verticalSpace(space: 10),
             //
-            "Dropoff Location".tr().text.make(),
-            "${widget.newOrder.dropoff.address} (${widget.newOrder.dropoff.distance}km)"
+            "Dropoff Location".tr().text.medium.make(),
+            "${widget.newOrder.dropoff?.address} (${widget.newOrder.dropoff?.distance}km)"
                 .text
                 .semiBold
-                .xl
+                .lg
+                .maxLines(2)
                 .make(),
             UiSpacer.verticalSpace(space: 10),
             //fee
@@ -104,8 +107,9 @@ class _NewOrderAlertBottomSheetState extends State<NewOrderAlertBottomSheet> {
               [
                 VStack(
                   [
-                    "Delivery Fee".tr().text.make(),
-                    "${AppStrings.currencySymbol} ${widget.newOrder.amount}".currencyFormat()
+                    "Delivery Fee".tr().text.medium.make(),
+                    "${AppStrings.currencySymbol} ${widget.newOrder.amount}"
+                        .currencyFormat()
                         .text
                         .semiBold
                         .xl
@@ -115,8 +119,9 @@ class _NewOrderAlertBottomSheetState extends State<NewOrderAlertBottomSheet> {
                 UiSpacer.horizontalSpace(),
                 VStack(
                   [
-                    "Total".tr().text.make(),
-                    "${AppStrings.currencySymbol} ${widget.newOrder.total != null ? widget.newOrder.total:''}".currencyFormat()
+                    "Total".tr().text.medium.make(),
+                    "${AppStrings.currencySymbol} ${widget.newOrder.total}"
+                        .currencyFormat()
                         .text
                         .semiBold
                         .xl
@@ -133,7 +138,7 @@ class _NewOrderAlertBottomSheetState extends State<NewOrderAlertBottomSheet> {
               child: VStack(
                 [
                   "Package Type".tr().text.make(),
-                  "${widget.newOrder.packageType}".text.semiBold.xl.make(),
+                  "${widget.newOrder.packageType}".text.semiBold.lg.make(),
                   UiSpacer.verticalSpace(),
                 ],
               ),
@@ -150,6 +155,21 @@ class _NewOrderAlertBottomSheetState extends State<NewOrderAlertBottomSheet> {
                 ? BusyIndicator().centered().p20()
                 : UiSpacer.emptySpace(),
             "Swipe to accept order".tr().text.makeCentered().py4(),
+            // cancel button
+            VStack(
+              [
+                5.heightBox,
+                CustomTextButton(
+                  title: "Reject Order".tr(),
+                  titleColor: Colors.red,
+                  onPressed: () {
+                    //reject order for this driver
+                    vm.countDownCompleted(started);
+                  },
+                ).wFull(context),
+                20.heightBox,
+              ],
+            ),
             UiSpacer.verticalSpace(),
           ],
         ).p20().scrollVertical();

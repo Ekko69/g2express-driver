@@ -14,17 +14,17 @@ String taxiOrderToJson(TaxiOrder data) => json.encode(data.toJson());
 
 class TaxiOrder {
   TaxiOrder({
-    this.id,
-    this.orderId,
-    this.vehicleTypeId,
-    this.pickupLatitude,
-    this.pickupLongitude,
-    this.pickupAddress,
-    this.dropoffLatitude,
-    this.dropoffLongitude,
-    this.dropoffAddress,
-    this.createdAt,
-    this.updatedAt,
+    required this.id,
+    required this.orderId,
+    required this.vehicleTypeId,
+    required this.pickupLatitude,
+    required this.pickupLongitude,
+    required this.pickupAddress,
+    required this.dropoffLatitude,
+    required this.dropoffLongitude,
+    required this.dropoffAddress,
+    required this.createdAt,
+    required this.updatedAt,
     this.currency,
   });
 
@@ -39,12 +39,12 @@ class TaxiOrder {
   String dropoffAddress;
   DateTime createdAt;
   DateTime updatedAt;
-  Currency currency;
+  Currency? currency;
 
   factory TaxiOrder.fromJson(Map<String, dynamic> json) => TaxiOrder(
-        id: json["id"].toString().toInt(),
-        orderId: json["order_id"].toString().toInt(),
-        vehicleTypeId: json["vehicle_type_id"].toString().toInt(),
+        id: json["id"].toString().toInt()!,
+        orderId: json["order_id"].toString().toInt()!,
+        vehicleTypeId: json["vehicle_type_id"].toString().toInt()!,
         pickupLatitude: json["pickup_latitude"],
         pickupLongitude: json["pickup_longitude"],
         pickupAddress: json["pickup_address"],
@@ -70,20 +70,20 @@ class TaxiOrder {
         "dropoff_address": dropoffAddress,
         "created_at": createdAt.toIso8601String(),
         "updated_at": updatedAt.toIso8601String(),
-        "currency": currency != null ? currency.toJson() : null,
+        "currency": currency != null ? currency?.toJson() : null,
       };
 
   LatLng get pickupLatLng {
     return LatLng(
-      pickupLatitude.toDouble(),
-      pickupLongitude.toDouble(),
+      pickupLatitude.toDouble()!,
+      pickupLongitude.toDouble()!,
     );
   }
 
   LatLng get dropoffLatLng {
     return LatLng(
-      dropoffLatitude.toDouble(),
-      dropoffLongitude.toDouble(),
+      dropoffLatitude.toDouble()!,
+      dropoffLongitude.toDouble()!,
     );
   }
 

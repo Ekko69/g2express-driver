@@ -13,7 +13,7 @@ class OrderPhotoVerificationViewModel extends MyBaseViewModel {
   OrderRequest orderRequest = OrderRequest();
   //
   final picker = ImagePicker();
-  File newPhoto;
+  File? newPhoto;
   //
   OrderPhotoVerificationViewModel(BuildContext context, this.order) {
     this.viewContext = context;

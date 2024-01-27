@@ -25,7 +25,7 @@ class VehiclesViewModel extends MyBaseViewModel {
   }
 
   void fetchVehicles() async {
-    refreshController?.refreshCompleted();
+    refreshController.refreshCompleted();
     setBusy(true);
     try {
       vehicles = await vehicleRequest.vehicles();
@@ -36,7 +36,9 @@ class VehiclesViewModel extends MyBaseViewModel {
   }
 
   newVehicleCreate() async {
-    await viewContext.nextPage(NewVehiclePage());
+    await Navigator.of(viewContext).push(
+      MaterialPageRoute(builder: (context) => NewVehiclePage()),
+    );
     fetchVehicles();
   }
 

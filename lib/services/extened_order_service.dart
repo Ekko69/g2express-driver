@@ -7,16 +7,16 @@ import 'package:fuodz/services/overlay.service.dart';
 import 'app.service.dart';
 
 class ExtendedOrderService {
-  StreamSubscription<FGBGType> subscriptionFGBGType;
+  StreamSubscription<FGBGType>? subscriptionFGBGType;
 
   void fbListener() {
     //
-    LocalStorageService.prefs.setBool("appInBackground", false);
+    LocalStorageService.prefs!.setBool("appInBackground", false);
     //
     subscriptionFGBGType = FGBGEvents.stream.listen(
       (event) async {
         final appInBackground = (event == FGBGType.background);
-        LocalStorageService.prefs.setBool("appInBackground", appInBackground);
+        LocalStorageService.prefs!.setBool("appInBackground", appInBackground);
         //app is now in background, show overlay floating app bubble
         if (appInBackground && AppService().driverIsOnline) {
           //show overlay floating app bubble
@@ -29,7 +29,7 @@ class ExtendedOrderService {
   }
 
   bool appIsInBackground() {
-    return LocalStorageService.prefs.getBool("appInBackground") ?? false;
+    return LocalStorageService.prefs!.getBool("appInBackground") ?? false;
   }
 
   void dispose() {

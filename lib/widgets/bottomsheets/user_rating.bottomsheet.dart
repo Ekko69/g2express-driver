@@ -14,9 +14,9 @@ import 'package:velocity_x/velocity_x.dart';
 
 class UserRatingBottomSheet extends StatelessWidget {
   const UserRatingBottomSheet({
-    Key key,
-    this.onSubmitted,
-    this.order,
+    Key? key,
+    required this.onSubmitted,
+    required this.order,
   }) : super(key: key);
 
   //
@@ -29,10 +29,8 @@ class UserRatingBottomSheet extends StatelessWidget {
     return ViewModelBuilder<UserRatingViewModel>.reactive(
       viewModelBuilder: () => UserRatingViewModel(context, order, onSubmitted),
       builder: (context, vm, child) {
-        return WillPopScope(
-          onWillPop: () async {
-            return false;
-          },
+        return PopScope(
+          canPop: false,
           child: BasePage(
             body: VStack(
               [
@@ -40,7 +38,8 @@ class UserRatingBottomSheet extends StatelessWidget {
                 UiSpacer.verticalSpace(),
                 UiSpacer.verticalSpace(),
                 "Total".tr().text.medium.xl.makeCentered(),
-                "${order.taxiOrder.currency != null ? order.taxiOrder.currency.symbol : AppStrings.currencySymbol} ${order.total}".currencyFormat()
+                "${order.taxiOrder?.currency != null ? order.taxiOrder?.currency?.symbol : AppStrings.currencySymbol} ${order.total}"
+                    .currencyFormat()
                     .text
                     .xl4
                     .bold

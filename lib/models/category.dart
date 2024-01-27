@@ -5,44 +5,44 @@ class Category {
   String name;
   String imageUrl;
   List<Product> products;
-  List<Category> subcategories;
+  List<Category>? subcategories;
 
   Category({
-    this.id,
-    this.name,
-    this.imageUrl,
-    this.products,
+    required this.id,
+    required this.name,
+    required this.imageUrl,
+    this.products = const [],
+    this.subcategories = const [],
   });
 
   factory Category.fromJson(dynamic jsonObject) {
-    final category = Category();
-    category.id = jsonObject["id"];
-    category.name = jsonObject["name"];
-    category.imageUrl = jsonObject["photo"];
-    category.products = jsonObject["products"] == null
-        ? null
-        : List<Product>.from(
-            jsonObject["products"].map(
-              (x) => Product.fromJson(x),
+    final category = Category(
+      id: jsonObject["id"],
+      name: jsonObject["name"],
+      imageUrl: jsonObject["photo"],
+      products: jsonObject["products"] == null
+          ? []
+          : List<Product>.from(
+              jsonObject["products"].map(
+                (x) => Product.fromJson(x),
+              ),
             ),
-          );
-    category.subcategories = jsonObject["sub_categories"] == null
-        ? []
-        : List<Category>.from(
-            jsonObject["sub_categories"].map(
-              (x) => Category.fromJson(x),
+      subcategories: jsonObject["sub_categories"] == null
+          ? []
+          : List<Category>.from(
+              jsonObject["sub_categories"].map(
+                (x) => Category.fromJson(x),
+              ),
             ),
-          );
+    );
     return category;
   }
 
   Map<String, dynamic> toJson() => {
-        "id": id == null ? null : id,
-        "name": name == null ? null : name,
-        "photo": imageUrl == null ? null : imageUrl,
-        "products": products == null
-            ? null
-            : List<dynamic>.from(products.map((x) => x.toJson())),
+        "id": id,
+        "name": name,
+        "photo": imageUrl,
+        "products": List<dynamic>.from(products.map((x) => x.toJson())),
         "subcategories": List<dynamic>.from(products.map((x) => x.toJson())),
       };
 }

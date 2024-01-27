@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
+import 'package:dartx/dartx.dart';
 import 'package:translator/translator.dart';
 
 import 'constants/app_languages.dart';
@@ -26,9 +27,8 @@ void main() async {
     print("Translating ==> ${code}");
     try {
       //
-      final langFileEntity = entities.firstWhere(
+      final langFileEntity = entities.firstOrNullWhere(
         (e) => e.path.toLowerCase().contains(code.toLowerCase()),
-        orElse: () => null,
       );
       //
       File langFile;
@@ -60,7 +60,7 @@ void main() async {
         if (code == "zh") {
           code = "zh-cn";
         }
-        
+
         //translate if the text has not been translated before
         if (code != "en") {
           final translation = await translator.translate(text, to: code);

@@ -26,7 +26,9 @@ class OrderSignatureVerificationViewModel extends MyBaseViewModel {
   }
 
   Future<File> getSignatureImage() async {
-    return await writeToFile(await handSignatureControl.toImage());
+    return await writeToFile(
+      await handSignatureControl.toImage() ?? ByteData(0),
+    );
   }
 
   submitSignature() async {

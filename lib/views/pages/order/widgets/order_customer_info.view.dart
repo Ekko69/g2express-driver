@@ -6,7 +6,7 @@ import 'package:fuodz/widgets/custom_image.view.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class OrderCustomerInfoView extends StatelessWidget {
-  OrderCustomerInfoView(this.order, {Key key}) : super(key: key);
+  OrderCustomerInfoView(this.order, {Key? key}) : super(key: key);
 
   final Order order;
 
@@ -20,7 +20,7 @@ class OrderCustomerInfoView extends StatelessWidget {
         [
           //customer profile
           CustomImage(
-            imageUrl: order?.driver?.photo,
+            imageUrl: order.user.photo,
             width: avatarSize,
             height: avatarSize,
           ),
@@ -28,14 +28,14 @@ class OrderCustomerInfoView extends StatelessWidget {
 
           VStack(
             [
-              "${order?.user?.name}".text.medium.make(),
+              "${order.user.name}".text.medium.make(),
               VxRating(
                 isSelectable: false,
-                onRatingUpdate: null,
+                onRatingUpdate: (value) {},
                 maxRating: 5.0,
                 count: 5,
                 size: 16,
-                value: order?.user?.rating,
+                value: order.user.rating,
                 selectionColor: AppColor.ratingColor,
               ),
             ],

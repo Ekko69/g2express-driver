@@ -12,7 +12,7 @@ import 'package:sliding_up_panel/sliding_up_panel.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class ArrivedTaxiView extends StatelessWidget {
-  const ArrivedTaxiView(this.taxiViewModel, {Key key}) : super(key: key);
+  const ArrivedTaxiView(this.taxiViewModel, {Key? key}) : super(key: key);
 
   final TaxiViewModel taxiViewModel;
   @override
@@ -44,9 +44,9 @@ class ArrivedTaxiView extends StatelessWidget {
               UiSpacer.vSpace(10),
               HStack(
                 [
-                  TaxiCustomerView(taxiViewModel.onGoingOrderTrip.user)
+                  TaxiCustomerView(taxiViewModel.onGoingOrderTrip!.user)
                       .expand(),
-                  TaxiAmountView(taxiViewModel.onGoingOrderTrip),
+                  TaxiAmountView(taxiViewModel.onGoingOrderTrip!),
                 ],
               ),
               UiSpacer.vSpace(10),

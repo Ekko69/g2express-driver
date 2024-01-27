@@ -11,7 +11,7 @@ import 'package:package_info/package_info.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class RequestOverlayPermissionView extends StatefulWidget {
-  const RequestOverlayPermissionView(this.vm, {Key key}) : super(key: key);
+  const RequestOverlayPermissionView(this.vm, {Key? key}) : super(key: key);
 
   final PermissionViewModel vm;
 
@@ -35,7 +35,7 @@ class _RequestOverlayPermissionViewState
               builder: (context, snapshot) {
                 String appName = "Driver App".tr();
                 if (snapshot.hasData) {
-                  appName = snapshot.data.appName;
+                  appName = snapshot.data!.appName;
                 }
                 return VStack(
                   [

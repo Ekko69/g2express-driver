@@ -53,7 +53,7 @@ class SplashViewModel extends MyBaseViewModel {
   }
 
   //
-  void updateAppVariables(dynamic json) async {
+  updateAppVariables(dynamic json) async {
     //
     await AppStrings.saveAppSettingsToLocalStorage(jsonEncode(json));
   }
@@ -64,7 +64,7 @@ class SplashViewModel extends MyBaseViewModel {
     await AppColor.saveColorsToLocalStorage(jsonEncode(colorJson));
     //change theme
     // await AdaptiveTheme.of(viewContext).reset();
-    await AdaptiveTheme.of(viewContext).setTheme(
+    AdaptiveTheme.of(viewContext).setTheme(
       light: AppTheme().lightTheme(),
       dark: AppTheme().darkTheme(),
       notify: true,
@@ -89,10 +89,10 @@ class SplashViewModel extends MyBaseViewModel {
 
     //
     if (AuthServices.firstTimeOnApp()) {
-      viewContext.navigator
+      Navigator.of(viewContext)
           .pushNamedAndRemoveUntil(AppRoutes.welcomeRoute, (route) => false);
     } else if (!AuthServices.authenticated()) {
-      viewContext.navigator
+      Navigator.of(viewContext)
           .pushNamedAndRemoveUntil(AppRoutes.loginRoute, (route) => false);
     } else {
       var inUseStatus = await Permission.locationWhenInUse.status;
@@ -103,7 +103,7 @@ class SplashViewModel extends MyBaseViewModel {
       if (bgPermissinGranted &&
           inUseStatus.isGranted &&
           alwaysUseStatus.isGranted) {
-        viewContext.navigator.pushNamedAndRemoveUntil(
+        Navigator.of(viewContext).pushNamedAndRemoveUntil(
           AppRoutes.homeRoute,
           (route) => false,
         );
@@ -113,13 +113,13 @@ class SplashViewModel extends MyBaseViewModel {
     }
 
     //
-    RemoteMessage initialMessage =
+    RemoteMessage? initialMessage =
         await FirebaseService().firebaseMessaging.getInitialMessage();
-    if (initialMessage != null) {
-      //
-      FirebaseService().saveNewNotification(initialMessage);
-      FirebaseService().notificationPayloadData = initialMessage.data;
-      FirebaseService().selectNotification("");
+    if (initialMessage == null) {
+      return;
     }
+    FirebaseService().saveNewNotification(initialMessage);
+    FirebaseService().notificationPayloadData = initialMessage.data;
+    FirebaseService().selectNotification("");
   }
 }

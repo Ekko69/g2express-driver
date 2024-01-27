@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:dio/dio.dart';
-import 'package:flutter/material.dart';
 import 'package:fuodz/constants/api.dart';
 import 'package:fuodz/models/api_response.dart';
 import 'package:fuodz/models/order.dart';
@@ -12,8 +11,11 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class OrderRequest extends HttpService {
   //
-  Future<List<Order>> getOrders(
-      {int page = 1, String status, String type}) async {
+  Future<List<Order>> getOrders({
+    int page = 1,
+    String? status,
+    String? type,
+  }) async {
     final apiResult = await get(
       Api.orders,
       queryParameters: {
@@ -31,27 +33,27 @@ class OrderRequest extends HttpService {
         return Order.fromJson(jsonObject);
       }).toList();
     } else {
-      throw apiResponse.message;
+      throw "${apiResponse.message}";
     }
   }
 
   //
-  Future<Order> getOrderDetails({@required int id}) async {
+  Future<Order> getOrderDetails({required int id}) async {
     final apiResult = await get(Api.orders + "/$id");
     //
     final apiResponse = ApiResponse.fromResponse(apiResult);
     if (apiResponse.allGood) {
       return Order.fromJson(apiResponse.body);
     } else {
-      throw apiResponse.message;
+      throw "${apiResponse.message}";
     }
   }
 
   //
   Future<Order> updateOrder({
-    int id,
+    required int id,
     String status = "delivered",
-    LatLng location,
+    LatLng? location,
   }) async {
     final apiResult = await patch(
       Api.orders + "/$id",
@@ -65,20 +67,22 @@ class OrderRequest extends HttpService {
     if (apiResponse.allGood) {
       return Order.fromJson(apiResponse.body["order"]);
     } else {
-      throw apiResponse.message;
+      throw "${apiResponse.message}";
     }
   }
 
   Future<ApiResponse> updateOrderWithSignature({
-    int id,
+    required int id,
     String status = "delivered",
-    File signature,
+    File? signature,
     String typeOfProof = "signature",
   }) async {
     //compress signature image
 
     //
-    signature = await AppService().compressFile(signature);
+    if (signature != null) {
+      signature = await AppService().compressFile(signature);
+    }
     //
     final apiResult = await postWithFiles(
       Api.orders + "/$id",
@@ -99,19 +103,21 @@ class OrderRequest extends HttpService {
     if (apiResponse.allGood) {
       return apiResponse;
     } else {
-      throw apiResponse.message;
+      throw "${apiResponse.message}";
     }
   }
 
   Future<ApiResponse> verifyOrderStopRequest({
-    int id,
-    File signature,
+    required int id,
+    File? signature,
     String typeOfProof = "signature",
   }) async {
     //compress signature image
 
     //
-    signature = await AppService().compressFile(signature);
+    if (signature != null) {
+      signature = await AppService().compressFile(signature);
+    }
     //
     final apiResult = await postWithFiles(
       Api.orderStopVerification + "/$id",
@@ -130,7 +136,7 @@ class OrderRequest extends HttpService {
     if (apiResponse.allGood) {
       return apiResponse;
     } else {
-      throw apiResponse.message;
+      throw "${apiResponse.message}";
     }
   }
 
@@ -149,7 +155,7 @@ class OrderRequest extends HttpService {
     if (apiResponse.allGood) {
       return Order.fromJson(apiResponse.body["order"]);
     } else {
-      throw apiResponse.message;
+      throw "${apiResponse.message}";
     }
   }
 }

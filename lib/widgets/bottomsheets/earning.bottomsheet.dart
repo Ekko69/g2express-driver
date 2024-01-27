@@ -15,13 +15,13 @@ import 'package:stacked/stacked.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class EarningBottomSheet extends StatelessWidget {
-  const EarningBottomSheet({Key key}) : super(key: key);
+  const EarningBottomSheet({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder<EarningViewModel>.reactive(
       viewModelBuilder: () => EarningViewModel(context),
-      onModelReady: (vm) => vm.initialise(),
+      onViewModelReady: (vm) => vm.initialise(),
       builder: (context, vm, child) {
         return VStack(
           [
@@ -34,9 +34,9 @@ class EarningBottomSheet extends StatelessWidget {
                       CurrencyHStack(
                         [
                           //currency
-                          vm.currency.symbol.text.medium.xl.make().px4(),
+                          "${vm.currency?.symbol}".text.medium.xl.make().px4(),
                           //earning
-                          vm.earning.amount
+                          "${vm.earning?.amount}"
                               .currencyValueFormat()
                               .text
                               .semiBold
@@ -47,7 +47,10 @@ class EarningBottomSheet extends StatelessWidget {
                         alignment: MainAxisAlignment.center,
                       ).py12(),
                       //updated at
-                      vm.earning.formattedUpdatedDate.text.medium.lg
+                      "${vm.earning?.formattedUpdatedDate}"
+                          .text
+                          .medium
+                          .lg
                           .makeCentered(),
 
                       //request payout
@@ -123,7 +126,7 @@ class EarningBottomSheet extends StatelessWidget {
                                           FormValidator.validateCustom(
                                         value,
                                         rules:
-                                            "required||numeric||lte:${vm.earning.amount}",
+                                            "required||numeric||lte:${vm.earning?.amount}",
                                       ),
                                     ).py12(),
                                     CustomButton(

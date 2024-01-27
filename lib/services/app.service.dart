@@ -24,9 +24,14 @@ class AppService {
   BehaviorSubject<bool> refreshAssignedOrders = BehaviorSubject<bool>();
   BehaviorSubject<Order> addToAssignedOrders = BehaviorSubject<Order>();
   bool driverIsOnline = false;
-  StreamSubscription actionStream;
+  StreamSubscription? actionStream;
   List<int> ignoredOrders = [];
   AssetsAudioPlayer assetsAudioPlayer = AssetsAudioPlayer();
+
+  changeHomePageIndex({int index = 2}) async {
+    print("Changed Home Page");
+    homePageIndex.add(index);
+  }
 
   //
   void playNotificationSound() {
@@ -40,13 +45,13 @@ class AppService {
     assetsAudioPlayer.open(
       Audio("assets/audio/alert.mp3"),
       loopMode: LoopMode.single,
-      notificationSettings: NotificationSettings(
-        nextEnabled: false,
-        prevEnabled: false,
-        stopEnabled: false,
-        seekBarEnabled: false,
-      ),
-      showNotification: true,
+      // notificationSettings: NotificationSettings(
+      //   nextEnabled: false,
+      //   prevEnabled: false,
+      //   stopEnabled: false,
+      //   seekBarEnabled: false,
+      // ),
+      showNotification: false,
       playInBackground: PlayInBackground.enabled,
     );
   }
@@ -59,7 +64,7 @@ class AppService {
     }
   }
 
-  Future<File> compressFile(File file, {int quality = 50}) async {
+  Future<File?> compressFile(File file, {int quality = 50}) async {
     final dir = await path_provider.getTemporaryDirectory();
     final targetPath =
         dir.absolute.path + "/temp_" + randomAlphaNumeric(10) + ".jpg";

@@ -5,7 +5,7 @@ import 'package:localize_and_translate/localize_and_translate.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class TaxiETAView extends StatefulWidget {
-  const TaxiETAView(this.vm, this.latlng, {Key key}) : super(key: key);
+  const TaxiETAView(this.vm, this.latlng, {Key? key}) : super(key: key);
 
   final TaxiViewModel vm;
   final LatLng latlng;

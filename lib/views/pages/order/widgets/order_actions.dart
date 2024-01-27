@@ -10,12 +10,12 @@ import 'package:velocity_x/velocity_x.dart';
 
 class OrderActions extends StatelessWidget {
   const OrderActions({
-    this.canChatCustomer,
-    this.busy,
-    this.order,
-    this.processOrderCompletion,
-    this.processOrderEnroute,
-    Key key,
+    this.canChatCustomer = false,
+    this.busy = false,
+    required this.order,
+    required this.processOrderCompletion,
+    required this.processOrderEnroute,
+    Key? key,
   }) : super(key: key);
 
   final bool canChatCustomer;
@@ -57,7 +57,7 @@ class OrderActions extends StatelessWidget {
                             barrierDismissible: false,
                             builder: (context) {
                               return Dialog(
-                                child:WalletTransferDialog(order),
+                                child: WalletTransferDialog(order),
                               );
                             },
                           );

@@ -10,32 +10,36 @@ class BasePage extends StatefulWidget {
   final bool showAppBar;
   final bool showLeadingAction;
   final bool showCart;
-  final Function onBackPressed;
-  final String title;
+  final Function? onBackPressed;
+  final String? title;
   final Widget body;
-  final Widget bottomSheet;
-  final Widget fab;
+  final Widget? bottomSheet;
+  final Widget? fab;
   final bool isLoading;
   final bool extendBodyBehindAppBar;
-  final double elevation;
-  final Color appBarItemColor;
-  final Color backgroundColor;
+  final double? elevation;
+  final Color? appBarItemColor;
+  final Color? backgroundColor;
+  final Color? appBarColor;
+  final Widget? leading;
 
   BasePage({
     this.showAppBar = false,
     this.showLeadingAction = false,
+    this.leading,
     this.showCart = false,
     this.onBackPressed,
     this.title = "",
-    this.body,
+    required this.body,
     this.bottomSheet,
     this.fab,
     this.isLoading = false,
+    this.appBarColor,
     this.elevation,
     this.extendBodyBehindAppBar = false,
     this.appBarItemColor,
     this.backgroundColor,
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   @override
@@ -56,21 +60,25 @@ class _BasePageState extends State<BasePage> {
         extendBodyBehindAppBar: widget.extendBodyBehindAppBar,
         appBar: widget.showAppBar
             ? AppBar(
+                backgroundColor: widget.appBarColor ?? context.primaryColor,
                 automaticallyImplyLeading: widget.showLeadingAction,
                 elevation: widget.elevation,
                 leading: widget.showLeadingAction
-                    ? IconButton(
-                        icon: Icon(
-                          !Utils.isArabic
-                              ? FlutterIcons.arrow_left_fea
-                              : FlutterIcons.arrow_right_fea,
-                        ),
-                        onPressed: widget.onBackPressed ??
-                            () => Navigator.pop(context),
-                      )
+                    ? widget.leading == null
+                        ? IconButton(
+                            icon: Icon(
+                              !Utils.isArabic
+                                  ? FlutterIcons.arrow_left_fea
+                                  : FlutterIcons.arrow_right_fea,
+                            ),
+                            onPressed: (widget.onBackPressed != null)
+                                ? () => widget.onBackPressed!()
+                                : () => Navigator.pop(context),
+                          )
+                        : widget.leading
                     : null,
                 title: Text(
-                  widget.title,
+                  "${widget.title}",
                 ),
               )
             : null,

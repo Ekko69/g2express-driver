@@ -13,7 +13,7 @@ import 'package:velocity_x/velocity_x.dart';
 import 'widgets/online_offline.fab.dart';
 
 class AssignedOrdersPage extends StatefulWidget {
-  const AssignedOrdersPage({Key key}) : super(key: key);
+  const AssignedOrdersPage({Key? key}) : super(key: key);
 
   @override
   _AssignedOrdersPageState createState() => _AssignedOrdersPageState();
@@ -28,7 +28,7 @@ class _AssignedOrdersPageState extends State<AssignedOrdersPage>
     return SafeArea(
       child: ViewModelBuilder<AssignedOrdersViewModel>.reactive(
         viewModelBuilder: () => AssignedOrdersViewModel(),
-        onModelReady: (vm) => vm.initialise(),
+        onViewModelReady: (vm) => vm.initialise(),
         builder: (context, vm, child) {
           return BasePage(
             body: VStack(

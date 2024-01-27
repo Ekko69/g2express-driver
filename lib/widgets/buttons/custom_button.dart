@@ -8,21 +8,21 @@ import 'package:fuodz/widgets/busy_indicator.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class CustomButton extends StatelessWidget {
-  final String title;
-  final IconData icon;
-  final double iconSize;
-  final Widget child;
-  final TextStyle titleStyle;
-  final Function onPressed;
-  final Function onLongPress;
-  final ShapeBorder shape;
+  final String? title;
+  final IconData? icon;
+  final double? iconSize;
+  final Widget? child;
+  final TextStyle? titleStyle;
+  final Function? onPressed;
+  final Function? onLongPress;
+  final OutlinedBorder? shape;
   final bool isFixedHeight;
-  final double height;
+  final double? height;
   final bool loading;
   final double shapeRadius;
-  final Color color;
-  final Color iconColor;
-  final double elevation;
+  final Color? color;
+  final Color? iconColor;
+  final double? elevation;
 
   const CustomButton({
     this.title,
@@ -40,7 +40,7 @@ class CustomButton extends StatelessWidget {
     this.color,
     this.titleStyle,
     this.elevation,
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   @override
@@ -58,8 +58,20 @@ class CustomButton extends StatelessWidget {
                 borderRadius: BorderRadius.circular(this.shapeRadius),
               ),
         ),
-        onPressed: this.loading ? null : this.onPressed,
-        onLongPress: this.loading ? null : this.onLongPress,
+        onPressed: (this.loading || this.onPressed == null)
+            ? null
+            : () {
+                //change focus to new focus node
+                FocusScope.of(context).requestFocus(new FocusNode());
+                this.onPressed!();
+              },
+        onLongPress: (this.loading || this.onLongPress == null)
+            ? null
+            : () {
+                //change focus to new focus node
+                FocusScope.of(context).requestFocus(new FocusNode());
+                this.onLongPress!();
+              },
         child: this.loading
             ? BusyIndicator(color: Colors.white)
             : Container(
@@ -82,9 +94,9 @@ class CustomButton extends StatelessWidget {
                                 left: Utils.isArabic ? Vx.dp0 : Vx.dp5,
                               )
                             : UiSpacer.emptySpace(),
-                        this.title != null && this.title.isNotBlank
+                        (this.title != null && this.title!.isNotBlank)
                             ? Text(
-                                this.title,
+                                "${this.title}",
                                 textAlign: TextAlign.center,
                                 style: this.titleStyle ??
                                     AppTextStyle.h3TitleTextStyle(

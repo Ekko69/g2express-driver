@@ -8,7 +8,7 @@ import 'package:localize_and_translate/localize_and_translate.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class CollectCashInfoDialog extends StatelessWidget {
-  const CollectCashInfoDialog(this.order, {Key key}) : super(key: key);
+  const CollectCashInfoDialog(this.order, {Key? key}) : super(key: key);
 
   final Order order;
 
@@ -26,7 +26,7 @@ class CollectCashInfoDialog extends StatelessWidget {
             [
               "Payment method".tr().text.sm.thin.make().expand(),
               UiSpacer.horizontalSpace(space: 10),
-              "${order.paymentMethod.name}".text.semiBold.sm.make(),
+              "${order.paymentMethod?.name}".text.semiBold.sm.make(),
             ],
           ),
           UiSpacer.verticalSpace(space: 5),
@@ -34,13 +34,19 @@ class CollectCashInfoDialog extends StatelessWidget {
             [
               "Amount".tr().text.sm.thin.make().expand(),
               UiSpacer.horizontalSpace(space: 10),
-              "${AppStrings.currencySymbol} ${order.total}".currencyFormat().text.semiBold.lg.make(),
+              "${AppStrings.currencySymbol} ${order.total}"
+                  .currencyFormat()
+                  .text
+                  .semiBold
+                  .lg
+                  .make(),
             ],
           ),
           UiSpacer.verticalSpace(),
           "Instruction".tr().text.semiBold.base.make(),
           UiSpacer.verticalSpace(space: 5),
-          "Please confirm you have collected order amount from customer. Once you confirm order will be marked as completed/delivered".tr()
+          "Please confirm you have collected order amount from customer. Once you confirm order will be marked as completed/delivered"
+              .tr()
               .text
               .light
               .sm

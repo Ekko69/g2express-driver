@@ -13,7 +13,7 @@ class WalletRequest extends HttpService {
       return Wallet.fromJson(apiResponse.body);
     }
 
-    throw apiResponse.message;
+    throw "${apiResponse.message}";
   }
 
   Future<String> walletTopup(String amount) async {
@@ -23,7 +23,7 @@ class WalletRequest extends HttpService {
       return apiResponse.body["link"];
     }
 
-    throw apiResponse.message;
+    throw "${apiResponse.message}";
   }
 
   Future<List<WalletTransaction>> walletTransactions({int page = 1}) async {
@@ -37,11 +37,13 @@ class WalletRequest extends HttpService {
           .toList();
     }
 
-    throw apiResponse.message;
+    throw "${apiResponse.message}";
   }
 
-  Future<ApiResponse> transferBalanceRequest(
-      {String amount, int userId}) async {
+  Future<ApiResponse> transferBalanceRequest({
+    required String amount,
+    required int userId,
+  }) async {
     final apiResult = await post(
       Api.transferWalletBalance,
       {

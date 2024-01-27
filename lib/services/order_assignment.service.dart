@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fl_location/fl_location.dart';
 import 'package:fuodz/constants/app_strings.dart';
@@ -42,26 +41,27 @@ class OrderAssignmentService {
 
   //
   static Future<bool> driverWithinPickup(Map<String, dynamic> json) async {
-    dynamic pickupJson = json['pickup'];
-    if (pickupJson is String) {
-      pickupJson = jsonDecode(pickupJson);
-    }
-    Pickup pickup = Pickup.fromJson(pickupJson) ?? null;
-    if (pickup == null) {
+    try {
+      dynamic pickupJson = json['pickup'];
+      if (pickupJson is String) {
+        pickupJson = jsonDecode(pickupJson);
+      }
+
+      Pickup? pickup = Pickup.fromJson(pickupJson);
+      final cLoc = await FlLocation.getLocation(timeLimit: 5.seconds);
+      //get pickup distance
+      double distance = Geolocator.distanceBetween(
+        cLoc.latitude,
+        cLoc.longitude,
+        pickup.lat!.toDouble(),
+        pickup.long!.toDouble(),
+      );
+      distance = distance / 1000;
+      //check distance
+      return distance <= AppStrings.driverSearchRadius;
+    } catch (error) {
       return false;
     }
-
-    final cLoc = await FlLocation.getLocation(timeLimit: 5.seconds);
-    //get pickup distance
-    double distance = Geolocator.distanceBetween(
-      cLoc?.latitude ?? 0.00,
-      cLoc?.longitude ?? 0.00,
-      pickup.lat.toDouble(),
-      pickup.long.toDouble(),
-    );
-    distance = distance / 1000;
-    //check distance
-    return distance <= AppStrings.driverSearchRadius;
   }
 
   //run transaction to let other driver know you are currently bein notified
@@ -69,7 +69,7 @@ class OrderAssignmentService {
     Map<String, dynamic> json,
     String docRefString,
   ) async {
-    final driver = await AuthServices.getCurrentUser() ?? null;
+    final driver = await AuthServices.getCurrentUser();
     return (await FirebaseFirestore.instance.runTransaction<bool>(
       (transaction) async {
         // Get the document
@@ -82,24 +82,25 @@ class OrderAssignmentService {
         }
 
         //check if i was informed already
-        List informedDrivers = (snapshot.data() as Map)['informed'] as List;
-        if (informedDrivers != null && informedDrivers.contains(driver?.id)) {
+        List? informedDrivers = (snapshot.data() as Map)['informed'] as List?;
+        if (informedDrivers != null && informedDrivers.contains(driver.id)) {
           return false;
         }
 
         //check if already ignored
         List ignoredDrivers = (snapshot.data() as Map)['ignored'] as List;
-        if (ignoredDrivers != null && ignoredDrivers.contains(driver?.id)) {
+        if (ignoredDrivers.contains(driver.id)) {
           return false;
         }
 
         int maxDriverNotifiable =
-            int.parse((snapshot.data() as Map)['notifiable'].toString()) ?? 1;
+            int.tryParse((snapshot.data() as Map)['notifiable'].toString()) ??
+                1;
         if (informedDrivers == null) {
-          informedDrivers = [driver?.id];
+          informedDrivers = [driver.id];
         } else if (informedDrivers.length < maxDriverNotifiable &&
-            !informedDrivers.contains(driver?.id)) {
-          informedDrivers.add(driver?.id);
+            !informedDrivers.contains(driver.id)) {
+          informedDrivers.add(driver.id);
         } else {
           return false;
         }
@@ -110,7 +111,12 @@ class OrderAssignmentService {
         return true;
       },
       maxAttempts: 2,
-    ).catchError((error) {}));
+    ).catchError(
+      (error) {
+        print(error);
+        return false;
+      },
+    ));
     // .then((value) => print("Follower count updated to $value"))
   }
 
@@ -119,7 +125,7 @@ class OrderAssignmentService {
     Map<String, dynamic> json,
     String docRefString,
   ) async {
-    final driver = await AuthServices.getCurrentUser() ?? null;
+    final driver = await AuthServices.getCurrentUser();
     final done = (await FirebaseFirestore.instance.runTransaction<bool>(
       (transaction) async {
         // Get the document
@@ -132,19 +138,19 @@ class OrderAssignmentService {
         }
 
         //remove driver id from noified drivers
-        List informedDrivers = (snapshot.data() as Map)['informed'] as List;
+        List? informedDrivers = (snapshot.data() as Map)['informed'] as List?;
         if (informedDrivers == null) {
           informedDrivers = [];
-        } else if (informedDrivers.contains(driver?.id)) {
-          informedDrivers.remove(driver?.id);
+        } else if (informedDrivers.contains(driver.id)) {
+          informedDrivers.remove(driver.id);
         }
 
         //add driver id to list of ignored drivers
-        List ignoredDrivers = (snapshot.data() as Map)['ignored'] as List;
+        List? ignoredDrivers = (snapshot.data() as Map)['ignored'] as List?;
         if (ignoredDrivers == null) {
-          ignoredDrivers = [driver?.id];
-        } else if (!ignoredDrivers.contains(driver?.id)) {
-          ignoredDrivers.add(driver?.id);
+          ignoredDrivers = [driver.id];
+        } else if (!ignoredDrivers.contains(driver.id)) {
+          ignoredDrivers.add(driver.id);
         } else {
           return false;
         }
@@ -160,7 +166,10 @@ class OrderAssignmentService {
         return true;
       },
       maxAttempts: 2,
-    ).catchError((error) {}));
+    ).catchError((error) {
+      print(error);
+      return false;
+    }));
     // .then((value) => print("Follower count updated to $value"))
 
     return done;

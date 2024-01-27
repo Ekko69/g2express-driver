@@ -1,31 +1,28 @@
 import 'package:flutter/material.dart';
 import 'package:fuodz/services/auth.service.dart';
 import 'package:fuodz/view_models/base.view_model.dart';
-import 'package:fuodz/models/user.dart';
 import 'package:fuodz/requests/auth.request.dart';
 import 'package:fuodz/views/pages/splash.page.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class AccountDeleteViewModel extends MyBaseViewModel {
   //
-  User currentUser;
+  // User currentUser;
   AuthRequest _authRequest = AuthRequest();
   bool otherReason = false;
-  String reason;
+  String? reason;
 
   AccountDeleteViewModel(BuildContext context) {
     this.viewContext = context;
   }
 
-  
-
   processAccountDeletion() async {
     _authRequest.delete("");
-    if (formBuilderKey.currentState.saveAndValidate()) {
+    if (formBuilderKey.currentState!.saveAndValidate()) {
       //
       setBusy(true);
       try {
-        final formValue = formBuilderKey.currentState.value;
+        final formValue = formBuilderKey.currentState!.value;
         final apiResponse = await _authRequest.deleteProfile(
           password: formValue["password"],
         );

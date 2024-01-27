@@ -11,14 +11,14 @@ import 'package:stacked/stacked.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class PaymentAccountPage extends StatelessWidget {
-  const PaymentAccountPage({Key key}) : super(key: key);
+  const PaymentAccountPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     //
     return ViewModelBuilder<PaymentAccountViewModel>.reactive(
       viewModelBuilder: () => PaymentAccountViewModel(context),
-      onModelReady: (vm) => vm.initialise(),
+      onViewModelReady: (vm) => vm.initialise(),
       builder: (context, vm, child) {
         return BasePage(
           title: "Payment Accounts".tr(),

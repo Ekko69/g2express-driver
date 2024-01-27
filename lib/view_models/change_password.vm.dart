@@ -3,15 +3,13 @@ import 'dart:io';
 import 'package:cool_alert/cool_alert.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:fuodz/models/user.dart';
 import 'package:fuodz/requests/auth.request.dart';
 import 'package:fuodz/view_models/base.view_model.dart';
 import 'package:localize_and_translate/localize_and_translate.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class ChangePasswordViewModel extends MyBaseViewModel {
-  User currentUser;
-  File newPhoto;
+  File? newPhoto;
   //the textediting controllers
   TextEditingController currentPasswordTEC = new TextEditingController();
   TextEditingController newPasswordTEC = new TextEditingController();
@@ -28,7 +26,7 @@ class ChangePasswordViewModel extends MyBaseViewModel {
   //
   processUpdate() async {
     //
-    if (formKey.currentState.validate()) {
+    if (formKey.currentState!.validate()) {
       //
       setBusy(true);
 

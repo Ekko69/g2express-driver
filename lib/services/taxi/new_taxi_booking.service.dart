@@ -11,14 +11,14 @@ import 'package:fuodz/view_models/taxi/taxi.vm.dart';
 class NewTaxiBookingService {
   TaxiViewModel taxiViewModel;
   NewTaxiBookingService(this.taxiViewModel);
-  StreamSubscription myLocationListener;
+  StreamSubscription? myLocationListener;
   bool showNewTripView = false;
   CountDownController countDownTimerController = CountDownController();
   GlobalKey newAlertViewKey = GlobalKey<FormState>();
   //
   FirebaseFirestore firebaseFireStore = FirebaseFirestore.instance;
-  StreamSubscription newOrderStreamSubscription;
-  StreamSubscription locationStreamSubscription;
+  StreamSubscription? newOrderStreamSubscription;
+  StreamSubscription? locationStreamSubscription;
 
   //dispose
   void dispose() {
@@ -120,7 +120,7 @@ class NewTaxiBookingService {
 
   void countDownCompleted() async {
     try {
-      countDownTimerController?.pause();
+      countDownTimerController.pause();
     } catch (e) {
       print("countDownTimerController error ==> $e");
     }
@@ -129,8 +129,8 @@ class NewTaxiBookingService {
     taxiViewModel.taxiGoogleMapManagerService.zoomToCurrentLocation();
     taxiViewModel.notifyListeners();
     await OrderAssignmentService.releaseOrderForotherDrivers(
-      taxiViewModel.newOrder.toJson(),
-      taxiViewModel.newOrder.docRef,
+      taxiViewModel.newOrder!.toJson(),
+      taxiViewModel.newOrder!.docRef!,
     );
     startNewOrderListener();
   }

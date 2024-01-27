@@ -9,8 +9,8 @@ import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class TaxiGoogleMapManagerService {
-  TaxiViewModel taxiViewModel;
-  GoogleMapController googleMapController;
+  TaxiViewModel? taxiViewModel;
+  GoogleMapController? googleMapController;
   EdgeInsets googleMapPadding = EdgeInsets.only(top: kToolbarHeight);
   Set<Polyline> gMapPolylines = {};
   // this will hold each polyline coordinate as Lat and Lng pairs
@@ -19,9 +19,9 @@ class TaxiGoogleMapManagerService {
   MarkerId driverMarkerId = MarkerId("driverIcon");
   PolylinePoints polylinePoints = PolylinePoints();
 // for my custom icons
-  BitmapDescriptor sourceIcon;
-  BitmapDescriptor destinationIcon;
-  BitmapDescriptor driverIcon;
+  BitmapDescriptor? sourceIcon;
+  BitmapDescriptor? destinationIcon;
+  BitmapDescriptor? driverIcon;
   bool canShowMap = true;
 
   TaxiGoogleMapManagerService(this.taxiViewModel) {
@@ -34,23 +34,26 @@ class TaxiGoogleMapManagerService {
   }
 
   onMapCameraMoveStarted() {
-    taxiViewModel?.taxiLocationService?.pauseAutoZoomToLocation();
+    taxiViewModel?.taxiLocationService.pauseAutoZoomToLocation();
   }
 
   onMapCameraIdle() {
-    taxiViewModel?.taxiLocationService?.handleAutoZoomToLocation();
+    taxiViewModel?.taxiLocationService.handleAutoZoomToLocation();
   }
 
   void setGoogleMapStyle() async {
+    if (taxiViewModel == null) {
+      return;
+    }
     String value =
-        await DefaultAssetBundle.of(taxiViewModel.viewContext).loadString(
+        await DefaultAssetBundle.of(taxiViewModel!.viewContext).loadString(
       'assets/json/google_map_style.json',
     );
     //
     googleMapController?.setMapStyle(value);
   }
 
-  void setSourceAndDestinationIcons() async {
+  setSourceAndDestinationIcons() async {
     sourceIcon = await BitmapDescriptor.fromAssetImage(
       ImageConfiguration(devicePixelRatio: 2.5),
       AppImages.pickupLocation,
@@ -62,8 +65,8 @@ class TaxiGoogleMapManagerService {
     );
     //
     final Uint8List markerIcond = await Utils().getBytesFromCanvas(
-      ((taxiViewModel?.viewContext?.percentWidth ?? 1) * 13).ceil(),
-      ((taxiViewModel?.viewContext?.percentWidth ?? 1) * 25).ceil(),
+      ((taxiViewModel?.viewContext.percentWidth ?? 1) * 13).ceil(),
+      ((taxiViewModel?.viewContext.percentWidth ?? 1) * 25).ceil(),
       AppImages.driverCar,
     );
     driverIcon = BitmapDescriptor.fromBytes(markerIcond);
@@ -89,7 +92,7 @@ class TaxiGoogleMapManagerService {
 
   //
   zoomToLocation(double lat, double lng) {
-    googleMapController.animateCamera(
+    googleMapController?.animateCamera(
       CameraUpdate.newCameraPosition(
         CameraPosition(
           target: LatLng(lat, lng),
@@ -99,20 +102,20 @@ class TaxiGoogleMapManagerService {
     );
   }
 
-  void updateGoogleMapPadding([double height]) {
+  void updateGoogleMapPadding([double? height]) {
     googleMapPadding = EdgeInsets.only(
       top: googleMapPadding.top,
-      bottom: height,
+      bottom: height ?? googleMapPadding.bottom,
     );
-    taxiViewModel.notifyListeners();
+    taxiViewModel?.notifyListeners();
   }
 
   clearMapData() {
     clearMapMarkers();
     polylineCoordinates.clear();
     gMapPolylines.clear();
-    taxiViewModel.uiStream.add(null);
-    taxiViewModel.notifyListeners();
+    taxiViewModel?.uiStream.add(null);
+    taxiViewModel?.notifyListeners();
   }
 
   //
@@ -122,11 +125,11 @@ class TaxiGoogleMapManagerService {
     } else {
       gMapMarkers.removeWhere((e) => e.markerId != driverMarkerId);
     }
-    taxiViewModel.notifyListeners();
+    taxiViewModel?.notifyListeners();
   }
 
   removeMapMarker(MarkerId markerId) {
     gMapMarkers.removeWhere((e) => e.markerId == markerId);
-    taxiViewModel.notifyListeners();
+    taxiViewModel?.notifyListeners();
   }
 }

@@ -26,7 +26,10 @@ import 'package:stacked/stacked.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class OrderDetailsPage extends StatelessWidget {
-  const OrderDetailsPage({this.order, Key key}) : super(key: key);
+  const OrderDetailsPage({
+    required this.order,
+    Key? key,
+  }) : super(key: key);
 
   //
   final Order order;
@@ -37,7 +40,7 @@ class OrderDetailsPage extends StatelessWidget {
     return Scaffold(
       body: ViewModelBuilder<OrderDetailsViewModel>.reactive(
         viewModelBuilder: () => OrderDetailsViewModel(context, order),
-        onModelReady: (vm) => vm.initialise(),
+        onViewModelReady: (vm) => vm.initialise(),
         builder: (context, vm, child) {
           return BasePage(
             title: "Order Details".tr(),
@@ -80,7 +83,7 @@ class OrderDetailsPage extends StatelessWidget {
 
                       //status
                       "Status".tr().text.gray500.medium.sm.make(),
-                      "${vm.order.status.tr().allWordsCapitilize() ?? ''}"
+                      "${vm.order.status.tr().capitalized}"
                           .text
                           .color(AppColor.getStausColor(vm.order.status))
                           .medium
@@ -98,21 +101,21 @@ class OrderDetailsPage extends StatelessWidget {
                           VStack(
                             [
                               "Vendor".tr().text.gray500.medium.sm.make(),
-                              vm.order.vendor.name.text.medium.xl
+                              vm.order.vendor!.name.text.medium.xl
                                   .make()
                                   .pOnly(bottom: Vx.dp20),
                             ],
                           ).expand(),
                           //call
-                          vm.order.canChatVendor
-                              ? CustomButton(
-                                  icon: FlutterIcons.phone_call_fea,
-                                  iconColor: Colors.white,
-                                  color: AppColor.primaryColor,
-                                  shapeRadius: Vx.dp20,
-                                  onPressed: vm.callVendor,
-                                ).wh(Vx.dp64, Vx.dp40).p12()
-                              : UiSpacer.emptySpace(),
+                          if (vm.order.canChatVendor &&
+                              AppUISettings.canCallVendor)
+                            CustomButton(
+                              icon: FlutterIcons.phone_call_fea,
+                              iconColor: Colors.white,
+                              color: AppColor.primaryColor,
+                              shapeRadius: Vx.dp20,
+                              onPressed: vm.callVendor,
+                            ).wh(Vx.dp64, Vx.dp40).p12(),
                         ],
                       ),
 
@@ -128,7 +131,8 @@ class OrderDetailsPage extends StatelessWidget {
                                   .medium
                                   .sm
                                   .make(),
-                              vm.order.vendor.address.text
+                              "${vm.order.vendor?.address}"
+                                  .text
                                   .make()
                                   .pOnly(bottom: Vx.dp20),
                             ],
@@ -139,14 +143,18 @@ class OrderDetailsPage extends StatelessWidget {
                             iconColor: Colors.white,
                             color: AppColor.primaryColor,
                             shapeRadius: Vx.dp20,
-                            onPressed: () => vm.routeToLocation(
-                              DeliveryAddress(
-                                  name: vm.order.vendor.name,
-                                  latitude:
-                                      double.parse(vm.order.vendor.latitude),
-                                  longitude:
-                                      double.parse(vm.order.vendor.longitude)),
-                            ),
+                            onPressed: (vm.order.vendor == null ||
+                                    vm.order.vendor?.latitude == null)
+                                ? null
+                                : () => vm.routeToLocation(
+                                      DeliveryAddress(
+                                        name: vm.order.vendor!.name,
+                                        latitude: double.parse(
+                                            vm.order.vendor!.latitude),
+                                        longitude: double.parse(
+                                            vm.order.vendor!.longitude),
+                                      ),
+                                    ),
                           ).wh(Vx.dp64, Vx.dp40).p12(),
                         ],
                       ),
@@ -178,15 +186,15 @@ class OrderDetailsPage extends StatelessWidget {
                             ],
                           ).expand(),
                           //call
-                          vm.order.canChatCustomer
-                              ? CustomButton(
-                                  icon: FlutterIcons.phone_call_fea,
-                                  iconColor: Colors.white,
-                                  color: AppColor.primaryColor,
-                                  shapeRadius: Vx.dp20,
-                                  onPressed: vm.callCustomer,
-                                ).wh(Vx.dp64, Vx.dp40).p12()
-                              : UiSpacer.emptySpace(),
+                          if (vm.order.canChatCustomer &&
+                              AppUISettings.canCallCustomer)
+                            CustomButton(
+                              icon: FlutterIcons.phone_call_fea,
+                              iconColor: Colors.white,
+                              color: AppColor.primaryColor,
+                              shapeRadius: Vx.dp20,
+                              onPressed: vm.callCustomer,
+                            ).wh(Vx.dp64, Vx.dp40).p12(),
                         ],
                       ),
                       vm.order.canChatCustomer
@@ -210,7 +218,7 @@ class OrderDetailsPage extends StatelessWidget {
 
                       //note
                       "Note".tr().text.gray500.medium.sm.make(),
-                      (vm.order.note ?? "--")
+                      "${vm.order.note}"
                           .text
                           .medium
                           .xl
@@ -234,25 +242,34 @@ class OrderDetailsPage extends StatelessWidget {
                               [
                                 AmountTile(
                                   "Package Type".tr(),
-                                  vm.order.packageType.name,
+                                  vm.order.packageType!.name,
                                 ),
-                                AmountTile("Width".tr(), vm.order.width + "cm"),
                                 AmountTile(
-                                    "Length".tr(), vm.order.length + "cm"),
+                                  "Width".tr(),
+                                  "${vm.order.width} cm",
+                                ),
                                 AmountTile(
-                                    "Height".tr(), vm.order.height + "cm"),
+                                  "Length".tr(),
+                                  "${vm.order.length} cm",
+                                ),
                                 AmountTile(
-                                    "Weight".tr(), vm.order.weight + "kg"),
+                                  "Height".tr(),
+                                  "${vm.order.height} cm",
+                                ),
+                                AmountTile(
+                                  "Weight".tr(),
+                                  "${vm.order.weight} kg",
+                                ),
                               ],
                               crossAlignment: CrossAxisAlignment.end,
                             )
                           : CustomListView(
                               noScrollPhysics: true,
-                              dataSet: vm.order.orderProducts,
+                              dataSet: vm.order.orderProducts ?? [],
                               itemBuilder: (context, index) {
                                 //
                                 final orderProduct =
-                                    vm.order.orderProducts[index];
+                                    vm.order.orderProducts![index];
                                 return OrderProductListItem(
                                   orderProduct: orderProduct,
                                 );
@@ -270,7 +287,7 @@ class OrderDetailsPage extends StatelessWidget {
                         tax: vm.order.tax,
                         driverTip: vm.order.tip,
                         vendorTax: vm.order.taxRate.toString(),
-                        total: vm.order.total,
+                        total: vm.order.total!,
                       ).pOnly(top: Vx.dp20, bottom: Vx.dp56),
                     ],
                   )

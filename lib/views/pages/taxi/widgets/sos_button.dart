@@ -7,7 +7,7 @@ import 'package:url_launcher/url_launcher_string.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class SOSButton extends StatelessWidget {
-  const SOSButton({Key key}) : super(key: key);
+  const SOSButton({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

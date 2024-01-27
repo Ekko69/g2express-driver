@@ -7,7 +7,7 @@ import 'package:supercharged/supercharged.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class TaxiPickupView extends StatelessWidget {
-  const TaxiPickupView(this.vm, {Key key}) : super(key: key);
+  const TaxiPickupView(this.vm, {Key? key}) : super(key: key);
 
   final TaxiViewModel vm;
 
@@ -29,8 +29,8 @@ class TaxiPickupView extends StatelessWidget {
         UiSpacer.horizontalSpace(),
         RouteButton(
           null,
-          lat: vm.onGoingOrderTrip?.taxiOrder?.pickupLatitude?.toDouble(),
-          lng: vm.onGoingOrderTrip?.taxiOrder?.pickupLongitude?.toDouble(),
+          lat: vm.onGoingOrderTrip!.taxiOrder!.pickupLatitude.toDouble(),
+          lng: vm.onGoingOrderTrip!.taxiOrder!.pickupLongitude.toDouble(),
         ),
       ],
     );

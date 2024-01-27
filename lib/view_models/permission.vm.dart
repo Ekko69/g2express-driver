@@ -176,7 +176,7 @@ class PermissionViewModel extends MyBaseViewModel {
       //CALL THE PERMISSION HANDLER
       await FlutterBackground.initialize(androidConfig: androidConfig);
       bool isGranted = await FlutterBackground.hasPermissions;
-      if (isGranted != null && isGranted) {
+      if (isGranted) {
         await FlutterBackground.initialize(androidConfig: androidConfig);
         await FlutterBackground.enableBackgroundExecution();
       }

@@ -12,12 +12,12 @@ import 'package:rxdart/rxdart.dart';
 
 class TaxiLocationService {
   //
-  TaxiViewModel taxiViewModel;
-  StreamSubscription myLocationListener;
+  TaxiViewModel? taxiViewModel;
+  StreamSubscription? myLocationListener;
   BehaviorSubject<int> etaStream = BehaviorSubject<int>();
-  Timer _timer;
-  Timer _etaTimer;
-  Marker driverMarker;
+  Timer? _timer;
+  Timer? _etaTimer;
+  Marker? driverMarker;
 
   //
   TaxiLocationService(this.taxiViewModel) {
@@ -34,8 +34,8 @@ class TaxiLocationService {
   //
   startLocationListener() async {
     if (await AppPermissionHandlerService().isLocationGranted()) {
-      taxiViewModel.taxiGoogleMapManagerService.canShowMap = true;
-      taxiViewModel.notifyListeners();
+      taxiViewModel?.taxiGoogleMapManagerService.canShowMap = true;
+      taxiViewModel?.notifyListeners();
       startListeningToDriverLocation();
     }
   }
@@ -51,27 +51,30 @@ class TaxiLocationService {
         if (driverMarker == null) {
           //new driver maker
           driverMarker = Marker(
-            markerId: taxiViewModel.taxiGoogleMapManagerService.driverMarkerId,
+            markerId: taxiViewModel!.taxiGoogleMapManagerService.driverMarkerId,
             position: LatLng(
               event.latitude,
               event.longitude,
             ),
             rotation: event.heading,
-            icon: taxiViewModel.taxiGoogleMapManagerService.driverIcon,
+            icon: taxiViewModel!.taxiGoogleMapManagerService.driverIcon!,
             anchor: Offset(0.5, 0.5),
           );
 
 //
-          taxiViewModel.taxiGoogleMapManagerService.gMapMarkers
-              .replaceFirstWhere(
-            (marker) =>
-                marker.markerId ==
-                taxiViewModel.taxiGoogleMapManagerService.driverMarkerId,
-            driverMarker,
-          );
+          taxiViewModel!.taxiGoogleMapManagerService.gMapMarkers =
+              taxiViewModel!.taxiGoogleMapManagerService.gMapMarkers
+                  .replaceFirstWhere(
+                    (marker) =>
+                        marker.markerId ==
+                        taxiViewModel!
+                            .taxiGoogleMapManagerService.driverMarkerId,
+                    driverMarker!,
+                  )
+                  .toSet();
         } else {
           //update driver maker
-          driverMarker = driverMarker.copyWith(
+          driverMarker = driverMarker?.copyWith(
             positionParam: LatLng(
               event.latitude,
               event.longitude,
@@ -80,12 +83,12 @@ class TaxiLocationService {
           );
 
           //
-          taxiViewModel.taxiGoogleMapManagerService.gMapMarkers
-              .add(driverMarker);
+          taxiViewModel!.taxiGoogleMapManagerService.gMapMarkers
+              .add(driverMarker!);
         }
 
         //
-        taxiViewModel.notifyListeners();
+        taxiViewModel?.notifyListeners();
         zoomToLocation();
       },
     );
@@ -93,7 +96,7 @@ class TaxiLocationService {
 
   zoomToLocation() async {
     //
-    taxiViewModel?.taxiGoogleMapManagerService?.googleMapController
+    taxiViewModel!.taxiGoogleMapManagerService.googleMapController
         ?.animateCamera(
       CameraUpdate.newCameraPosition(
         CameraPosition(
@@ -120,7 +123,7 @@ class TaxiLocationService {
 
   void requestLocationPermissionForGoogleMap() async {
     await AppPermissionHandlerService().handleLocationRequest();
-    taxiViewModel.taxiLocationService.startLocationListener();
+    taxiViewModel!.taxiLocationService.startLocationListener();
   }
 
   //ETA section
@@ -134,8 +137,8 @@ class TaxiLocationService {
   calculatedETAToLocation(LatLng latLng) {
     //
     final startPoint = Point(
-      latitude: driverMarker.position.latitude,
-      longitude: driverMarker.position.longitude,
+      latitude: driverMarker!.position.latitude,
+      longitude: driverMarker!.position.longitude,
     );
     final endPoint = Point(
       latitude: latLng.latitude,
@@ -143,7 +146,9 @@ class TaxiLocationService {
     );
     final distance = GeoRange().distance(startPoint, endPoint);
     double etaInHours = (distance /
-        (AppStrings.env("taxi")["drivingSpeed"] ?? "50").toString().toDouble());
+        (AppStrings.env("taxi")["drivingSpeed"] ?? "50")
+            .toString()
+            .toDouble()!);
     final eta = (etaInHours * 60).ceil();
     etaStream.add(eta);
   }

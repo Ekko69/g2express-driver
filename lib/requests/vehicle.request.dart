@@ -14,15 +14,17 @@ class VehicleRequest extends HttpService {
     return (apiResponse.body as List).map((e) => Vehicle.fromJson(e)).toList();
   }
 
-  Future<ApiResponse> newVehicleRequest(
-      {Map<String, dynamic> vals, List<File> docs}) async {
+  Future<ApiResponse> newVehicleRequest({
+    required Map<String, dynamic> vals,
+    List<File>? docs,
+  }) async {
     final postBody = {
       ...vals,
     };
 
     FormData formData = FormData.fromMap(postBody);
-    if (docs != null && docs.isNotEmpty) {
-      for (File file in docs) {
+    if ((docs ?? []).isNotEmpty) {
+      for (File file in docs!) {
         formData.files.addAll([
           MapEntry("documents[]", await MultipartFile.fromFile(file.path)),
         ]);
@@ -47,6 +49,6 @@ class VehicleRequest extends HttpService {
     if (apiResponse.allGood) {
       return apiResponse;
     }
-    throw apiResponse.message;
+    throw "${apiResponse.message}";
   }
 }

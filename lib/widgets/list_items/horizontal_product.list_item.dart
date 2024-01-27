@@ -9,8 +9,11 @@ import 'package:velocity_x/velocity_x.dart';
 
 class HorizontalProductListItem extends StatelessWidget {
   //
-  const HorizontalProductListItem(this.product, {this.onPressed, Key key})
-      : super(key: key);
+  const HorizontalProductListItem(
+    this.product, {
+    required this.onPressed,
+    Key? key,
+  }) : super(key: key);
 
   //
   final Product product;
@@ -25,7 +28,7 @@ class HorizontalProductListItem extends StatelessWidget {
       [
         //
         Hero(
-          tag: product.heroTag,
+          tag: product.heroTag ?? product.id,
           child: CustomImage(imageUrl: product.photo)
               .wh(Vx.dp64, Vx.dp64)
               .box

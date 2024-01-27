@@ -5,8 +5,11 @@ import 'package:localize_and_translate/localize_and_translate.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class EmptyOrder extends StatelessWidget {
-  const EmptyOrder({this.title, Key key}) : super(key: key);
-  final String title;
+  const EmptyOrder({
+    this.title,
+    Key? key,
+  }) : super(key: key);
+  final String? title;
   @override
   Widget build(BuildContext context) {
     return EmptyState(

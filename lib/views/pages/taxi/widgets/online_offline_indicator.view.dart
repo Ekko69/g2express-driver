@@ -8,7 +8,7 @@ import 'package:velocity_x/velocity_x.dart';
 import 'package:rolling_switch/rolling_switch.dart';
 
 class OnlineOfflineIndicatorView extends StatelessWidget {
-  const OnlineOfflineIndicatorView(this.vm, {Key key}) : super(key: key);
+  const OnlineOfflineIndicatorView(this.vm, {Key? key}) : super(key: key);
   final TaxiViewModel vm;
   @override
   Widget build(BuildContext context) {
@@ -30,7 +30,7 @@ class OnlineOfflineIndicatorView extends StatelessWidget {
                       icon: FlutterIcons.location_on_mdi,
                       text: Text(
                         'Online'.tr(),
-                        style: context.textTheme.bodyLarge.copyWith(
+                        style: context.textTheme.bodyLarge!.copyWith(
                           color: Colors.white,
                         ),
                       ),
@@ -42,7 +42,7 @@ class OnlineOfflineIndicatorView extends StatelessWidget {
                       backgroundColor: Colors.red,
                       text: Text(
                         'Offline'.tr(),
-                        style: context.textTheme.bodyLarge.copyWith(
+                        style: context.textTheme.bodyLarge!.copyWith(
                           color: Colors.white,
                         ),
                       ),

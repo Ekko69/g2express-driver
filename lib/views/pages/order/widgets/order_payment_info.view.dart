@@ -7,7 +7,7 @@ import 'package:velocity_x/velocity_x.dart';
 import 'package:localize_and_translate/localize_and_translate.dart';
 
 class OrderPaymentInfoView extends StatelessWidget {
-  const OrderPaymentInfoView(this.vm, {Key key}) : super(key: key);
+  const OrderPaymentInfoView(this.vm, {Key? key}) : super(key: key);
   final OrderDetailsViewModel vm;
 
   //
@@ -18,15 +18,13 @@ class OrderPaymentInfoView extends StatelessWidget {
         //
         HStack(
           [
-
             //Payment option
             VStack(
               [
                 //
                 "Payment Method".tr().text.gray500.medium.sm.make(),
                 //
-                vm.order.paymentMethod.name
-                    .allWordsCapitilize()
+                "${vm.order.paymentMethod?.name.capitalized}"
                     .text
                     .medium
                     .xl
@@ -35,15 +33,13 @@ class OrderPaymentInfoView extends StatelessWidget {
               ],
             ).expand(),
 
-
             //Payment status
             VStack(
               [
                 //
                 "Payment Status".tr().text.gray500.medium.sm.make(),
                 //
-                "${vm.order.paymentStatus.tr()
-                    .allWordsCapitilize() ?? '' }"
+                "${vm.order.paymentStatus.tr().capitalized}"
                     .text
                     .color(AppColor.getStausColor(vm.order.paymentStatus))
                     .medium
@@ -55,14 +51,19 @@ class OrderPaymentInfoView extends StatelessWidget {
           ],
         ),
         //
-         //show payer if order is parcel order
+        //show payer if order is parcel order
         CustomVisibilty(
           visible: vm.order.isPackageDelivery,
           child: VStack(
             [
               UiSpacer.vSpace(),
               "Order Payer".tr().text.medium.make(),
-              (vm.order.payer == "1" ? "Sender" : "Receiver").tr().text.xl.semiBold.make(),
+              (vm.order.payer == "1" ? "Sender" : "Receiver")
+                  .tr()
+                  .text
+                  .xl
+                  .semiBold
+                  .make(),
               UiSpacer.vSpace(10),
             ],
           ),

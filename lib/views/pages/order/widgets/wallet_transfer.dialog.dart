@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:fuodz/models/order.dart';
 import 'package:fuodz/services/validator.service.dart';
 import 'package:fuodz/utils/ui_spacer.dart';
-import 'package:fuodz/view_models/wallet.vm.dart';
+import 'package:fuodz/view_models/wallet_transfer.vm.dart';
 import 'package:fuodz/widgets/buttons/custom_button.dart';
 import 'package:fuodz/widgets/custom_text_form_field.dart';
 import 'package:localize_and_translate/localize_and_translate.dart';
@@ -10,13 +10,13 @@ import 'package:stacked/stacked.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class WalletTransferDialog extends StatelessWidget {
-  const WalletTransferDialog(this.order, {Key key}) : super(key: key);
+  const WalletTransferDialog(this.order, {Key? key}) : super(key: key);
 
   final Order order;
   @override
   Widget build(BuildContext context) {
-    return ViewModelBuilder<WalletViewModel>.reactive(
-      viewModelBuilder: () => WalletViewModel(context, order: order),
+    return ViewModelBuilder<WalletTransferViewModel>.reactive(
+      viewModelBuilder: () => WalletTransferViewModel(context, order: order),
       builder: (context, vm, child) {
         return Form(
           key: vm.formKey,

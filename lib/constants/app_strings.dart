@@ -10,6 +10,14 @@ class AppStrings {
   static String get fcmApiKey => env('fcm_key');
   static String get currencySymbol => env('currency');
   static String get countryCode => env('country_code');
+
+  //
+  static bool get enableOtp => env('enble_otp') == "1";
+  static bool get enableOTPLogin => env('enableOTPLogin') == "1";
+  static bool get enableEmailLogin => env('enableEmailLogin');
+  static bool get enableProfileUpdate => env('enableProfileUpdate');
+  //
+
   static bool get enableProofOfDelivery => env('enableProofOfDelivery') == "1";
   static bool get signatureVerify =>
       env('orderVerificationType') == "signature";
@@ -37,7 +45,7 @@ class AppStrings {
   }
 
   static bool get driverMatchingNewSystem =>
-      (env('autoassignmentsystem') == 1) ?? false;
+      ((env('autoassignmentsystem') ?? 0) == 1);
 
   //
   static String get otpGateway => env('otpGateway') ?? "none";
@@ -78,14 +86,14 @@ class AppStrings {
   //
   //saving
   static Future<bool> saveAppSettingsToLocalStorage(String colorsMap) async {
-    return await LocalStorageService.prefs
+    return await LocalStorageService.prefs!
         .setString(AppStrings.appRemoteSettings, colorsMap);
   }
 
   static dynamic appSettingsObject;
   static Future<void> getAppSettingsFromLocalStorage() async {
     appSettingsObject =
-        LocalStorageService.prefs.getString(AppStrings.appRemoteSettings);
+        LocalStorageService.prefs!.getString(AppStrings.appRemoteSettings);
     if (appSettingsObject != null) {
       appSettingsObject = jsonDecode(appSettingsObject);
     }

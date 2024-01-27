@@ -9,14 +9,14 @@ import 'package:stacked/stacked.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class OnlineOfflineFab extends StatelessWidget {
-  const OnlineOfflineFab({Key key}) : super(key: key);
+  const OnlineOfflineFab({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     //
     return ViewModelBuilder<HomeViewModel>.reactive(
       viewModelBuilder: () => HomeViewModel(context),
-      onModelReady: (homeVm) => homeVm.initialise(),
+      onViewModelReady: (homeVm) => homeVm.initialise(),
       builder: (context, homeVm, child) {
         final stateColor =
             AppService().driverIsOnline ? Colors.green : Colors.red;
