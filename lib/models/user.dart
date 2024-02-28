@@ -39,7 +39,9 @@ class User {
         vendorId: json['vendor_id'],
         rating: json['rating'].toString().toDouble() ?? 5.00,
         isOnline: (json['is_online'].toString().toInt() ?? 0) == 1,
-        isTaxiDriver: (json['is_taxi_driver'].toString().toInt() ?? 0) == 1,
+        isTaxiDriver: json['is_taxi_driver'] is bool
+            ? json['is_taxi_driver']
+            : (json['is_taxi_driver'].toString().toInt() ?? 0) == 1,
         documentRequested: json["document_requested"] == null
             ? false
             : json["document_requested"],

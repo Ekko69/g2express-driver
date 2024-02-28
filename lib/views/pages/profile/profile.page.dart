@@ -1,8 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
-import 'package:fuodz/constants/app_strings.dart';
-import 'package:fuodz/extensions/dynamic.dart';
+import 'package:fuodz/constants/app_ui_settings.dart';
 import 'package:fuodz/view_models/profile.vm.dart';
+import 'package:fuodz/views/pages/profile/finance.page.dart';
+import 'package:fuodz/views/pages/profile/legal.page.dart';
+import 'package:fuodz/views/pages/profile/support.page.dart';
+import 'package:fuodz/views/pages/profile/widget/document_request.view.dart';
+import 'package:fuodz/views/pages/profile/widget/driver_type.switch.dart';
+import 'package:fuodz/views/pages/vehicle/vehicles.page.dart';
 import 'package:fuodz/widgets/base.page.dart';
 import 'package:fuodz/widgets/cards/profile.card.dart';
 import 'package:fuodz/widgets/menu_item.dart';
@@ -29,83 +34,87 @@ class ProfilePage extends StatelessWidget {
 
                 //profile card
                 ProfileCard(model).py12(),
-
-                //menu
-                VxBox(
-                  child: VStack(
-                    [
-                      //
-                      MenuItem(
-                        title: "Notifications".tr(),
-                        onPressed: model.openNotification,
-                      ),
-
-                      //
-                      MenuItem(
-                        title: "Rate & Review".tr(),
-                        onPressed: model.openReviewApp,
-                      ),
-
-                      MenuItem(
-                        title: "Faqs".tr(),
-                        onPressed: model.openFaqs,
-                      ),
-
-                      //
-                      MenuItem(
-                        title: "Version".tr(),
-                        suffix: model.appVersionInfo.text.make(),
-                      ),
-
-                      //
-                      MenuItem(
-                        title: "Privacy Policy".tr(),
-                        onPressed: model.openPrivacyPolicy,
-                      ),
-                      //
-                      MenuItem(
-                        title: "Terms & Conditions".tr(),
-                        onPressed: model.openTerms,
-                      ),
-                      //
-                      MenuItem(
-                        title: "Contact Us".tr(),
-                        onPressed: model.openContactUs,
-                      ),
-                      MenuItem(
-                        title: "Live support".tr(),
-                        onPressed: model.openLivesupport,
-                      ),
-                      //
-                      MenuItem(
-                        title: "Language".tr(),
-                        divider: false,
-                        suffix: Icon(
-                          FlutterIcons.language_ent,
-                        ),
-                        onPressed: model.changeLanguage,
-                      ),
-                    ],
+                12.heightBox,
+                //if driver switch is enabled
+                DriverTypeSwitch(),
+                //document verification
+                DocumentRequestView(),
+                Visibility(
+                  visible: AppUISettings.enableDriverTypeSwitch ||
+                      model.currentUser.isTaxiDriver,
+                  child: MenuItem(
+                    title: "Vehicle Details".tr(),
+                    onPressed: () {
+                      context.nextPage(VehiclesPage());
+                    },
+                    topDivider: true,
                   ),
-                )
-                    .border(color: Theme.of(context).cardColor)
-                    .color(Theme.of(context).cardColor)
-                    .shadow
-                    .roundedSM
-                    .make(),
+                ),
+                //
+
+                MenuItem(
+                  title: "Finance".tr(),
+                  onPressed: () {
+                    context.nextPage(FinancePage());
+                  },
+                ),
+                20.heightBox,
+                //menu
+                VStack(
+                  [
+                    //
+                    MenuItem(
+                      title: "Notifications".tr(),
+                      onPressed: model.openNotification,
+                    ),
+
+                    //
+                    MenuItem(
+                      title: "Rate & Review".tr(),
+                      onPressed: model.openReviewApp,
+                    ),
+
+                    MenuItem(
+                      title: "Faqs".tr(),
+                      onPressed: model.openFaqs,
+                    ),
+
+                    //
+                    MenuItem(
+                      title: "Legal".tr(),
+                      onPressed: () {
+                        context.nextPage(LegalPage());
+                      },
+                    ),
+                    MenuItem(
+                      title: "Support".tr(),
+                      onPressed: () {
+                        context.nextPage(SupportPage());
+                      },
+                    ),
+
+                    //
+                    MenuItem(
+                      title: "Language".tr(),
+                      divider: false,
+                      suffix: Icon(
+                        FlutterIcons.language_ent,
+                      ),
+                      onPressed: model.changeLanguage,
+                    ),
+                  ],
+                ),
 
                 //
-                "Copyright ©%s %s all right reserved"
-                    .tr()
-                    .fill([
-                      "${DateTime.now().year}",
-                      AppStrings.companyName,
-                    ])
-                    .text
-                    .center
-                    .sm
-                    .makeCentered()
-                    .py20(),
+                MenuItem(
+                  child: "Logout".tr().text.red500.make(),
+                  onPressed: model.logoutPressed,
+                  divider: false,
+                  suffix: Icon(
+                    FlutterIcons.logout_ant,
+                    size: 16,
+                  ),
+                ),
               ],
             ).p20().scrollVertical(),
           );

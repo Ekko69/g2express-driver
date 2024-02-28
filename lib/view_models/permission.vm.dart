@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_background/flutter_background.dart';
+import 'package:fuodz/services/auth.service.dart';
 import 'package:fuodz/views/pages/permission/widgets/request_bg_location_permission.view.dart';
 import 'package:fuodz/views/pages/permission/widgets/request_bg_permission.view.dart';
 import 'package:fuodz/views/pages/permission/widgets/request_location_permission.view.dart';
@@ -199,7 +200,8 @@ class PermissionViewModel extends MyBaseViewModel {
     notifyListeners();
   }
 
-  loadHomepage() {
+  loadHomepage() async {
+    await AuthServices().initData();
     viewContext.nextAndRemoveUntilPage(
       HomePage(),
     );

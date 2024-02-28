@@ -59,6 +59,8 @@ class Api {
   static const activateVehicle = "/driver/vehicle/{id}/activate";
   //
   static const documentSubmission = "/driver/document/request/submission";
+  static const payoutsReport = "/driver/payouts/report";
+  static const earningsReport = "/driver/earnings/report";
 
   // Other pages
   static String get privacyPolicy {

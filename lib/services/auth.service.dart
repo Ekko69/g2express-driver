@@ -5,11 +5,18 @@ import 'package:fuodz/models/user.dart';
 import 'package:fuodz/models/vehicle.dart';
 import 'package:fuodz/services/firebase.service.dart';
 import 'package:fuodz/services/location.service.dart';
+import 'package:singleton/singleton.dart';
 
 import 'http.service.dart';
 import 'local_storage.service.dart';
 
 class AuthServices {
+  /// Factory method that reuse same instance automatically
+  factory AuthServices() => Singleton.lazy(() => AuthServices._());
+
+  /// Private constructor
+  AuthServices._() {}
+
   //
   static bool firstTimeOnApp() {
     return LocalStorageService.prefs!.getBool(AppStrings.firstTimeOnApp) ??
@@ -50,6 +57,11 @@ class AuthServices {
   }
 
   //
+  initData() async {
+    await getCurrentUser(force: true);
+    await getDriverVehicle(force: true);
+  }
+
   //
   static User? currentUser;
   static Future<User> getCurrentUser({bool force = false}) async {

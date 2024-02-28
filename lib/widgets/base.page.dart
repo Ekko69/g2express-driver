@@ -22,6 +22,7 @@ class BasePage extends StatefulWidget {
   final Color? backgroundColor;
   final Color? appBarColor;
   final Widget? leading;
+  final Widget? bottomNavigationBar;
 
   BasePage({
     this.showAppBar = false,
@@ -39,6 +40,7 @@ class BasePage extends StatefulWidget {
     this.extendBodyBehindAppBar = false,
     this.appBarItemColor,
     this.backgroundColor,
+    this.bottomNavigationBar,
     Key? key,
   }) : super(key: key);
 
@@ -96,6 +98,7 @@ class _BasePageState extends State<BasePage> {
         bottomSheet: widget.bottomSheet,
         floatingActionButton: widget.fab,
         // floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+        bottomNavigationBar: widget.bottomNavigationBar,
       ),
     );
   }

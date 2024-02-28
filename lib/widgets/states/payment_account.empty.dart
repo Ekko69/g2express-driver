@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:fuodz/constants/app_images.dart';
-import 'package:fuodz/widgets/states/empty.state.dart';
 import 'package:localize_and_translate/localize_and_translate.dart';
 import 'package:velocity_x/velocity_x.dart';
 
@@ -9,12 +8,30 @@ class EmptyPaymentAccount extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return EmptyState(
-      imageUrl: AppImages.paymentAccount,
-      title: "Payment Account Not Found".tr(),
-      description:
-          "Please create a new payment account. This can be use to receive earning from the platform"
-              .tr(),
+    return VStack(
+      [
+        Image.asset(
+          AppImages.noPaymentAccount,
+          width: context.percentWidth * 45,
+          height: context.percentWidth * 45,
+        ),
+        VStack(
+          [
+            "No Payment Account".tr().text.xl2.bold.center.make(),
+            ("When you add a payment account, it will appear here. You can add multiple payment accounts."
+                        .tr() +
+                    "\n\n" +
+                    "Click the + button to add a payment account.".tr())
+                .text
+                .center
+                .make(),
+          ],
+          spacing: 10,
+          crossAlignment: CrossAxisAlignment.center,
+        ),
+      ],
+      spacing: 15,
+      crossAlignment: CrossAxisAlignment.center,
     ).p20().centered();
   }
 }

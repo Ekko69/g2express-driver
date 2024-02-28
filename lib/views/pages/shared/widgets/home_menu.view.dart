@@ -39,8 +39,7 @@ class HomeMenuView extends StatelessWidget {
                 DocumentRequestView(),
                 Visibility(
                   visible: AppUISettings.enableDriverTypeSwitch ||
-                      (model.currentUser != null &&
-                          model.currentUser!.isTaxiDriver),
+                      model.currentUser.isTaxiDriver,
                   child: MenuItem(
                     title: "Vehicle Details".tr(),
                     onPressed: () {

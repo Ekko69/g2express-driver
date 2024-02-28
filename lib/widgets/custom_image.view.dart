@@ -1,6 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:fuodz/widgets/busy_indicator.dart';
+import 'package:fuodz/constants/app_images.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class CustomImage extends StatelessWidget {
@@ -21,8 +21,13 @@ class CustomImage extends StatelessWidget {
     return CachedNetworkImage(
       imageUrl: this.imageUrl,
       fit: this.boxFit ?? BoxFit.cover,
-      progressIndicatorBuilder: (context, imageURL, progress) =>
-          BusyIndicator().centered(),
+      errorWidget: (context, imageUrl, _) => Image.asset(
+        AppImages.noImage,
+        fit: this.boxFit ?? BoxFit.cover,
+      ),
+      progressIndicatorBuilder: (context, imageURL, progress) {
+        return Image.asset(AppImages.placeholder);
+      },
     ).h(this.height).w(this.width ?? context.percentWidth);
   }
 }

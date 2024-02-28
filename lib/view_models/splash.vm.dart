@@ -95,6 +95,7 @@ class SplashViewModel extends MyBaseViewModel {
       Navigator.of(viewContext)
           .pushNamedAndRemoveUntil(AppRoutes.loginRoute, (route) => false);
     } else {
+      await AuthServices().initData();
       var inUseStatus = await Permission.locationWhenInUse.status;
       var alwaysUseStatus = await Permission.locationAlways.status;
       final bgPermissinGranted =

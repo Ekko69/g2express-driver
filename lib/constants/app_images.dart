@@ -31,4 +31,7 @@ class AppImages {
   static const noNotification = "assets/images/no-notification.png";
   static const noVehicle = "assets/images/no-vehicle.png";
   static const pendingDocument = "assets/images/pending-document.png";
+  static const placeholder = "assets/images/placeholder.png";
+  static const noImage = "assets/images/no_image.png";
+  static const noPaymentAccount = "assets/images/no_payment_account.png";
 }

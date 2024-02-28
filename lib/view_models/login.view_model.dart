@@ -37,7 +37,7 @@ class LoginViewModel extends MyBaseViewModel with QrcodeScannerTrait {
 
   void initialise() async {
     //
-    emailTEC.text = kReleaseMode ? "" : "dev_taxi_driver@demo.com";
+    emailTEC.text = kReleaseMode ? "" : "driver@demo.com";
     passwordTEC.text = kReleaseMode ? "" : "password";
 
     //

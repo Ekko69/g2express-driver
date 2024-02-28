@@ -396,3 +396,16 @@ Your document is pending verification, once verified you will receive an email f
 Please select a document
 Reject Order
 Trip Fare
+Payouts
+Report
+Report exported successfully
+Open
+Payout Report
+No data to export
+Payment Account
+Date
+Amount
+Status
+No Payment Account
+When you add a payment account, it will appear here. You can add multiple payment accounts.
+Click the + button to add a payment account.

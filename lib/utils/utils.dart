@@ -78,11 +78,11 @@ class Utils {
 
   static setJiffyLocale() async {
     String cLocale = translator.activeLocale.languageCode;
-    List<String> supportedLocales = Jiffy.getAllAvailableLocales();
+    List<String> supportedLocales = Jiffy.getSupportedLocales();
     if (supportedLocales.contains(cLocale)) {
-      await Jiffy.locale(translator.activeLocale.languageCode);
+      await Jiffy.setLocale(translator.activeLocale.languageCode);
     } else {
-      await Jiffy.locale("en");
+      await Jiffy.setLocale("en");
     }
   }
 
@@ -90,19 +90,19 @@ class Utils {
   static Future<String> getCurrentCountryCode() async {
     String countryCode = "US";
     try {
-      //make request to get country code
-      final response = await HttpService().dio.get(
-            "http://ip-api.com/json/?fields=countryCode",
-          );
-      //get the country code
-      countryCode = response.data["countryCode"];
+      countryCode = AppStrings.countryCode
+          .toUpperCase()
+          .replaceAll("AUTO", "")
+          .replaceAll("INTERNATIONAL", "")
+          .split(",")[0];
     } catch (e) {
       try {
-        countryCode = AppStrings.countryCode
-            .toUpperCase()
-            .replaceAll("AUTO", "")
-            .replaceAll("INTERNATIONAL", "")
-            .split(",")[0];
+        //make request to get country code
+        final response = await HttpService().dio.get(
+              "http://ip-api.com/json/?fields=countryCode",
+            );
+        //get the country code
+        countryCode = response.data["countryCode"];
       } catch (e) {
         countryCode = "us";
       }

@@ -23,13 +23,14 @@ import 'package:velocity_x/velocity_x.dart';
 class ProfileViewModel extends MyBaseViewModel {
   //
   String appVersionInfo = "";
-  User? currentUser;
+  late User currentUser;
 
   //
   AuthRequest _authRequest = AuthRequest();
 
   ProfileViewModel(BuildContext context) {
     this.viewContext = context;
+    this.currentUser = AuthServices.currentUser!;
   }
 
   void initialise() async {

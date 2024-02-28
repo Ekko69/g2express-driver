@@ -233,7 +233,7 @@ class Order {
       recipientName: json["recipient_name"],
       recipientPhone: json["recipient_phone"],
       pickupDate: json["pickup_date"] != null
-          ? Jiffy(json["pickup_date"]).format("dd MMM, yyyy")
+          ? Jiffy.parse(json["pickup_date"]).format(pattern: "dd MMM, yyyy")
           : "",
       pickupTime: "${json["pickup_date"]} ${json["pickup_time"]}",
       // Jiffy("${json["pickup_date"]} ${json["pickup_time"]}","yyyy-MM-dd hh:mm:ss").format("hh:mm a"),
